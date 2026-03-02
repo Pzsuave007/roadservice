@@ -352,7 +352,7 @@ export default function LandingPage() {
             
             <a
               href={`tel:${PHONE_NUMBER}`}
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-400 text-white font-bold transition-all emergency-glow hover:scale-105"
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-red-600 to-red-500 text-white font-bold transition-all emergency-glow hover:scale-105"
               data-testid="header-call-btn"
             >
               <Phone className="w-4 h-4" />
@@ -394,7 +394,7 @@ export default function LandingPage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
               <a
                 href={`tel:${PHONE_NUMBER}`}
-                className="w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-5 rounded-full bg-gradient-to-r from-orange-500 to-orange-400 text-white font-black text-xl uppercase tracking-wider shadow-2xl shadow-orange-500/40 hover:scale-105 transition-transform cta-button"
+                className="w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-5 rounded-full bg-gradient-to-r from-red-600 to-red-500 text-white font-black text-xl uppercase tracking-wider shadow-2xl shadow-red-600/40 hover:scale-105 transition-transform cta-button"
                 data-testid="hero-call-btn"
               >
                 <Phone className="w-6 h-6" />
@@ -421,7 +421,7 @@ export default function LandingPage() {
             </button>
             
             <p className="text-gray-200 pt-2 flex items-center justify-center gap-2 text-sm">
-              <MapPin className="w-4 h-4 text-orange-400" />
+              <MapPin className="w-4 h-4 text-red-500" />
               {t('servingArea')}
             </p>
             
@@ -436,7 +436,7 @@ export default function LandingPage() {
                 {t('insured')}
               </span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 text-gray-800 text-xs font-semibold shadow-sm">
-                <Clock className="w-3.5 h-3.5 text-orange-600" />
+                <Clock className="w-3.5 h-3.5 text-red-700" />
                 {t('available247')}
               </span>
             </div>
@@ -448,7 +448,7 @@ export default function LandingPage() {
       <section id="quote" className="py-10 md:py-20 px-4 section-gray" data-testid="quote-section">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-6 md:mb-10">
-            <p className="text-orange-500 font-semibold mb-1 text-sm">{language === 'en' ? 'Quick Estimate' : 'Estimado Rápido'}</p>
+            <p className="text-red-600 font-semibold mb-1 text-sm">{language === 'en' ? 'Quick Estimate' : 'Estimado Rápido'}</p>
             <h2 className="text-2xl md:text-4xl font-bold mb-2 text-gray-900">{t('quoteTitle')}</h2>
             <p className="text-gray-600 text-sm md:text-base">{t('quoteSubtitle')}</p>
           </div>
@@ -465,7 +465,7 @@ export default function LandingPage() {
                         placeholder={language === 'en' ? "Your current location" : "Tu ubicación actual"}
                         value={formData.pickupLocation}
                         onChange={(e) => handleInputChange('pickupLocation', e.target.value)}
-                        className="bg-white border-gray-300 focus:border-orange-500 text-gray-900 placeholder:text-gray-400 flex-1"
+                        className="bg-white border-gray-300 focus:border-red-600 text-gray-900 placeholder:text-gray-400 flex-1"
                         data-testid="pickup-input"
                       />
                       <Button
@@ -494,7 +494,7 @@ export default function LandingPage() {
                       placeholder={language === 'en' ? "Where should we take your vehicle?" : "¿A dónde llevamos tu vehículo?"}
                       value={formData.dropoffLocation}
                       onChange={(e) => handleInputChange('dropoffLocation', e.target.value)}
-                      className="bg-white border-gray-300 focus:border-orange-500 text-gray-900 placeholder:text-gray-400"
+                      className="bg-white border-gray-300 focus:border-red-600 text-gray-900 placeholder:text-gray-400"
                       data-testid="dropoff-input"
                     />
                   </div>
@@ -551,7 +551,7 @@ export default function LandingPage() {
                       placeholder="(555) 123-4567"
                       value={formData.phoneNumber}
                       onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
-                      className="bg-white border-gray-300 focus:border-orange-500 text-gray-900 placeholder:text-gray-400"
+                      className="bg-white border-gray-300 focus:border-red-600 text-gray-900 placeholder:text-gray-400"
                       data-testid="phone-input"
                     />
                   </div>
@@ -564,7 +564,7 @@ export default function LandingPage() {
                       max="500"
                       value={formData.estimatedDistance}
                       onChange={(e) => handleInputChange('estimatedDistance', parseInt(e.target.value) || 10)}
-                      className="bg-white border-gray-300 focus:border-orange-500 text-gray-900"
+                      className="bg-white border-gray-300 focus:border-red-600 text-gray-900"
                       data-testid="distance-input"
                     />
                   </div>
@@ -576,7 +576,7 @@ export default function LandingPage() {
                     onClick={() => handleInputChange('isEmergency', true)}
                     className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
                       formData.isEmergency
-                        ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20'
+                        ? 'bg-red-600 text-white shadow-lg shadow-red-600/20'
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                     data-testid="emergency-btn"
@@ -600,7 +600,7 @@ export default function LandingPage() {
                 <Button
                   onClick={getEstimate}
                   disabled={isSubmitting}
-                  className="w-full py-6 text-lg font-bold bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-600 hover:to-orange-500 text-white shadow-lg shadow-orange-500/20"
+                  className="w-full py-6 text-lg font-bold bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white shadow-lg shadow-red-600/20"
                   data-testid="get-estimate-btn"
                 >
                   {isSubmitting ? t('submitting') : t('getEstimate')}
@@ -629,13 +629,13 @@ export default function LandingPage() {
                   )}
                   <div className="border-t border-gray-200 pt-4 flex justify-between text-2xl font-bold">
                     <span className="text-gray-900">{t('totalEstimate')}</span>
-                    <span className="text-orange-500">${estimate.total_estimate.toFixed(2)}</span>
+                    <span className="text-red-600">${estimate.total_estimate.toFixed(2)}</span>
                   </div>
                 </div>
                 
                 {/* Important notice - call for exact price */}
-                <div className="bg-orange-50 border-2 border-orange-200 rounded-xl p-4">
-                  <p className="text-orange-800 text-center font-medium">
+                <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">
+                  <p className="text-red-800 text-center font-medium">
                     {language === 'en' 
                       ? "⚠️ This is an ESTIMATE only. Call Ben now to get the exact price for your situation!"
                       : "⚠️ Esto es solo un ESTIMADO. ¡Llama a Ben ahora para obtener el precio exacto!"}
@@ -646,7 +646,7 @@ export default function LandingPage() {
                   {/* Primary CTA - CALL NOW */}
                   <a
                     href={`tel:${PHONE_NUMBER}`}
-                    className="w-full py-6 text-lg font-bold bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-600 hover:to-orange-500 text-white rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-orange-500/20 transition-all hover:scale-[1.02]"
+                    className="w-full py-6 text-lg font-bold bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-red-600/20 transition-all hover:scale-[1.02]"
                     data-testid="call-for-exact-btn"
                   >
                     <Phone className="w-6 h-6" />
@@ -706,7 +706,7 @@ export default function LandingPage() {
                 <p className="text-gray-600">{t('contactSoon')}</p>
                 <a
                   href={`tel:${PHONE_NUMBER}`}
-                  className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-orange-500 to-orange-400 text-white font-bold transition-colors shadow-lg shadow-orange-500/20"
+                  className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-red-600 to-red-500 text-white font-bold transition-colors shadow-lg shadow-red-600/20"
                 >
                   <Phone className="w-5 h-5" />
                   {t('callNow')} - {PHONE_DISPLAY}
@@ -720,7 +720,7 @@ export default function LandingPage() {
       {/* Services Section */}
       <section className="py-10 md:py-20 px-4 section-light" data-testid="services-section">
         <div className="max-w-7xl mx-auto">
-          <p className="text-orange-500 text-center font-semibold mb-1 text-sm">{language === 'en' ? 'What We Offer' : 'Lo Que Ofrecemos'}</p>
+          <p className="text-red-600 text-center font-semibold mb-1 text-sm">{language === 'en' ? 'What We Offer' : 'Lo Que Ofrecemos'}</p>
           <h2 className="text-2xl md:text-4xl font-bold text-center mb-2 text-gray-900">
             {t('servicesTitle')}
           </h2>
@@ -737,14 +737,14 @@ export default function LandingPage() {
                   className="glass-card p-4 md:p-6 service-card"
                   data-testid={`service-card-${service.type}`}
                 >
-                  <div className="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-gradient-to-br from-orange-500 to-orange-400 flex items-center justify-center mb-2 md:mb-4 shadow-lg shadow-orange-500/20">
+                  <div className="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-gradient-to-br from-red-600 to-red-500 flex items-center justify-center mb-2 md:mb-4 shadow-lg shadow-red-600/20">
                     <Icon className="w-5 h-5 md:w-7 md:h-7 text-white" />
                   </div>
                   <h3 className="text-sm md:text-xl font-bold mb-1 md:mb-2 text-gray-900">{t(service.key)}</h3>
                   <p className="text-gray-600 text-xs md:text-sm mb-2 md:mb-4 hidden md:block">{t(`${service.key}Desc`)}</p>
                   <a
                     href={`tel:${PHONE_NUMBER}`}
-                    className="inline-flex items-center gap-1 md:gap-2 text-orange-500 hover:text-orange-600 font-semibold text-xs md:text-sm group"
+                    className="inline-flex items-center gap-1 md:gap-2 text-red-600 hover:text-red-700 font-semibold text-xs md:text-sm group"
                   >
                     <Phone className="w-3 h-3 md:w-4 md:h-4" />
                     {t('callNow')}
@@ -826,7 +826,7 @@ export default function LandingPage() {
       {/* Our Fleet Gallery */}
       <section className="py-10 md:py-20 px-4 section-light" data-testid="gallery-section">
         <div className="max-w-7xl mx-auto">
-          <p className="text-orange-500 text-center font-semibold mb-1 text-sm">{language === 'en' ? 'Our Equipment' : 'Nuestro Equipo'}</p>
+          <p className="text-red-600 text-center font-semibold mb-1 text-sm">{language === 'en' ? 'Our Equipment' : 'Nuestro Equipo'}</p>
           <h2 className="text-2xl md:text-4xl font-bold text-center mb-2 text-gray-900">
             {language === 'en' ? 'Our Fleet in Action' : 'Nuestra Flota en Acción'}
           </h2>
@@ -945,7 +945,7 @@ export default function LandingPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-gray-900/95 to-gray-900/85" />
         
         <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <AlertTriangle className="w-12 h-12 md:w-16 md:h-16 text-orange-500 mx-auto mb-4 md:mb-6" />
+          <AlertTriangle className="w-12 h-12 md:w-16 md:h-16 text-red-600 mx-auto mb-4 md:mb-6" />
           <h2 className="text-2xl md:text-4xl font-bold mb-2 md:mb-4">{t('accidentTitle')}</h2>
           <p className="text-base md:text-xl text-gray-300 mb-4 md:mb-8">{t('accidentSubtitle')}</p>
           
@@ -970,7 +970,7 @@ export default function LandingPage() {
           
           <a
             href={`tel:${PHONE_NUMBER}`}
-            className="inline-flex items-center gap-2 md:gap-3 px-6 md:px-10 py-3 md:py-5 rounded-full bg-gradient-to-r from-orange-500 to-yellow-400 text-gray-900 font-black text-base md:text-xl uppercase tracking-wider shadow-2xl shadow-orange-500/30 transition-all cta-button hover:scale-105"
+            className="inline-flex items-center gap-2 md:gap-3 px-6 md:px-10 py-3 md:py-5 rounded-full bg-gradient-to-r from-red-600 to-yellow-400 text-gray-900 font-black text-base md:text-xl uppercase tracking-wider shadow-2xl shadow-red-600/30 transition-all cta-button hover:scale-105"
             data-testid="accident-call-btn"
           >
             <Phone className="w-5 h-5 md:w-6 md:h-6" />
@@ -982,7 +982,7 @@ export default function LandingPage() {
       {/* FAQ Section */}
       <section className="py-10 md:py-20 px-4 section-light" data-testid="faq-section">
         <div className="max-w-3xl mx-auto">
-          <p className="text-orange-500 text-center font-semibold mb-1 text-sm">{language === 'en' ? 'Got Questions?' : '¿Tienes Preguntas?'}</p>
+          <p className="text-red-600 text-center font-semibold mb-1 text-sm">{language === 'en' ? 'Got Questions?' : '¿Tienes Preguntas?'}</p>
           <h2 className="text-2xl md:text-4xl font-bold text-center mb-2 text-gray-900">{t('faqTitle')}</h2>
           <p className="text-gray-600 text-center mb-6 md:mb-12 text-sm">
             {language === 'en' ? 'Find answers to common questions about our towing services' : 'Encuentra respuestas a preguntas comunes sobre nuestros servicios'}
@@ -996,7 +996,7 @@ export default function LandingPage() {
                 className="bg-white border border-gray-200 px-4 md:px-6 rounded-xl shadow-sm"
                 data-testid={`faq-item-${num}`}
               >
-                <AccordionTrigger className="text-left text-sm md:text-lg font-semibold hover:text-orange-500 text-gray-900 py-3 md:py-5">
+                <AccordionTrigger className="text-left text-sm md:text-lg font-semibold hover:text-red-600 text-gray-900 py-3 md:py-5">
                   {t(`faq${num}Q`)}
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-700 text-sm md:text-base leading-relaxed pb-3 md:pb-5">
@@ -1026,7 +1026,7 @@ export default function LandingPage() {
           
           <a
             href={`tel:${PHONE_NUMBER}`}
-            className="inline-flex items-center gap-2 md:gap-4 px-6 md:px-12 py-4 md:py-6 rounded-full bg-gradient-to-r from-orange-500 via-orange-400 to-yellow-400 text-gray-900 font-black text-base md:text-2xl uppercase tracking-wider shadow-2xl shadow-orange-500/40 hover:scale-105 transition-transform cta-button animate-pulse-slow"
+            className="inline-flex items-center gap-2 md:gap-4 px-6 md:px-12 py-4 md:py-6 rounded-full bg-gradient-to-r from-red-600 via-red-500 to-yellow-400 text-gray-900 font-black text-base md:text-2xl uppercase tracking-wider shadow-2xl shadow-red-600/40 hover:scale-105 transition-transform cta-button animate-pulse-slow"
             data-testid="final-call-btn"
           >
             <Phone className="w-5 h-5 md:w-8 md:h-8" />
@@ -1081,7 +1081,7 @@ export default function LandingPage() {
               {/* Call */}
               <a
                 href={`tel:${PHONE_NUMBER}`}
-                className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-orange-500 to-orange-400 text-white font-semibold transition-transform hover:scale-[1.02]"
+                className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-red-600 to-red-500 text-white font-semibold transition-transform hover:scale-[1.02]"
                 data-testid="fab-call"
                 onClick={() => setFabOpen(false)}
               >
@@ -1158,7 +1158,7 @@ export default function LandingPage() {
           className={`w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 ${
             fabOpen 
               ? 'bg-gray-800 rotate-0' 
-              : 'bg-gradient-to-r from-orange-500 to-red-500 animate-pulse-slow'
+              : 'bg-gradient-to-r from-red-600 to-red-500 animate-pulse-slow'
           }`}
           data-testid="fab-main-btn"
         >
@@ -1236,7 +1236,7 @@ export default function LandingPage() {
                 {/* Call directly */}
                 <a
                   href={`tel:${PHONE_NUMBER}`}
-                  className="w-full py-4 text-lg font-bold bg-gradient-to-r from-orange-500 to-orange-400 text-white rounded-xl flex items-center justify-center gap-3 transition-all"
+                  className="w-full py-4 text-lg font-bold bg-gradient-to-r from-red-600 to-red-500 text-white rounded-xl flex items-center justify-center gap-3 transition-all"
                   data-testid="send-location-call"
                   onClick={() => setShowLocationModal(false)}
                 >
