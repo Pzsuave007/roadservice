@@ -860,20 +860,24 @@ export default function LandingPage() {
       {/* FAQ Section */}
       <section className="py-20 px-4 section-light" data-testid="faq-section">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">{t('faqTitle')}</h2>
+          <p className="text-orange-500 text-center font-semibold mb-2">{language === 'en' ? 'Got Questions?' : '¿Tienes Preguntas?'}</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900">{t('faqTitle')}</h2>
+          <p className="text-gray-600 text-center mb-12">
+            {language === 'en' ? 'Find answers to common questions about our towing services' : 'Encuentra respuestas a preguntas comunes sobre nuestros servicios'}
+          </p>
           
           <Accordion type="single" collapsible className="space-y-4">
             {[1, 2, 3, 4, 5, 6].map((num) => (
               <AccordionItem
                 key={num}
                 value={`item-${num}`}
-                className="glass-card border border-gray-700/50 px-6 rounded-xl"
+                className="bg-white border border-gray-200 px-6 rounded-xl shadow-sm"
                 data-testid={`faq-item-${num}`}
               >
-                <AccordionTrigger className="text-left text-lg font-semibold hover:text-orange-400 text-white">
+                <AccordionTrigger className="text-left text-base md:text-lg font-semibold hover:text-orange-500 text-gray-900 py-5">
                   {t(`faq${num}Q`)}
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-400">
+                <AccordionContent className="text-gray-700 text-base leading-relaxed pb-5">
                   {t(`faq${num}A`)}
                 </AccordionContent>
               </AccordionItem>
