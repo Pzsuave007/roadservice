@@ -1,7 +1,7 @@
 # Ben's Road Service LLC - Landing Page PRD
 
 ## Original Problem Statement
-Create a high-converting, single-page landing website for a professional Towing & Roadside Assistance company (Ben's Road Service LLC) serving Salem & all of Oregon. The site should generate phone calls, capture SMS leads, collect quote requests, and build trust.
+Create a high-converting, single-page landing website for a professional Towing & Roadside Assistance company (Ben's Road Service LLC) serving Salem & up to 100 miles throughout Oregon. The site should generate phone calls, capture SMS leads, collect quote requests, and build trust.
 
 ## User Personas
 1. **Stranded Driver** - Needs immediate emergency towing/roadside help
@@ -10,46 +10,77 @@ Create a high-converting, single-page landing website for a professional Towing 
 4. **Business Owner (Ben)** - Needs to view and manage quote requests
 
 ## Core Requirements
-- Dark theme with orange/red emergency accents
+- Bright/light theme with orange accents (updated from dark theme)
 - Mobile-first, fast-loading design
 - Click-to-call and text functionality
-- Quote calculator with instant pricing
+- Quote calculator with instant pricing estimate (encourages calling for exact price)
 - Admin dashboard for quote management
 - Bilingual support (English/Spanish)
+- Location sharing for stranded drivers
 
-## What's Been Implemented (March 2, 2025)
+## What's Been Implemented
 
-### Landing Page Sections
-- ✅ Sticky header with phone number, text button, 24/7 badge
-- ✅ Hero section with CTA buttons (Call Now, Get Quote)
-- ✅ Services section (7 services with icons)
-- ✅ Quote calculator with instant pricing
-- ✅ Why Choose Us section (5 features)
-- ✅ Google Reviews section (4 sample reviews)
-- ✅ Service area map (Google Maps embed for Salem, OR)
-- ✅ Accident assistance section
-- ✅ FAQ accordion (6 questions with SEO schema)
-- ✅ Final CTA section
-- ✅ Mobile floating action buttons (FAB)
+### March 2, 2025 - Initial Build
+- Full landing page with all core sections
+- Quote form with pricing calculator
+- Admin dashboard with authentication
+- Bilingual support (EN/ES)
+
+### March 2, 2025 - Update #2
+- ✅ **Quote Section Repositioned**: Moved right after Hero for fast access
+- ✅ **GPS Location Sharing**: Added "Use My Location" button with geolocation API
+- ✅ **Call-First Flow**: After estimate, primary CTA is "Call Ben for Exact Price"
+- ✅ **Pre-filled SMS**: "Or Text Ben" button with auto-filled message including estimate
+- ✅ **100-Mile Service Map**: Google Map now shows expanded coverage area
+- ✅ Light/bright theme with client's custom tow truck images
+
+### Landing Page Sections (Current Order)
+1. ✅ Sticky header with phone number, text button, 24/7 badge
+2. ✅ Hero section with CTA buttons (Call Now, Get Quote)
+3. ✅ **Quote Calculator** (instant pricing estimate) - NOW RIGHT AFTER HERO
+4. ✅ Services section (7 services with icons)
+5. ✅ Why Choose Us section (5 features)
+6. ✅ Google Reviews section (4 sample reviews)
+7. ✅ Our Fleet Gallery (client's truck photos)
+8. ✅ Service area map (100-mile radius from Salem)
+9. ✅ Accident assistance section
+10. ✅ FAQ accordion (6 questions with SEO schema)
+11. ✅ Final CTA section
+12. ✅ Mobile floating action buttons (FAB)
+
+### Quote Calculator Features
+- ✅ **Location Sharing Button** (GPS icon) - one click to share current location
+- ✅ OpenStreetMap reverse geocoding for address lookup
+- ✅ Vehicle type selection (Sedan, SUV, Truck, Motorcycle, Van, Other)
+- ✅ Service type selection (7 services)
+- ✅ Emergency vs Scheduled toggle
+- ✅ Distance input (miles)
+- ✅ Phone number capture
+- ✅ **Instant Estimate Display**: Shows base price, mileage, emergency fee, total
+- ✅ **Call-First CTA**: "Call Ben for Exact Price" as primary action
+- ✅ **Text Option**: Pre-filled SMS with service details and estimate
 
 ### Backend Features
-- ✅ Quote estimate API (pricing calculation)
+- ✅ Quote estimate API with pricing logic
 - ✅ Quote request submission API
 - ✅ Admin authentication (Basic Auth)
 - ✅ Admin dashboard API (stats, quote management)
 - ✅ Status update and delete quote endpoints
 
-### Admin Dashboard
-- ✅ Login page with authentication
-- ✅ Stats overview (Total, Pending, Contacted, Completed)
-- ✅ Quote requests table with all details
-- ✅ Status update dropdown
-- ✅ Delete quote functionality
+### Pricing Structure (Adjustable)
+| Service | Base Price |
+|---------|------------|
+| Emergency Towing | $85 |
+| Flatbed Towing | $95 |
+| Accident Recovery | $125 |
+| Lockout Service | $55 |
+| Jump Start | $45 |
+| Tire Change | $55 |
+| Long Distance | $100 |
 
-### Bilingual Support
-- ✅ Language toggle (EN/ES)
-- ✅ All text content translated
-- ✅ Persists selection during session
+- Mileage: $3.50/mile
+- Emergency Fee: $25
+- Vehicle Multipliers: Sedan 1.0x, SUV 1.15x, Truck 1.25x, Motorcycle 0.85x, Van 1.2x
 
 ## Prioritized Backlog
 
@@ -65,16 +96,9 @@ Create a high-converting, single-page landing website for a professional Towing 
 - Quote notes/comments feature
 
 ### P2 - Nice to Have
-- Dark/light mode toggle
 - More detailed pricing options
 - Integration with dispatch software
 - Customer testimonial video section
-
-## Next Action Items
-1. Add user's logo when provided
-2. Set up SMS/email notifications for new quotes
-3. Connect real Google Business reviews
-4. Add more detailed service pricing options
 
 ## Technical Stack
 - Frontend: React + Tailwind CSS + Shadcn/UI
@@ -85,3 +109,4 @@ Create a high-converting, single-page landing website for a professional Towing 
 ## Admin Credentials
 - Username: admin
 - Password: bensroadservice2024
+- URL: /admin
