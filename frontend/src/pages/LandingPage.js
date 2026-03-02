@@ -54,6 +54,9 @@ const PHONE_NUMBER = '9713886300';
 const PHONE_DISPLAY = '(971) 388-6300';
 const WHATSAPP_NUMBER = '19713886300'; // With country code for WhatsApp
 
+// Company logo
+const COMPANY_LOGO = 'https://customer-assets.emergentagent.com/job_00aa8ed2-46e4-4aea-a6de-8d7e8cfaf0af/artifacts/szsdzxev_bensroadserviceslogo-horizontal.png';
+
 // Client's actual tow truck images
 const CLIENT_IMAGES = {
   hero: 'https://customer-assets.emergentagent.com/job_quick-towing-pro/artifacts/q4hhmpd9_WhatsApp%20Image%202026-03-02%20at%207.33.36%20AM%20%281%29.jpeg',
@@ -300,15 +303,22 @@ export default function LandingPage() {
     <div className="min-h-screen bg-white text-gray-900">
       {/* Sticky Top Bar */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-green-600">
+        <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {/* Logo */}
+            <img 
+              src={COMPANY_LOGO} 
+              alt="Ben's Road Service LLC" 
+              className="h-10 md:h-12 w-auto"
+              data-testid="header-logo"
+            />
+            <div className="hidden md:flex items-center gap-2 text-green-600">
               <Clock className="w-4 h-4 animate-pulse" />
               <span className="text-sm font-bold">{t('openNow')}</span>
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3">
             <button
               onClick={toggleLanguage}
               className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors text-sm font-medium text-gray-700"
@@ -1027,16 +1037,25 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="py-6 md:py-8 px-4 border-t border-gray-700 bg-gray-900" data-testid="footer">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
-          <p className="text-gray-400 text-center md:text-left text-xs md:text-base">{t('footerText')}</p>
-          <div className="flex items-center gap-4">
-            <span className="text-gray-400 text-xs md:text-base">{t('weSpeak')}</span>
-            <a
-              href="/admin"
-              className="text-gray-500 hover:text-gray-300 text-xs md:text-sm"
-            >
-              Admin
-            </a>
+        <div className="max-w-7xl mx-auto flex flex-col items-center gap-4">
+          {/* Logo in footer */}
+          <img 
+            src={COMPANY_LOGO} 
+            alt="Ben's Road Service LLC" 
+            className="h-12 md:h-16 w-auto brightness-0 invert opacity-80"
+            data-testid="footer-logo"
+          />
+          <div className="flex flex-col md:flex-row items-center justify-between w-full gap-2 md:gap-4">
+            <p className="text-gray-400 text-center md:text-left text-xs md:text-base">{t('footerText')}</p>
+            <div className="flex items-center gap-4">
+              <span className="text-gray-400 text-xs md:text-base">{t('weSpeak')}</span>
+              <a
+                href="/admin"
+                className="text-gray-500 hover:text-gray-300 text-xs md:text-sm"
+              >
+                Admin
+              </a>
+            </div>
           </div>
         </div>
       </footer>
