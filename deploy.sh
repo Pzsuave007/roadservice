@@ -61,8 +61,14 @@ if [ "$OS" = "ubuntu" ] || [ "$OS" = "debian" ]; then
         sudo apt-get install -y nodejs
     fi
     
-elif [ "$OS" = "centos" ] || [ "$OS" = "rhel" ] || [ "$OS" = "fedora" ]; then
-    sudo yum install -y curl git nodejs npm python3 python3-pip nginx
+elif [ "$OS" = "centos" ] || [ "$OS" = "rhel" ] || [ "$OS" = "fedora" ] || [ "$OS" = "almalinux" ] || [ "$OS" = "rocky" ]; then
+    sudo dnf install -y curl git python3 python3-pip nginx
+    
+    # Install Node.js 18 on RHEL-based systems
+    if ! command -v node &> /dev/null; then
+        curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
+        sudo dnf install -y nodejs
+    fi
     
 elif [ "$OS" = "arch" ]; then
     sudo pacman -Sy --noconfirm curl git nodejs npm python python-pip nginx
