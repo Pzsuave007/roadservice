@@ -345,16 +345,16 @@ export default function LandingPage() {
                       value={formData.vehicleType}
                       onValueChange={(value) => handleInputChange('vehicleType', value)}
                     >
-                      <SelectTrigger className="bg-zinc-950/50 border-zinc-800" data-testid="vehicle-select">
+                      <SelectTrigger className="bg-zinc-950/50 border-zinc-800 text-white" data-testid="vehicle-select">
                         <SelectValue placeholder={t('vehicleType')} />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="sedan">{t('sedan')}</SelectItem>
-                        <SelectItem value="suv">{t('suv')}</SelectItem>
-                        <SelectItem value="truck">{t('truck')}</SelectItem>
-                        <SelectItem value="motorcycle">{t('motorcycle')}</SelectItem>
-                        <SelectItem value="van">{t('van')}</SelectItem>
-                        <SelectItem value="other">{t('other')}</SelectItem>
+                      <SelectContent className="bg-zinc-900 border-zinc-700">
+                        <SelectItem value="sedan" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('sedan')}</SelectItem>
+                        <SelectItem value="suv" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('suv')}</SelectItem>
+                        <SelectItem value="truck" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('truck')}</SelectItem>
+                        <SelectItem value="motorcycle" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('motorcycle')}</SelectItem>
+                        <SelectItem value="van" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('van')}</SelectItem>
+                        <SelectItem value="other" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('other')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -364,17 +364,17 @@ export default function LandingPage() {
                       value={formData.serviceType}
                       onValueChange={(value) => handleInputChange('serviceType', value)}
                     >
-                      <SelectTrigger className="bg-zinc-950/50 border-zinc-800" data-testid="service-select">
+                      <SelectTrigger className="bg-zinc-950/50 border-zinc-800 text-white" data-testid="service-select">
                         <SelectValue placeholder={t('serviceNeeded')} />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="emergency_towing">{t('emergencyTowing')}</SelectItem>
-                        <SelectItem value="flatbed_towing">{t('flatbedTowing')}</SelectItem>
-                        <SelectItem value="accident_recovery">{t('accidentRecovery')}</SelectItem>
-                        <SelectItem value="lockout">{t('lockoutService')}</SelectItem>
-                        <SelectItem value="jump_start">{t('jumpStart')}</SelectItem>
-                        <SelectItem value="tire_change">{t('tireChange')}</SelectItem>
-                        <SelectItem value="long_distance">{t('longDistance')}</SelectItem>
+                      <SelectContent className="bg-zinc-900 border-zinc-700">
+                        <SelectItem value="emergency_towing" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('emergencyTowing')}</SelectItem>
+                        <SelectItem value="flatbed_towing" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('flatbedTowing')}</SelectItem>
+                        <SelectItem value="accident_recovery" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('accidentRecovery')}</SelectItem>
+                        <SelectItem value="lockout" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('lockoutService')}</SelectItem>
+                        <SelectItem value="jump_start" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('jumpStart')}</SelectItem>
+                        <SelectItem value="tire_change" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('tireChange')}</SelectItem>
+                        <SelectItem value="long_distance" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('longDistance')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
