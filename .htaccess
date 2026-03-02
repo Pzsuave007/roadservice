@@ -1,64 +1,9 @@
-# Apache .htaccess for Ben's Road Service LLC
-# Place this file in your public_html folder
-
 RewriteEngine On
 
-# ============================================
-# React Router - Handle SPA routing
-# ============================================
-RewriteBase /
-RewriteRule ^index\.html$ - [L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !^/api
-RewriteRule . /index.html [L]
-
-# ============================================
-# API Proxy - Forward /api requests to backend
-# ============================================
+# Proxy API requests to backend (port 8002)
 RewriteCond %{REQUEST_URI} ^/api
-RewriteRule ^api/(.*)$ http://127.0.0.1:8001/api/$1 [P,L]
+RewriteRule ^api/(.*)$ http://127.0.0.1:8002/api/$1 [P,L]
 
-# ============================================
-# Security Headers
-# ============================================
-<IfModule mod_headers.c>
-    Header always set X-Content-Type-Options nosniff
-    Header always set X-Frame-Options SAMEORIGIN
-    Header always set X-XSS-Protection "1; mode=block"
-    Header always set Referrer-Policy "strict-origin-when-cross-origin"
-</IfModule>
-
-# ============================================
-# Caching for Static Assets
-# ============================================
-<IfModule mod_expires.c>
-    ExpiresActive On
-    ExpiresByType image/jpg "access plus 1 year"
-    ExpiresByType image/jpeg "access plus 1 year"
-    ExpiresByType image/png "access plus 1 year"
-    ExpiresByType image/gif "access plus 1 year"
-    ExpiresByType image/svg+xml "access plus 1 year"
-    ExpiresByType image/webp "access plus 1 year"
-    ExpiresByType text/css "access plus 1 month"
-    ExpiresByType application/javascript "access plus 1 month"
-    ExpiresByType application/x-javascript "access plus 1 month"
-    ExpiresByType font/woff "access plus 1 year"
-    ExpiresByType font/woff2 "access plus 1 year"
-</IfModule>
-
-# ============================================
-# Gzip Compression
-# ============================================
-<IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/html
-    AddOutputFilterByType DEFLATE text/css
-    AddOutputFilterByType DEFLATE text/javascript
-    AddOutputFilterByType DEFLATE application/javascript
-    AddOutputFilterByType DEFLATE application/json
-</IfModule>
-
-# ============================================
-# Prevent Directory Listing
-# ============================================
-Options -Indexes
+# Proxy all other requests to frontend (port 3001)
+RewriteCond %{REQUEST_URI} !^/api
+RewriteRule ^(.*)$ http://127.0.0.1:3001/$1 [P,L]

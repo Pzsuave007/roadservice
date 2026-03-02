@@ -13,29 +13,26 @@ echo "  (AlmaLinux + cPanel + Apache)"
 echo "============================================"
 echo ""
 
-# Colors for output
+# Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
-print_status() {
-    echo -e "${GREEN}[✓]${NC} $1"
-}
+print_status() { echo -e "${GREEN}[✓]${NC} $1"; }
+print_warning() { echo -e "${YELLOW}[!]${NC} $1"; }
+print_error() { echo -e "${RED}[✗]${NC} $1"; }
 
-print_warning() {
-    echo -e "${YELLOW}[!]${NC} $1"
-}
+# Configuration
+GIT_REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROD_DIR="/opt/bensroadservice"
+BACKEND_PORT="8002"
+FRONTEND_PORT="3001"
 
-print_error() {
-    echo -e "${RED}[✗]${NC} $1"
-}
-
-# Get the directory where the script is located
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
-
-echo "Working directory: $SCRIPT_DIR"
+echo "Git Repository: $GIT_REPO_DIR"
+echo "Production Dir: $PROD_DIR"
+echo "Backend Port: $BACKEND_PORT"
+echo "Frontend Port: $FRONTEND_PORT"
 echo ""
 
 # ============================================
@@ -45,49 +42,42 @@ echo "Step 1: Checking requirements..."
 
 # Check Python
 if command -v python3 &> /dev/null; then
-    PYTHON_VERSION=$(python3 --version)
-    print_status "Python found: $PYTHON_VERSION"
+    print_status "Python found: $(python3 --version)"
 else
-    print_error "Python3 not found. Please install Python 3.9+"
+    print_error "Python3 not found!"
     exit 1
 fi
 
 # Check Node.js
 if command -v node &> /dev/null; then
-    NODE_VERSION=$(node --version)
-    print_status "Node.js found: $NODE_VERSION"
+    print_status "Node.js found: $(node --version)"
 else
-    print_warning "Node.js not found. Installing..."
+    print_warning "Installing Node.js..."
     curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
     sudo dnf install -y nodejs
 fi
 
-# Check if Apache is running
-if systemctl is-active --quiet httpd; then
-    print_status "Apache is running"
-else
-    print_warning "Apache not running, attempting to start..."
-    sudo systemctl start httpd
+# Check/Install serve globally
+if ! command -v serve &> /dev/null; then
+    print_warning "Installing serve globally..."
+    sudo npm install -g serve
 fi
+print_status "serve is installed"
 
 # ============================================
-# Step 2: Get Domain Configuration
+# Step 2: Create Production Directory
 # ============================================
 echo ""
-echo "Step 2: Domain Configuration..."
+echo "Step 2: Creating production directory..."
 
-read -p "Enter your domain (e.g., bensroadservice.com): " DOMAIN
-if [ -z "$DOMAIN" ]; then
-    DOMAIN="localhost"
-fi
+sudo mkdir -p $PROD_DIR/backend
+sudo mkdir -p $PROD_DIR/frontend
 
-read -p "Enter your document root path (e.g., /home/username/public_html): " DOC_ROOT
-if [ -z "$DOC_ROOT" ]; then
-    DOC_ROOT="/var/www/html"
-fi
+# Copy files to production
+sudo cp -r $GIT_REPO_DIR/backend/* $PROD_DIR/backend/
+sudo cp -r $GIT_REPO_DIR/frontend/* $PROD_DIR/frontend/
 
-print_status "Domain: $DOMAIN"
-print_status "Document Root: $DOC_ROOT"
+print_status "Files copied to $PROD_DIR"
 
 # ============================================
 # Step 3: Setup Backend
@@ -95,16 +85,16 @@ print_status "Document Root: $DOC_ROOT"
 echo ""
 echo "Step 3: Setting up Backend..."
 
-cd "$SCRIPT_DIR/backend"
+cd $PROD_DIR/backend
 
-# Create virtual environment
-python3 -m venv venv
+# Create virtual environment if not exists
+if [ ! -d "venv" ]; then
+    python3 -m venv venv
+fi
 source venv/bin/activate
 
-# Upgrade pip
+# Upgrade pip and install dependencies
 pip install --upgrade pip
-
-# Install Python dependencies
 pip install -r requirements.txt
 
 # Create .env file
@@ -118,9 +108,8 @@ MONGO_URL=$MONGO_URL
 DB_NAME=bens_road_service
 EOF
 
-print_status "Backend dependencies installed"
-
-cd "$SCRIPT_DIR"
+deactivate
+print_status "Backend setup complete"
 
 # ============================================
 # Step 4: Setup Frontend
@@ -128,176 +117,140 @@ cd "$SCRIPT_DIR"
 echo ""
 echo "Step 4: Setting up Frontend..."
 
-cd "$SCRIPT_DIR/frontend"
+cd $PROD_DIR/frontend
 
-# Install Node dependencies
-npm install --legacy-peer-deps
+# Get domain
+read -p "Enter your domain (e.g., bensroadservice247.com): " DOMAIN
+if [ -z "$DOMAIN" ]; then
+    DOMAIN="localhost"
+fi
 
-# Create .env file for production
+# Create .env for React build
 cat > .env << EOF
-REACT_APP_BACKEND_URL=https://${DOMAIN}
+REACT_APP_BACKEND_URL=https://$DOMAIN
 EOF
 
-# Build the frontend for production
+# Install dependencies
+npm install --legacy-peer-deps
+
+# Build the frontend
 echo "Building frontend (this may take a few minutes)..."
 npm run build
 
 print_status "Frontend built successfully"
 
-cd "$SCRIPT_DIR"
-
 # ============================================
-# Step 5: Deploy Frontend to Document Root
+# Step 5: Create systemd Services
 # ============================================
 echo ""
-echo "Step 5: Deploying frontend files..."
+echo "Step 5: Creating systemd services..."
 
-# Copy built files to document root
-if [ -d "$DOC_ROOT" ]; then
-    # Backup existing files
-    if [ "$(ls -A $DOC_ROOT)" ]; then
-        sudo mv "$DOC_ROOT" "${DOC_ROOT}_backup_$(date +%Y%m%d_%H%M%S)" 2>/dev/null || true
-        sudo mkdir -p "$DOC_ROOT"
-    fi
-    
-    sudo cp -r "$SCRIPT_DIR/frontend/build/"* "$DOC_ROOT/"
-    sudo chown -R apache:apache "$DOC_ROOT" 2>/dev/null || sudo chown -R www-data:www-data "$DOC_ROOT" 2>/dev/null || true
-    print_status "Frontend files deployed to $DOC_ROOT"
-else
-    print_error "Document root $DOC_ROOT does not exist"
-    exit 1
-fi
-
-# ============================================
-# Step 6: Create Backend Service
-# ============================================
-echo ""
-echo "Step 6: Creating backend service..."
-
-# Create systemd service for backend
-sudo tee /etc/systemd/system/bens-backend.service > /dev/null << EOF
+# Backend Service
+sudo tee /etc/systemd/system/bensroad-backend.service > /dev/null << EOF
 [Unit]
-Description=Ben's Road Service Backend API
+Description=Ben's Road Service Backend
 After=network.target
 
 [Service]
 Type=simple
 User=root
-WorkingDirectory=$SCRIPT_DIR/backend
-Environment="PATH=$SCRIPT_DIR/backend/venv/bin"
-ExecStart=$SCRIPT_DIR/backend/venv/bin/uvicorn server:app --host 127.0.0.1 --port 8001
+WorkingDirectory=$PROD_DIR/backend
+ExecStart=$PROD_DIR/backend/venv/bin/python3 -m uvicorn server:app --host 0.0.0.0 --port $BACKEND_PORT
 Restart=always
-RestartSec=10
+EnvironmentFile=$PROD_DIR/backend/.env
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-# Reload systemd and start service
-sudo systemctl daemon-reload
-sudo systemctl enable bens-backend
-sudo systemctl start bens-backend
+print_status "Backend service created"
 
-print_status "Backend service created and started"
+# Frontend Service
+sudo tee /etc/systemd/system/bensroad-frontend.service > /dev/null << EOF
+[Unit]
+Description=Ben's Road Service Frontend
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=$PROD_DIR/frontend
+ExecStart=/usr/bin/npx serve -s build -l $FRONTEND_PORT
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+print_status "Frontend service created"
+
+# Reload and start services
+sudo systemctl daemon-reload
+sudo systemctl enable bensroad-backend
+sudo systemctl enable bensroad-frontend
+sudo systemctl restart bensroad-backend
+sudo systemctl restart bensroad-frontend
+
+print_status "Services started"
 
 # ============================================
-# Step 7: Configure Apache
+# Step 6: Configure SELinux
 # ============================================
 echo ""
-echo "Step 7: Configuring Apache..."
+echo "Step 6: Configuring SELinux..."
 
-# Enable required Apache modules
-sudo dnf install -y mod_ssl 2>/dev/null || true
+sudo setsebool -P httpd_can_network_connect 1 2>/dev/null || true
+print_status "SELinux configured"
 
-# Check if proxy modules are available
-if ! httpd -M 2>/dev/null | grep -q proxy_module; then
-    print_warning "Enabling Apache proxy modules..."
+# ============================================
+# Step 7: Create .htaccess for Apache
+# ============================================
+echo ""
+echo "Step 7: Creating .htaccess..."
+
+read -p "Enter your document root path (e.g., /home/bensroaduni2/public_html): " DOC_ROOT
+if [ -z "$DOC_ROOT" ]; then
+    DOC_ROOT="/home/bensroaduni2/public_html"
 fi
 
-# Create .htaccess for API routing
-sudo tee "$DOC_ROOT/.htaccess" > /dev/null << 'EOF'
+# Create .htaccess
+sudo tee $DOC_ROOT/.htaccess > /dev/null << EOF
 RewriteEngine On
 
-# Handle React Router (SPA)
-RewriteBase /
-RewriteRule ^index\.html$ - [L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !^/api
-RewriteRule . /index.html [L]
-
-# Proxy API requests to backend
+# Proxy API requests to backend (port $BACKEND_PORT)
 RewriteCond %{REQUEST_URI} ^/api
-RewriteRule ^api/(.*)$ http://127.0.0.1:8001/api/$1 [P,L]
+RewriteRule ^api/(.*)$ http://127.0.0.1:$BACKEND_PORT/api/\$1 [P,L]
 
-# Security headers
-Header always set X-Content-Type-Options nosniff
-Header always set X-Frame-Options SAMEORIGIN
-Header always set X-XSS-Protection "1; mode=block"
+# Proxy all other requests to frontend (port $FRONTEND_PORT)
+RewriteCond %{REQUEST_URI} !^/api
+RewriteRule ^(.*)$ http://127.0.0.1:$FRONTEND_PORT/\$1 [P,L]
 EOF
 
-# Create Apache config for the virtual host (if not using cPanel)
-APACHE_CONF="/etc/httpd/conf.d/bens-road-service.conf"
-sudo tee "$APACHE_CONF" > /dev/null << EOF
-# Ben's Road Service LLC - Apache Configuration
+print_status ".htaccess created at $DOC_ROOT"
 
-# Enable proxy modules
-LoadModule proxy_module modules/mod_proxy.so
-LoadModule proxy_http_module modules/mod_proxy_http.so
+# ============================================
+# Step 8: Create Update Script
+# ============================================
+echo ""
+echo "Step 8: Creating update script..."
 
-<VirtualHost *:80>
-    ServerName $DOMAIN
-    ServerAlias www.$DOMAIN
-    DocumentRoot $DOC_ROOT
-    
-    <Directory $DOC_ROOT>
-        Options -Indexes +FollowSymLinks
-        AllowOverride All
-        Require all granted
-    </Directory>
-    
-    # Proxy API requests to FastAPI backend
-    ProxyPreserveHost On
-    ProxyPass /api/ http://127.0.0.1:8001/api/
-    ProxyPassReverse /api/ http://127.0.0.1:8001/api/
-    
-    # Logging
-    ErrorLog logs/${DOMAIN}-error.log
-    CustomLog logs/${DOMAIN}-access.log combined
-</VirtualHost>
+cat > $GIT_REPO_DIR/update.sh << EOF
+#!/bin/bash
+cd $GIT_REPO_DIR
+git fetch origin
+git pull origin main
+cp -r backend/* $PROD_DIR/backend/
+cp -r frontend/* $PROD_DIR/frontend/
+cd $PROD_DIR/frontend
+npm install --legacy-peer-deps
+npm run build
+sudo systemctl restart bensroad-backend
+sudo systemctl restart bensroad-frontend
+echo "✓ Update complete!"
 EOF
 
-# Test Apache config
-if sudo httpd -t 2>&1 | grep -q "Syntax OK"; then
-    print_status "Apache configuration is valid"
-    sudo systemctl restart httpd
-else
-    print_warning "Apache config test failed. You may need to configure manually in cPanel."
-fi
-
-print_status "Apache configured"
-
-# ============================================
-# Step 8: SELinux Configuration (AlmaLinux)
-# ============================================
-echo ""
-echo "Step 8: Configuring SELinux..."
-
-# Allow Apache to connect to network (for proxy)
-sudo setsebool -P httpd_can_network_connect 1 2>/dev/null || true
-print_status "SELinux configured for Apache proxy"
-
-# ============================================
-# Step 9: Firewall Configuration
-# ============================================
-echo ""
-echo "Step 9: Configuring Firewall..."
-
-# Open HTTP and HTTPS ports
-sudo firewall-cmd --permanent --add-service=http 2>/dev/null || true
-sudo firewall-cmd --permanent --add-service=https 2>/dev/null || true
-sudo firewall-cmd --reload 2>/dev/null || true
-print_status "Firewall configured"
+chmod +x $GIT_REPO_DIR/update.sh
+print_status "Update script created: $GIT_REPO_DIR/update.sh"
 
 # ============================================
 # Done!
@@ -307,30 +260,36 @@ echo "============================================"
 echo -e "${GREEN}  DEPLOYMENT COMPLETE! ${NC}"
 echo "============================================"
 echo ""
-echo "Your website is now running at:"
-echo -e "  ${GREEN}http://${DOMAIN}${NC}"
+echo "Your website should now be running at:"
+echo -e "  ${GREEN}https://${DOMAIN}${NC}"
 echo ""
 echo "Admin Dashboard:"
-echo -e "  ${GREEN}http://${DOMAIN}/admin${NC}"
+echo -e "  ${GREEN}https://${DOMAIN}/admin${NC}"
 echo "  Username: admin"
 echo "  Password: bensroadservice2024"
 echo ""
 echo "============================================"
-echo "  IMPORTANT FOR cPANEL USERS"
+echo "  SERVICE COMMANDS"
 echo "============================================"
 echo ""
-echo "If API calls don't work, add this to your"
-echo "cPanel Apache Configuration or .htaccess:"
+echo "Check status:"
+echo "  sudo systemctl status bensroad-backend"
+echo "  sudo systemctl status bensroad-frontend"
 echo ""
-echo "  ProxyPass /api/ http://127.0.0.1:8001/api/"
-echo "  ProxyPassReverse /api/ http://127.0.0.1:8001/api/"
+echo "Restart services:"
+echo "  sudo systemctl restart bensroad-backend"
+echo "  sudo systemctl restart bensroad-frontend"
+echo ""
+echo "View logs:"
+echo "  journalctl -u bensroad-backend -f"
+echo "  journalctl -u bensroad-frontend -f"
+echo ""
+echo "Update from GitHub:"
+echo "  cd $GIT_REPO_DIR && ./update.sh"
 echo ""
 echo "============================================"
-echo ""
-echo "Useful commands:"
-echo "  - Check backend: sudo systemctl status bens-backend"
-echo "  - View logs: sudo journalctl -u bens-backend -f"
-echo "  - Restart backend: sudo systemctl restart bens-backend"
-echo "  - Restart Apache: sudo systemctl restart httpd"
-echo ""
+echo "  PORTS USED"
+echo "============================================"
+echo "  Backend:  $BACKEND_PORT"
+echo "  Frontend: $FRONTEND_PORT"
 echo "============================================"
