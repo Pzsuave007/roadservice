@@ -4,7 +4,7 @@ from datetime import datetime
 import json
 import base64
 
-BACKEND_URL = "https://ben-towing-quotes.preview.emergentagent.com"
+BACKEND_URL = "https://towing-service-demo.preview.emergentagent.com"
 API = f"{BACKEND_URL}/api"
 
 class BensRoadServiceTester:
