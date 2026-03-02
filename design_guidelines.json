@@ -1,0 +1,199 @@
+{
+  "brand_identity": {
+    "name": "Ben's Road Service LLC",
+    "mission": "To provide rapid, reliable towing and roadside assistance across Oregon, 24/7.",
+    "emotional_tone": "Reliable, Urgent, Professional, Safe, Local.",
+    "visual_archetype": "The Night Watchman",
+    "theme_mode": "dark"
+  },
+  "typography": {
+    "font_family": {
+      "headings": "Chivo, sans-serif",
+      "body": "Manrope, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "scale": {
+      "display": "text-5xl md:text-7xl font-black tracking-tight leading-none",
+      "h1": "text-4xl md:text-5xl font-bold tracking-tight",
+      "h2": "text-3xl md:text-4xl font-bold tracking-tight",
+      "h3": "text-2xl font-semibold",
+      "body_lg": "text-lg leading-relaxed",
+      "body": "text-base leading-relaxed text-gray-400",
+      "caption": "text-sm text-gray-500 uppercase tracking-widest"
+    },
+    "weights": {
+      "regular": 400,
+      "medium": 500,
+      "bold": 700,
+      "black": 900
+    },
+    "import_url": "https://fonts.googleapis.com/css2?family=Chivo:wght@400;700;900&family=Manrope:wght@400;500;700&display=swap"
+  },
+  "colors": {
+    "palette": {
+      "background": {
+        "default": "#09090b",
+        "secondary": "#18181b",
+        "tertiary": "#27272a"
+      },
+      "surface": {
+        "default": "#18181b",
+        "elevated": "#27272a",
+        "glass": "rgba(24, 24, 27, 0.7)"
+      },
+      "primary": {
+        "default": "#f97316",
+        "hover": "#ea580c",
+        "active": "#c2410c",
+        "foreground": "#ffffff"
+      },
+      "secondary_accent": {
+        "default": "#ef4444",
+        "hover": "#dc2626"
+      },
+      "text": {
+        "primary": "#fafafa",
+        "secondary": "#a1a1aa",
+        "muted": "#71717a",
+        "inverse": "#09090b"
+      },
+      "border": {
+        "default": "#27272a",
+        "subtle": "#3f3f46"
+      },
+      "status": {
+        "success": "#22c55e",
+        "warning": "#eab308",
+        "error": "#ef4444",
+        "info": "#3b82f6"
+      }
+    },
+    "gradients": {
+      "emergency": "linear-gradient(135deg, #f97316 0%, #ef4444 100%)",
+      "dark_overlay": "linear-gradient(to bottom, rgba(9,9,11,0) 0%, rgba(9,9,11,0.8) 50%, #09090b 100%)",
+      "glass_shine": "linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.05) 25%, transparent 30%)"
+    }
+  },
+  "layout_system": {
+    "container": {
+      "max_width": "max-w-7xl",
+      "padding": "px-4 md:px-8 lg:px-12"
+    },
+    "grid": {
+      "bento_primary": "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6",
+      "features": "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+    },
+    "spacing": {
+      "section_y": "py-16 md:py-24",
+      "element_gap": "gap-4"
+    },
+    "z_index": {
+      "sticky_nav": "z-50",
+      "modal": "z-50",
+      "dropdown": "z-40",
+      "overlay": "z-30",
+      "base": "z-0"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": {
+        "classes": "bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-full px-8 py-4 transition-all shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_30px_rgba(249,115,22,0.5)] active:scale-95",
+        "interaction": "transform transition-transform active:scale-95"
+      },
+      "secondary": {
+        "classes": "bg-white/10 hover:bg-white/20 text-white font-semibold rounded-full px-8 py-4 backdrop-blur-sm border border-white/10 transition-all",
+        "interaction": "transform transition-transform active:scale-95"
+      },
+      "emergency": {
+        "classes": "bg-gradient-to-r from-orange-500 to-red-600 text-white font-black uppercase tracking-wider rounded-lg px-6 py-3 animate-pulse-slow shadow-lg shadow-orange-500/20",
+        "interaction": "hover:animate-none hover:scale-105 transition-transform"
+      }
+    },
+    "cards": {
+      "glass": "bg-zinc-900/50 backdrop-blur-md border border-white/5 rounded-2xl p-6 md:p-8 hover:border-orange-500/30 transition-colors duration-300",
+      "solid": "bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl"
+    },
+    "inputs": {
+      "default": "bg-zinc-950/50 border border-zinc-800 rounded-lg px-4 py-3 text-white placeholder:text-zinc-500 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all outline-none"
+    }
+  },
+  "assets": {
+    "icons": {
+      "library": "lucide-react",
+      "style": "stroke-width: 1.5px; size: 24px",
+      "primary_color": "text-orange-500"
+    },
+    "images": {
+      "hero_bg": {
+        "url": "https://images.unsplash.com/photo-1758200988734-8ffcc3d3210b?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "alt": "Ben's Road Service Tow Truck at Night",
+        "usage": "Full screen hero background with heavy dark overlay"
+      },
+      "service_towing": {
+        "url": "https://images.unsplash.com/photo-1700619402419-190a01c22047?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "alt": "Flatbed Towing Service",
+        "usage": "Service card image"
+      },
+      "service_tire": {
+        "url": "https://images.unsplash.com/photo-1764015805414-df7de89d405b?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "alt": "Tire Change Service",
+        "usage": "Service card image"
+      },
+      "service_accident": {
+        "url": "https://images.unsplash.com/photo-1764565686660-116f42ffec5b?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "alt": "Accident Assistance",
+        "usage": "Accident section background or card"
+      },
+      "map_placeholder": {
+        "description": "Use a dark-themed map style (Snazzy Maps 'Dark' or Mapbox Dark) centered on Salem, OR.",
+        "url": "https://images.unsplash.com/photo-1611216625141-d52dc0441830?crop=entropy&cs=srgb&fm=jpg&q=85"
+      }
+    }
+  },
+  "accessibility": {
+    "contrast_check": "Ensure all text on dark backgrounds is at least text-gray-300 or lighter. Primary buttons must have white text.",
+    "focus_states": "All interactive elements must have a visible ring-2 ring-orange-500 focus state.",
+    "screen_readers": "All icon-only buttons must have aria-label. Images must have alt text."
+  },
+  "motion_library": {
+    "hero_enter": {
+      "initial": { "opacity": 0, "y": 20 },
+      "animate": { "opacity": 1, "y": 0 },
+      "transition": { "duration": 0.6, "ease": "easeOut" }
+    },
+    "stagger_children": {
+      "container": {
+        "hidden": { "opacity": 0 },
+        "show": {
+          "opacity": 1,
+          "transition": { "staggerChildren": 0.1 }
+        }
+      },
+      "item": {
+        "hidden": { "opacity": 0, "y": 20 },
+        "show": { "opacity": 1, "y": 0 }
+      }
+    }
+  },
+  "instructions_to_main_agent": {
+    "general": "Build a single-page React app (Landing Page) + Admin Dashboard (Login/Protected). Use 'lucide-react' for icons. Use 'sonner' for toasts.",
+    "layout_rules": "Always use <main className='min-h-screen bg-background text-foreground font-body'> wrapper. Avoid pure white backgrounds; use zinc-950 for dark mode feel.",
+    "mobile_optimization": "Ensure the 'Call Now' FAB is sticky on mobile screens (bottom-4 right-4 or full width bottom bar). Touch targets must be >44px.",
+    "language_toggle": "Implement a global context or state for Language (EN/ES). All text content must be switchable.",
+    "quote_calculator": "Create a distinct section with a form: Vehicle Type, Service Needed, Location (Zip), Dropoff (Zip). Calculate estimated price: Base ($75) + Mileage ($3/mile). This is an ESTIMATE.",
+    "admin_dashboard": "Simple table view of quote requests. Protect with basic hardcoded auth for MVP (e.g., user: admin, pass: bensroadservice2024).",
+    "theme_setup": "Force dark mode by default in tailwind config or html class. Do not implement a light mode toggle unless requested later."
+  },
+  "universal_guidelines": [
+    "You tend to converge toward generic, 'on distribution' outputs. Avoid this.",
+    "Don't make generic centered layouts. Use asymmetry.",
+    "Create depth through layered design elements with z-index hierarchy.",
+    "Use glass-morphism effects with backdrop filters.",
+    "Every interaction needs micro-animations.",
+    "Use 2-3x more spacing than feels comfortable.",
+    "Main agent relies on these image URLs. Missing categories = main agent will use placeholder text which is FORBIDDEN.",
+    "Components MUST use named exports.",
+    "Pages MUST use default exports."
+  ]
+}
