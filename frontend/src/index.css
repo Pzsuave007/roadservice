@@ -6,30 +6,30 @@
 
 @layer base {
   :root {
-    --background: 222 47% 11%;
+    --background: 220 20% 14%;
     --foreground: 210 40% 98%;
-    --card: 222 47% 15%;
+    --card: 220 20% 18%;
     --card-foreground: 210 40% 98%;
-    --popover: 222 47% 15%;
+    --popover: 220 20% 18%;
     --popover-foreground: 210 40% 98%;
-    --primary: 32 98% 50%;
-    --primary-foreground: 222 47% 11%;
-    --secondary: 217 91% 60%;
+    --primary: 25 95% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 100% 52%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 25%;
+    --muted: 220 15% 25%;
     --muted-foreground: 215 20% 75%;
-    --accent: 45 93% 58%;
-    --accent-foreground: 222 47% 11%;
+    --accent: 45 100% 51%;
+    --accent-foreground: 220 20% 14%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 217 33% 30%;
-    --input: 217 33% 30%;
-    --ring: 32 98% 50%;
+    --border: 220 15% 30%;
+    --input: 220 15% 30%;
+    --ring: 25 95% 53%;
     --radius: 0.75rem;
-    --chart-1: 32 98% 50%;
-    --chart-2: 217 91% 60%;
+    --chart-1: 25 95% 53%;
+    --chart-2: 210 100% 52%;
     --chart-3: 142 71% 45%;
-    --chart-4: 45 93% 58%;
+    --chart-4: 45 100% 51%;
     --chart-5: 0 84% 60%;
   }
 }
@@ -52,19 +52,19 @@
 
 @layer utilities {
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-yellow-400;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-300;
   }
   
   .glass-card {
-    @apply bg-slate-800/70 backdrop-blur-md border border-slate-700/50 rounded-2xl;
+    @apply bg-gray-800/80 backdrop-blur-md border border-gray-700/50 rounded-2xl;
   }
   
   .emergency-glow {
-    box-shadow: 0 0 30px rgba(251, 146, 60, 0.4);
+    box-shadow: 0 0 25px rgba(251, 146, 60, 0.5), 0 0 50px rgba(251, 146, 60, 0.2);
   }
   
   .emergency-glow-hover:hover {
-    box-shadow: 0 0 40px rgba(251, 146, 60, 0.6);
+    box-shadow: 0 0 35px rgba(251, 146, 60, 0.6), 0 0 70px rgba(251, 146, 60, 0.3);
   }
 }
 
@@ -74,25 +74,27 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #1e293b;
+  background: #1f2937;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #475569;
+  background: #4b5563;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: #6b7280;
 }
 
 /* Animations */
 @keyframes pulse-slow {
   0%, 100% {
     opacity: 1;
+    transform: scale(1);
   }
   50% {
-    opacity: 0.85;
+    opacity: 0.9;
+    transform: scale(1.02);
   }
 }
 

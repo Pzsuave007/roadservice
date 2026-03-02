@@ -3,19 +3,21 @@
 .hero-overlay {
   background: linear-gradient(
     to bottom,
-    rgba(15, 23, 42, 0.6) 0%,
-    rgba(15, 23, 42, 0.85) 50%,
-    #0f172a 100%
+    rgba(17, 24, 39, 0.5) 0%,
+    rgba(17, 24, 39, 0.7) 50%,
+    rgba(17, 24, 39, 0.95) 100%
   );
 }
 
 .service-card {
   transition: all 0.3s ease;
+  background: linear-gradient(135deg, rgba(31, 41, 55, 0.9) 0%, rgba(17, 24, 39, 0.9) 100%);
 }
 
 .service-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(251, 146, 60, 0.5);
+  transform: translateY(-6px);
+  border-color: rgba(251, 146, 60, 0.6);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(251, 146, 60, 0.1);
 }
 
 .cta-button {
@@ -49,7 +51,7 @@
 .quote-form select:focus {
   outline: none;
   border-color: #fb923c;
-  box-shadow: 0 0 0 2px rgba(251, 146, 60, 0.3);
+  box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.2);
 }
 
 /* Star rating */
@@ -73,16 +75,16 @@
 .admin-table td {
   padding: 1rem;
   text-align: left;
-  border-bottom: 1px solid #334155;
+  border-bottom: 1px solid #374151;
 }
 
 .admin-table th {
-  background: #1e293b;
+  background: #1f2937;
   font-weight: 600;
 }
 
 .admin-table tr:hover {
-  background: #1e293b;
+  background: #1f2937;
 }
 
 /* Status badges */
@@ -112,4 +114,13 @@
 .status-cancelled {
   background: rgba(239, 68, 68, 0.2);
   color: #ef4444;
+}
+
+/* Section backgrounds */
+.section-light {
+  background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
+}
+
+.section-dark {
+  background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
 }
