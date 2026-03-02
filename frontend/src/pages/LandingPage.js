@@ -902,7 +902,7 @@ export default function LandingPage() {
       <section className="py-10 md:py-20 px-4 section-dark" data-testid="service-area-section">
         <div className="max-w-6xl mx-auto">
           <p className="text-blue-400 text-center font-medium mb-1 text-sm">{language === 'en' ? 'Coverage' : 'Cobertura'}</p>
-          <h2 className="text-2xl md:text-4xl font-bold text-center mb-2">{t('serviceAreaTitle')}</h2>
+          <h2 className="text-2xl md:text-4xl font-bold text-center mb-2 text-white">{t('serviceAreaTitle')}</h2>
           <p className="text-gray-400 text-center mb-4 md:mb-8 text-sm">
             {language === 'en' 
               ? 'Serving Salem and up to 100 miles throughout Oregon!' 
@@ -946,7 +946,7 @@ export default function LandingPage() {
         
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <AlertTriangle className="w-12 h-12 md:w-16 md:h-16 text-red-800 mx-auto mb-4 md:mb-6" />
-          <h2 className="text-2xl md:text-4xl font-bold mb-2 md:mb-4">{t('accidentTitle')}</h2>
+          <h2 className="text-2xl md:text-4xl font-bold mb-2 md:mb-4 text-white">{t('accidentTitle')}</h2>
           <p className="text-base md:text-xl text-gray-300 mb-4 md:mb-8">{t('accidentSubtitle')}</p>
           
           <div className="grid grid-cols-2 gap-2 md:gap-4 max-w-2xl mx-auto mb-6 md:mb-10">
@@ -1021,7 +1021,7 @@ export default function LandingPage() {
         <div className="absolute inset-0 bg-gray-900/85" />
         
         <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl md:text-5xl font-black mb-2 md:mb-4">{t('finalCtaTitle')}</h2>
+          <h2 className="text-2xl md:text-5xl font-black mb-2 md:mb-4 text-white">{t('finalCtaTitle')}</h2>
           <p className="text-base md:text-2xl text-gray-300 mb-6 md:mb-10">{t('finalCtaSubtitle')}</p>
           
           <a
