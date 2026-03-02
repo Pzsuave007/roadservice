@@ -49,6 +49,15 @@ const API = `${BACKEND_URL}/api`;
 const PHONE_NUMBER = '9713886300';
 const PHONE_DISPLAY = '(971) 388-6300';
 
+// Client's actual tow truck images
+const CLIENT_IMAGES = {
+  hero: 'https://customer-assets.emergentagent.com/job_quick-towing-pro/artifacts/q4hhmpd9_WhatsApp%20Image%202026-03-02%20at%207.33.36%20AM%20%281%29.jpeg',
+  flatbedDay: 'https://customer-assets.emergentagent.com/job_quick-towing-pro/artifacts/nczsdil9_WhatsApp%20Image%202026-03-02%20at%207.33.36%20AM%20%282%29.jpeg',
+  gasStation: 'https://customer-assets.emergentagent.com/job_quick-towing-pro/artifacts/202b513u_WhatsApp%20Image%202026-03-02%20at%207.33.36%20AM%20%283%29.jpeg',
+  truckWithPickup: 'https://customer-assets.emergentagent.com/job_quick-towing-pro/artifacts/lsayurd5_WhatsApp%20Image%202026-03-02%20at%207.33.36%20AM%20%284%29.jpeg',
+  truckCloseup: 'https://customer-assets.emergentagent.com/job_quick-towing-pro/artifacts/7xjs889d_WhatsApp%20Image%202026-03-02%20at%207.33.36%20AM%20%285%29.jpeg',
+};
+
 export default function LandingPage() {
   const { t, language, toggleLanguage } = useLanguage();
   const [quoteStep, setQuoteStep] = useState('form'); // form, estimate, submitted
@@ -204,7 +213,7 @@ export default function LandingPage() {
       <section 
         className="relative min-h-screen flex items-center justify-center pt-20"
         style={{
-          backgroundImage: `url(https://images.unsplash.com/photo-1758200988734-8ffcc3d3210b?crop=entropy&cs=srgb&fm=jpg&q=85)`,
+          backgroundImage: `url(${CLIENT_IMAGES.hero})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -575,6 +584,80 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Our Fleet Gallery */}
+      <section className="py-20 px-4" data-testid="gallery-section">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+            {language === 'en' ? 'Our Fleet in Action' : 'Nuestra Flota en Acción'}
+          </h2>
+          <p className="text-slate-400 text-center mb-12">
+            {language === 'en' ? 'Professional equipment ready to serve you 24/7' : 'Equipo profesional listo para servirle 24/7'}
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="glass-card overflow-hidden group">
+              <img 
+                src={CLIENT_IMAGES.flatbedDay} 
+                alt="Flatbed towing service" 
+                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div className="p-4">
+                <h3 className="font-bold text-lg">{t('flatbedTowing')}</h3>
+                <p className="text-slate-400 text-sm">{language === 'en' ? 'Safe transport for all vehicles' : 'Transporte seguro para todos los vehículos'}</p>
+              </div>
+            </div>
+            
+            <div className="glass-card overflow-hidden group">
+              <img 
+                src={CLIENT_IMAGES.truckWithPickup} 
+                alt="Heavy duty towing" 
+                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div className="p-4">
+                <h3 className="font-bold text-lg">{language === 'en' ? 'Heavy Duty Capable' : 'Capacidad para Carga Pesada'}</h3>
+                <p className="text-slate-400 text-sm">{language === 'en' ? 'Trucks, SUVs, and more' : 'Trocas, SUVs, y más'}</p>
+              </div>
+            </div>
+            
+            <div className="glass-card overflow-hidden group">
+              <img 
+                src={CLIENT_IMAGES.gasStation} 
+                alt="24/7 Service" 
+                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div className="p-4">
+                <h3 className="font-bold text-lg">{t('available247')}</h3>
+                <p className="text-slate-400 text-sm">{language === 'en' ? 'Always ready when you need us' : 'Siempre listos cuando nos necesite'}</p>
+              </div>
+            </div>
+            
+            <div className="glass-card overflow-hidden group">
+              <img 
+                src={CLIENT_IMAGES.hero} 
+                alt="Night emergency service" 
+                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div className="p-4">
+                <h3 className="font-bold text-lg">{t('emergencyTowing')}</h3>
+                <p className="text-slate-400 text-sm">{language === 'en' ? 'Day or night, we\'re there' : 'De día o de noche, estamos ahí'}</p>
+              </div>
+            </div>
+            
+            <div className="glass-card overflow-hidden group md:col-span-2">
+              <img 
+                src={CLIENT_IMAGES.truckCloseup} 
+                alt="Ben's Road Service truck" 
+                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div className="p-4">
+                <h3 className="font-bold text-lg">Ben's Road Service LLC</h3>
+                <p className="text-slate-400 text-sm">{language === 'en' ? 'Professional, reliable, and ready to help' : 'Profesional, confiable, y listo para ayudar'}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Service Area Map */}
       <section className="py-20 px-4" data-testid="service-area-section">
         <div className="max-w-6xl mx-auto">
@@ -602,7 +685,7 @@ export default function LandingPage() {
       <section 
         className="py-20 px-4 relative"
         style={{
-          backgroundImage: `url(https://images.unsplash.com/photo-1764565686660-116f42ffec5b?crop=entropy&cs=srgb&fm=jpg&q=85)`,
+          backgroundImage: `url(${CLIENT_IMAGES.truckWithPickup})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -674,7 +757,7 @@ export default function LandingPage() {
       <section 
         className="py-24 px-4 relative"
         style={{
-          backgroundImage: `url(https://images.unsplash.com/photo-1758200988734-8ffcc3d3210b?crop=entropy&cs=srgb&fm=jpg&q=85)`,
+          backgroundImage: `url(${CLIENT_IMAGES.gasStation})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
