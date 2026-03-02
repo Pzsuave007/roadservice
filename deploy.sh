@@ -97,14 +97,9 @@ source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 
-# Create .env file
-read -p "Enter MongoDB connection string (press Enter for localhost): " MONGO_URL
-if [ -z "$MONGO_URL" ]; then
-    MONGO_URL="mongodb://localhost:27017"
-fi
-
+# Create .env file (using localhost MongoDB)
 cat > .env << EOF
-MONGO_URL=$MONGO_URL
+MONGO_URL=mongodb://localhost:27017
 DB_NAME=bens_road_service
 EOF
 
