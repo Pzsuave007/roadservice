@@ -6,31 +6,31 @@
 
 @layer base {
   :root {
-    --background: 240 10% 4%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 7%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 7%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 24 95% 53%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 240 6% 10%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 6% 10%;
-    --muted-foreground: 240 5% 65%;
-    --accent: 0 72% 51%;
-    --accent-foreground: 0 0% 100%;
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 15%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 15%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 32 98% 50%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 217 91% 60%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 25%;
+    --muted-foreground: 215 20% 75%;
+    --accent: 45 93% 58%;
+    --accent-foreground: 222 47% 11%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 240 6% 20%;
-    --input: 240 6% 20%;
-    --ring: 24 95% 53%;
+    --border: 217 33% 30%;
+    --input: 217 33% 30%;
+    --ring: 32 98% 50%;
     --radius: 0.75rem;
-    --chart-1: 24 95% 53%;
-    --chart-2: 0 72% 51%;
+    --chart-1: 32 98% 50%;
+    --chart-2: 217 91% 60%;
     --chart-3: 142 71% 45%;
-    --chart-4: 197 37% 24%;
-    --chart-5: 27 87% 67%;
+    --chart-4: 45 93% 58%;
+    --chart-5: 0 84% 60%;
   }
 }
 
@@ -52,19 +52,19 @@
 
 @layer utilities {
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-red-500;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-yellow-400;
   }
   
   .glass-card {
-    @apply bg-zinc-900/50 backdrop-blur-md border border-white/5 rounded-2xl;
+    @apply bg-slate-800/70 backdrop-blur-md border border-slate-700/50 rounded-2xl;
   }
   
   .emergency-glow {
-    box-shadow: 0 0 30px rgba(249, 115, 22, 0.3);
+    box-shadow: 0 0 30px rgba(251, 146, 60, 0.4);
   }
   
   .emergency-glow-hover:hover {
-    box-shadow: 0 0 40px rgba(249, 115, 22, 0.5);
+    box-shadow: 0 0 40px rgba(251, 146, 60, 0.6);
   }
 }
 
@@ -74,16 +74,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #18181b;
+  background: #1e293b;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #3f3f46;
+  background: #475569;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #52525b;
+  background: #64748b;
 }
 
 /* Animations */
@@ -92,7 +92,7 @@
     opacity: 1;
   }
   50% {
-    opacity: 0.8;
+    opacity: 0.85;
   }
 }
 

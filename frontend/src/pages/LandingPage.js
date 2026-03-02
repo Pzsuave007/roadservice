@@ -158,12 +158,12 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-white">
+    <div className="min-h-screen bg-slate-900 text-white">
       {/* Sticky Top Bar */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-zinc-950/95 backdrop-blur-md border-b border-zinc-800">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-700">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-green-500">
+            <div className="flex items-center gap-2 text-emerald-400">
               <Clock className="w-4 h-4" />
               <span className="text-sm font-semibold">{t('openNow')}</span>
             </div>
@@ -172,7 +172,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={toggleLanguage}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-zinc-800 hover:bg-zinc-700 transition-colors text-sm"
+              className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-700 hover:bg-slate-600 transition-colors text-sm"
               data-testid="language-toggle"
             >
               <Globe className="w-4 h-4" />
@@ -181,7 +181,7 @@ export default function LandingPage() {
             
             <a
               href={`sms:${PHONE_NUMBER}`}
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-800 hover:bg-zinc-700 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-600 hover:bg-blue-500 transition-colors"
               data-testid="header-text-btn"
             >
               <MessageSquare className="w-4 h-4" />
@@ -190,7 +190,7 @@ export default function LandingPage() {
             
             <a
               href={`tel:${PHONE_NUMBER}`}
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-bold transition-colors emergency-glow"
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-orange-500 to-amber-400 text-slate-900 font-bold transition-colors emergency-glow"
               data-testid="header-call-btn"
             >
               <Phone className="w-4 h-4" />
@@ -220,14 +220,14 @@ export default function LandingPage() {
             <p className="text-2xl md:text-4xl font-bold text-white">
               {t('heroSubtitle')}
             </p>
-            <p className="text-xl md:text-2xl text-zinc-300">
+            <p className="text-xl md:text-2xl text-slate-300">
               {t('heroTagline')}
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
               <a
                 href={`tel:${PHONE_NUMBER}`}
-                className="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-5 rounded-full bg-gradient-to-r from-orange-500 to-red-600 text-white font-black text-xl uppercase tracking-wider shadow-lg shadow-orange-500/30 hover:scale-105 transition-transform cta-button"
+                className="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-5 rounded-full bg-gradient-to-r from-orange-500 to-amber-400 text-slate-900 font-black text-xl uppercase tracking-wider shadow-lg shadow-orange-500/40 hover:scale-105 transition-transform cta-button"
                 data-testid="hero-call-btn"
               >
                 <Phone className="w-6 h-6" />
@@ -235,7 +235,7 @@ export default function LandingPage() {
               </a>
               <a
                 href="#quote"
-                className="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-5 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold text-lg backdrop-blur-sm border border-white/10 transition-all cta-button"
+                className="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-5 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-lg border border-blue-500 transition-all cta-button"
                 data-testid="hero-quote-btn"
               >
                 <FileText className="w-5 h-5" />
@@ -243,14 +243,14 @@ export default function LandingPage() {
               </a>
             </div>
             
-            <p className="text-zinc-400 pt-4 flex items-center justify-center gap-2">
-              <MapPin className="w-4 h-4 text-orange-500" />
+            <p className="text-slate-300 pt-4 flex items-center justify-center gap-2">
+              <MapPin className="w-4 h-4 text-orange-400" />
               {t('servingArea')}
             </p>
             
             {/* Trust Badges */}
             <div className="flex flex-wrap items-center justify-center gap-4 pt-8">
-              <Badge variant="outline" className="px-4 py-2 border-green-500/50 text-green-400 bg-green-500/10">
+              <Badge variant="outline" className="px-4 py-2 border-emerald-500/50 text-emerald-400 bg-emerald-500/10">
                 <Shield className="w-4 h-4 mr-2" />
                 {t('licensed')}
               </Badge>
@@ -280,17 +280,17 @@ export default function LandingPage() {
               return (
                 <div
                   key={service.key}
-                  className="glass-card p-6 service-card hover:border-orange-500/30"
+                  className="glass-card p-6 service-card hover:border-orange-400/50"
                   data-testid={`service-card-${service.type}`}
                 >
-                  <div className="w-14 h-14 rounded-xl bg-orange-500/20 flex items-center justify-center mb-4">
-                    <Icon className="w-7 h-7 text-orange-500" />
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-500/20 to-amber-500/20 flex items-center justify-center mb-4">
+                    <Icon className="w-7 h-7 text-orange-400" />
                   </div>
                   <h3 className="text-xl font-bold mb-2">{t(service.key)}</h3>
-                  <p className="text-zinc-400 text-sm mb-4">{t(`${service.key}Desc`)}</p>
+                  <p className="text-slate-400 text-sm mb-4">{t(`${service.key}Desc`)}</p>
                   <a
                     href={`tel:${PHONE_NUMBER}`}
-                    className="inline-flex items-center gap-2 text-orange-500 hover:text-orange-400 font-semibold text-sm"
+                    className="inline-flex items-center gap-2 text-orange-400 hover:text-orange-300 font-semibold text-sm"
                   >
                     <Phone className="w-4 h-4" />
                     {t('callNow')}
@@ -303,11 +303,11 @@ export default function LandingPage() {
       </section>
 
       {/* Quote Calculator Section */}
-      <section id="quote" className="py-20 px-4 bg-zinc-950/50" data-testid="quote-section">
+      <section id="quote" className="py-20 px-4 bg-slate-800/50" data-testid="quote-section">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-3xl md:text-4xl font-bold mb-3">{t('quoteTitle')}</h2>
-            <p className="text-zinc-400">{t('quoteSubtitle')}</p>
+            <p className="text-slate-400">{t('quoteSubtitle')}</p>
           </div>
           
           <div className="glass-card p-8">
@@ -321,7 +321,7 @@ export default function LandingPage() {
                       placeholder="e.g., 123 Main St, Salem OR"
                       value={formData.pickupLocation}
                       onChange={(e) => handleInputChange('pickupLocation', e.target.value)}
-                      className="bg-zinc-950/50 border-zinc-800 focus:border-orange-500"
+                      className="bg-slate-900/50 border-slate-600 focus:border-orange-400"
                       data-testid="pickup-input"
                     />
                   </div>
@@ -332,7 +332,7 @@ export default function LandingPage() {
                       placeholder="e.g., 456 Oak Ave, Salem OR"
                       value={formData.dropoffLocation}
                       onChange={(e) => handleInputChange('dropoffLocation', e.target.value)}
-                      className="bg-zinc-950/50 border-zinc-800 focus:border-orange-500"
+                      className="bg-slate-900/50 border-slate-600 focus:border-orange-400"
                       data-testid="dropoff-input"
                     />
                   </div>
@@ -345,16 +345,16 @@ export default function LandingPage() {
                       value={formData.vehicleType}
                       onValueChange={(value) => handleInputChange('vehicleType', value)}
                     >
-                      <SelectTrigger className="bg-zinc-950/50 border-zinc-800 text-white" data-testid="vehicle-select">
+                      <SelectTrigger className="bg-slate-900/50 border-slate-600 text-white" data-testid="vehicle-select">
                         <SelectValue placeholder={t('vehicleType')} />
                       </SelectTrigger>
-                      <SelectContent className="bg-zinc-900 border-zinc-700">
-                        <SelectItem value="sedan" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('sedan')}</SelectItem>
-                        <SelectItem value="suv" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('suv')}</SelectItem>
-                        <SelectItem value="truck" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('truck')}</SelectItem>
-                        <SelectItem value="motorcycle" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('motorcycle')}</SelectItem>
-                        <SelectItem value="van" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('van')}</SelectItem>
-                        <SelectItem value="other" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('other')}</SelectItem>
+                      <SelectContent className="bg-slate-800 border-slate-600">
+                        <SelectItem value="sedan" className="text-white hover:bg-slate-700 focus:bg-slate-700">{t('sedan')}</SelectItem>
+                        <SelectItem value="suv" className="text-white hover:bg-slate-700 focus:bg-slate-700">{t('suv')}</SelectItem>
+                        <SelectItem value="truck" className="text-white hover:bg-slate-700 focus:bg-slate-700">{t('truck')}</SelectItem>
+                        <SelectItem value="motorcycle" className="text-white hover:bg-slate-700 focus:bg-slate-700">{t('motorcycle')}</SelectItem>
+                        <SelectItem value="van" className="text-white hover:bg-slate-700 focus:bg-slate-700">{t('van')}</SelectItem>
+                        <SelectItem value="other" className="text-white hover:bg-slate-700 focus:bg-slate-700">{t('other')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -364,17 +364,17 @@ export default function LandingPage() {
                       value={formData.serviceType}
                       onValueChange={(value) => handleInputChange('serviceType', value)}
                     >
-                      <SelectTrigger className="bg-zinc-950/50 border-zinc-800 text-white" data-testid="service-select">
+                      <SelectTrigger className="bg-slate-900/50 border-slate-600 text-white" data-testid="service-select">
                         <SelectValue placeholder={t('serviceNeeded')} />
                       </SelectTrigger>
-                      <SelectContent className="bg-zinc-900 border-zinc-700">
-                        <SelectItem value="emergency_towing" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('emergencyTowing')}</SelectItem>
-                        <SelectItem value="flatbed_towing" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('flatbedTowing')}</SelectItem>
-                        <SelectItem value="accident_recovery" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('accidentRecovery')}</SelectItem>
-                        <SelectItem value="lockout" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('lockoutService')}</SelectItem>
-                        <SelectItem value="jump_start" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('jumpStart')}</SelectItem>
-                        <SelectItem value="tire_change" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('tireChange')}</SelectItem>
-                        <SelectItem value="long_distance" className="text-white hover:bg-zinc-800 focus:bg-zinc-800">{t('longDistance')}</SelectItem>
+                      <SelectContent className="bg-slate-800 border-slate-600">
+                        <SelectItem value="emergency_towing" className="text-white hover:bg-slate-700 focus:bg-slate-700">{t('emergencyTowing')}</SelectItem>
+                        <SelectItem value="flatbed_towing" className="text-white hover:bg-slate-700 focus:bg-slate-700">{t('flatbedTowing')}</SelectItem>
+                        <SelectItem value="accident_recovery" className="text-white hover:bg-slate-700 focus:bg-slate-700">{t('accidentRecovery')}</SelectItem>
+                        <SelectItem value="lockout" className="text-white hover:bg-slate-700 focus:bg-slate-700">{t('lockoutService')}</SelectItem>
+                        <SelectItem value="jump_start" className="text-white hover:bg-slate-700 focus:bg-slate-700">{t('jumpStart')}</SelectItem>
+                        <SelectItem value="tire_change" className="text-white hover:bg-slate-700 focus:bg-slate-700">{t('tireChange')}</SelectItem>
+                        <SelectItem value="long_distance" className="text-white hover:bg-slate-700 focus:bg-slate-700">{t('longDistance')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -389,7 +389,7 @@ export default function LandingPage() {
                       placeholder="(555) 123-4567"
                       value={formData.phoneNumber}
                       onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
-                      className="bg-zinc-950/50 border-zinc-800 focus:border-orange-500"
+                      className="bg-slate-900/50 border-slate-600 focus:border-orange-400"
                       data-testid="phone-input"
                     />
                   </div>
@@ -402,7 +402,7 @@ export default function LandingPage() {
                       max="500"
                       value={formData.estimatedDistance}
                       onChange={(e) => handleInputChange('estimatedDistance', parseInt(e.target.value) || 10)}
-                      className="bg-zinc-950/50 border-zinc-800 focus:border-orange-500"
+                      className="bg-slate-900/50 border-slate-600 focus:border-orange-400"
                       data-testid="distance-input"
                     />
                   </div>
@@ -414,8 +414,8 @@ export default function LandingPage() {
                     onClick={() => handleInputChange('isEmergency', true)}
                     className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all ${
                       formData.isEmergency
-                        ? 'bg-red-500/20 text-red-400 border-2 border-red-500'
-                        : 'bg-zinc-800 text-zinc-400 border-2 border-transparent'
+                        ? 'bg-orange-500/20 text-orange-400 border-2 border-orange-500'
+                        : 'bg-slate-700 text-slate-400 border-2 border-transparent'
                     }`}
                     data-testid="emergency-btn"
                   >
@@ -427,7 +427,7 @@ export default function LandingPage() {
                     className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all ${
                       !formData.isEmergency
                         ? 'bg-blue-500/20 text-blue-400 border-2 border-blue-500'
-                        : 'bg-zinc-800 text-zinc-400 border-2 border-transparent'
+                        : 'bg-slate-700 text-slate-400 border-2 border-transparent'
                     }`}
                     data-testid="scheduled-btn"
                   >
@@ -438,7 +438,7 @@ export default function LandingPage() {
                 <Button
                   onClick={getEstimate}
                   disabled={isSubmitting}
-                  className="w-full py-6 text-lg font-bold bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700"
+                  className="w-full py-6 text-lg font-bold bg-gradient-to-r from-orange-500 to-amber-400 hover:from-orange-600 hover:to-amber-500 text-slate-900"
                   data-testid="get-estimate-btn"
                 >
                   {isSubmitting ? t('submitting') : t('getEstimate')}
@@ -450,34 +450,34 @@ export default function LandingPage() {
               <div className="space-y-6" data-testid="quote-estimate">
                 <h3 className="text-2xl font-bold text-center">{t('estimateTitle')}</h3>
                 
-                <div className="bg-zinc-900 rounded-xl p-6 space-y-4">
-                  <div className="flex justify-between text-zinc-300">
+                <div className="bg-slate-800 rounded-xl p-6 space-y-4">
+                  <div className="flex justify-between text-slate-300">
                     <span>{t('basePrice')}</span>
                     <span>${estimate.base_price.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between text-zinc-300">
+                  <div className="flex justify-between text-slate-300">
                     <span>{t('mileageCharge')} ({estimate.distance_miles} mi)</span>
                     <span>${estimate.mileage_charge.toFixed(2)}</span>
                   </div>
                   {estimate.emergency_fee > 0 && (
-                    <div className="flex justify-between text-zinc-300">
+                    <div className="flex justify-between text-slate-300">
                       <span>{t('emergencyFee')}</span>
                       <span>${estimate.emergency_fee.toFixed(2)}</span>
                     </div>
                   )}
-                  <div className="border-t border-zinc-700 pt-4 flex justify-between text-xl font-bold">
+                  <div className="border-t border-slate-600 pt-4 flex justify-between text-xl font-bold">
                     <span>{t('totalEstimate')}</span>
-                    <span className="text-orange-500">${estimate.total_estimate.toFixed(2)}</span>
+                    <span className="text-orange-400">${estimate.total_estimate.toFixed(2)}</span>
                   </div>
                 </div>
                 
-                <p className="text-zinc-500 text-sm text-center">{t('estimateNote')}</p>
+                <p className="text-slate-500 text-sm text-center">{t('estimateNote')}</p>
                 
                 <div className="flex flex-col gap-3">
                   <Button
                     onClick={submitRequest}
                     disabled={isSubmitting}
-                    className="w-full py-6 text-lg font-bold bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700"
+                    className="w-full py-6 text-lg font-bold bg-gradient-to-r from-orange-500 to-amber-400 hover:from-orange-600 hover:to-amber-500 text-slate-900"
                     data-testid="confirm-request-btn"
                   >
                     {isSubmitting ? t('submitting') : t('confirmRequest')}
@@ -485,7 +485,7 @@ export default function LandingPage() {
                   <Button
                     onClick={() => setQuoteStep('form')}
                     variant="outline"
-                    className="w-full"
+                    className="w-full border-slate-600"
                   >
                     {language === 'en' ? 'Modify Quote' : 'Modificar Cotización'}
                   </Button>
@@ -495,14 +495,14 @@ export default function LandingPage() {
             
             {quoteStep === 'submitted' && (
               <div className="text-center py-8 space-y-4" data-testid="quote-submitted">
-                <div className="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mx-auto">
-                  <CheckCircle className="w-10 h-10 text-green-500" />
+                <div className="w-20 h-20 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto">
+                  <CheckCircle className="w-10 h-10 text-emerald-500" />
                 </div>
                 <h3 className="text-2xl font-bold">{t('requestSubmitted')}</h3>
-                <p className="text-zinc-400">{t('contactSoon')}</p>
+                <p className="text-slate-400">{t('contactSoon')}</p>
                 <a
                   href={`tel:${PHONE_NUMBER}`}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-bold transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-orange-500 to-amber-400 text-slate-900 font-bold transition-colors"
                 >
                   <Phone className="w-5 h-5" />
                   {t('callNow')} - {PHONE_DISPLAY}
@@ -523,11 +523,11 @@ export default function LandingPage() {
               const Icon = item.icon;
               return (
                 <div key={item.key} className="text-center p-6">
-                  <div className="w-16 h-16 rounded-2xl bg-orange-500/20 flex items-center justify-center mx-auto mb-4">
-                    <Icon className="w-8 h-8 text-orange-500" />
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 flex items-center justify-center mx-auto mb-4">
+                    <Icon className="w-8 h-8 text-blue-400" />
                   </div>
                   <h3 className="text-lg font-bold mb-2">{t(item.key)}</h3>
-                  <p className="text-zinc-400 text-sm">{t(`${item.key}Desc`)}</p>
+                  <p className="text-slate-400 text-sm">{t(`${item.key}Desc`)}</p>
                 </div>
               );
             })}
@@ -536,14 +536,14 @@ export default function LandingPage() {
           {/* Star Rating */}
           <div className="flex items-center justify-center gap-1 mt-8">
             {[1, 2, 3, 4, 5].map((star) => (
-              <Star key={star} className="w-8 h-8 fill-yellow-500 text-yellow-500" />
+              <Star key={star} className="w-8 h-8 fill-amber-400 text-amber-400" />
             ))}
           </div>
         </div>
       </section>
 
       {/* Reviews Section */}
-      <section className="py-20 px-4 bg-zinc-950/50" data-testid="reviews-section">
+      <section className="py-20 px-4 bg-slate-800/50" data-testid="reviews-section">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">{t('reviewsTitle')}</h2>
           
@@ -552,10 +552,10 @@ export default function LandingPage() {
               <div key={index} className="glass-card p-6" data-testid={`review-card-${index}`}>
                 <div className="flex items-center gap-1 mb-3">
                   {[1, 2, 3, 4, 5].map((star) => (
-                    <Star key={star} className="w-5 h-5 fill-yellow-500 text-yellow-500" />
+                    <Star key={star} className="w-5 h-5 fill-amber-400 text-amber-400" />
                   ))}
                 </div>
-                <p className="text-zinc-300 mb-4 italic">"{review.text}"</p>
+                <p className="text-slate-300 mb-4 italic">"{review.text}"</p>
                 <p className="font-semibold text-white">{review.name}</p>
               </div>
             ))}
@@ -566,7 +566,7 @@ export default function LandingPage() {
               href="https://g.page/r/YOUR_GOOGLE_BUSINESS_ID/review"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-zinc-800 hover:bg-zinc-700 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-slate-700 hover:bg-slate-600 transition-colors"
             >
               {t('readMoreReviews')}
               <ChevronRight className="w-4 h-4" />
@@ -586,14 +586,14 @@ export default function LandingPage() {
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d181814.71477384583!2d-123.14837282813!3d44.9428908!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54bffefcbc4b9c63%3A0xf93429e08f0357c2!2sSalem%2C%20OR!5e0!3m2!1sen!2sus!4v1699999999999!5m2!1sen!2sus"
                 width="100%"
                 height="100%"
-                style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg)' }}
+                style={{ border: 0 }}
                 allowFullScreen=""
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Service Area Map"
               />
             </div>
-            <p className="text-center text-zinc-400">{t('serviceAreaCities')}</p>
+            <p className="text-center text-slate-400">{t('serviceAreaCities')}</p>
           </div>
         </div>
       </section>
@@ -608,35 +608,35 @@ export default function LandingPage() {
         }}
         data-testid="accident-section"
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/95 to-zinc-950/80" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 to-slate-900/80" />
         
         <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-6" />
+          <AlertTriangle className="w-16 h-16 text-orange-500 mx-auto mb-6" />
           <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('accidentTitle')}</h2>
-          <p className="text-xl text-zinc-300 mb-8">{t('accidentSubtitle')}</p>
+          <p className="text-xl text-slate-300 mb-8">{t('accidentSubtitle')}</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto mb-10">
-            <div className="flex items-center gap-3 bg-white/5 rounded-lg p-4">
-              <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
+            <div className="flex items-center gap-3 bg-white/10 rounded-lg p-4">
+              <CheckCircle className="w-6 h-6 text-emerald-400 flex-shrink-0" />
               <span>{t('insuranceWork')}</span>
             </div>
-            <div className="flex items-center gap-3 bg-white/5 rounded-lg p-4">
-              <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
+            <div className="flex items-center gap-3 bg-white/10 rounded-lg p-4">
+              <CheckCircle className="w-6 h-6 text-emerald-400 flex-shrink-0" />
               <span>{t('directBilling')}</span>
             </div>
-            <div className="flex items-center gap-3 bg-white/5 rounded-lg p-4">
-              <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
+            <div className="flex items-center gap-3 bg-white/10 rounded-lg p-4">
+              <CheckCircle className="w-6 h-6 text-emerald-400 flex-shrink-0" />
               <span>{t('policeDispatch')}</span>
             </div>
-            <div className="flex items-center gap-3 bg-white/5 rounded-lg p-4">
-              <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
+            <div className="flex items-center gap-3 bg-white/10 rounded-lg p-4">
+              <CheckCircle className="w-6 h-6 text-emerald-400 flex-shrink-0" />
               <span>{t('safeStorage')}</span>
             </div>
           </div>
           
           <a
             href={`tel:${PHONE_NUMBER}`}
-            className="inline-flex items-center gap-3 px-10 py-5 rounded-full bg-red-600 hover:bg-red-700 text-white font-black text-xl uppercase tracking-wider shadow-lg shadow-red-500/30 transition-all cta-button"
+            className="inline-flex items-center gap-3 px-10 py-5 rounded-full bg-gradient-to-r from-orange-500 to-amber-400 text-slate-900 font-black text-xl uppercase tracking-wider shadow-lg shadow-orange-500/40 transition-all cta-button"
             data-testid="accident-call-btn"
           >
             <Phone className="w-6 h-6" />
@@ -646,7 +646,7 @@ export default function LandingPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 px-4 bg-zinc-950/50" data-testid="faq-section">
+      <section className="py-20 px-4 bg-slate-800/50" data-testid="faq-section">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">{t('faqTitle')}</h2>
           
@@ -658,10 +658,10 @@ export default function LandingPage() {
                 className="glass-card border-none px-6"
                 data-testid={`faq-item-${num}`}
               >
-                <AccordionTrigger className="text-left text-lg font-semibold hover:text-orange-500">
+                <AccordionTrigger className="text-left text-lg font-semibold hover:text-orange-400">
                   {t(`faq${num}Q`)}
                 </AccordionTrigger>
-                <AccordionContent className="text-zinc-400">
+                <AccordionContent className="text-slate-400">
                   {t(`faq${num}A`)}
                 </AccordionContent>
               </AccordionItem>
@@ -680,15 +680,15 @@ export default function LandingPage() {
         }}
         data-testid="final-cta-section"
       >
-        <div className="absolute inset-0 bg-zinc-950/90" />
+        <div className="absolute inset-0 bg-slate-900/90" />
         
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-black mb-4">{t('finalCtaTitle')}</h2>
-          <p className="text-2xl text-zinc-300 mb-10">{t('finalCtaSubtitle')}</p>
+          <p className="text-2xl text-slate-300 mb-10">{t('finalCtaSubtitle')}</p>
           
           <a
             href={`tel:${PHONE_NUMBER}`}
-            className="inline-flex items-center gap-4 px-12 py-6 rounded-full bg-gradient-to-r from-orange-500 to-red-600 text-white font-black text-2xl uppercase tracking-wider shadow-xl shadow-orange-500/30 hover:scale-105 transition-transform cta-button animate-pulse-slow"
+            className="inline-flex items-center gap-4 px-12 py-6 rounded-full bg-gradient-to-r from-orange-500 to-amber-400 text-slate-900 font-black text-2xl uppercase tracking-wider shadow-xl shadow-orange-500/40 hover:scale-105 transition-transform cta-button animate-pulse-slow"
             data-testid="final-call-btn"
           >
             <Phone className="w-8 h-8" />
@@ -698,14 +698,14 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-4 border-t border-zinc-800" data-testid="footer">
+      <footer className="py-8 px-4 border-t border-slate-700" data-testid="footer">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-zinc-400 text-center md:text-left">{t('footerText')}</p>
+          <p className="text-slate-400 text-center md:text-left">{t('footerText')}</p>
           <div className="flex items-center gap-4">
-            <span className="text-zinc-400">{t('weSpeak')}</span>
+            <span className="text-slate-400">{t('weSpeak')}</span>
             <a
               href="/admin"
-              className="text-zinc-500 hover:text-zinc-300 text-sm"
+              className="text-slate-500 hover:text-slate-300 text-sm"
             >
               Admin
             </a>
@@ -717,15 +717,15 @@ export default function LandingPage() {
       <div className="fab-container md:hidden" data-testid="fab-container">
         <a
           href={`tel:${PHONE_NUMBER}`}
-          className="w-14 h-14 rounded-full bg-gradient-to-r from-orange-500 to-red-600 flex items-center justify-center shadow-lg shadow-orange-500/30"
+          className="w-14 h-14 rounded-full bg-gradient-to-r from-orange-500 to-amber-400 flex items-center justify-center shadow-lg shadow-orange-500/40"
           aria-label={t('callNow')}
           data-testid="fab-call"
         >
-          <Phone className="w-6 h-6 text-white" />
+          <Phone className="w-6 h-6 text-slate-900" />
         </a>
         <a
           href={`sms:${PHONE_NUMBER}`}
-          className="w-14 h-14 rounded-full bg-zinc-800 flex items-center justify-center shadow-lg"
+          className="w-14 h-14 rounded-full bg-blue-600 flex items-center justify-center shadow-lg"
           aria-label={t('textUs')}
           data-testid="fab-text"
         >
@@ -735,7 +735,7 @@ export default function LandingPage() {
           href="https://maps.google.com/?q=Salem,+OR"
           target="_blank"
           rel="noopener noreferrer"
-          className="w-14 h-14 rounded-full bg-zinc-800 flex items-center justify-center shadow-lg"
+          className="w-14 h-14 rounded-full bg-slate-700 flex items-center justify-center shadow-lg"
           aria-label={t('getDirections')}
           data-testid="fab-directions"
         >
@@ -743,7 +743,7 @@ export default function LandingPage() {
         </a>
         <a
           href="#quote"
-          className="w-14 h-14 rounded-full bg-zinc-800 flex items-center justify-center shadow-lg"
+          className="w-14 h-14 rounded-full bg-slate-700 flex items-center justify-center shadow-lg"
           aria-label={t('getQuote')}
           data-testid="fab-quote"
         >
