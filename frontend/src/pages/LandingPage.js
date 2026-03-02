@@ -41,6 +41,8 @@ import {
   Users,
   DollarSign,
   Wrench,
+  Crosshair,
+  Loader2,
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -72,9 +74,66 @@ export default function LandingPage() {
     phoneNumber: '',
     estimatedDistance: 10,
   });
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Get user's current location using browser geolocation
+  const getCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error(language === 'en' ? 'Geolocation is not supported by your browser' : 'La geolocalización no es compatible con tu navegador');
+      return;
+    }
+    
+    setIsGettingLocation(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          // Use reverse geocoding to get address from coordinates
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+          );
+          const data = await response.json();
+          
+          if (data.display_name) {
+            // Extract a simpler address format
+            const address = data.address;
+            let simpleAddress = '';
+            
+            if (address.road) simpleAddress += address.road;
+            if (address.house_number) simpleAddress = address.house_number + ' ' + simpleAddress;
+            if (address.city || address.town || address.village) {
+              simpleAddress += simpleAddress ? ', ' : '';
+              simpleAddress += address.city || address.town || address.village;
+            }
+            if (address.state) {
+              simpleAddress += simpleAddress ? ', ' : '';
+              simpleAddress += address.state;
+            }
+            
+            handleInputChange('pickupLocation', simpleAddress || data.display_name);
+            toast.success(language === 'en' ? 'Location found!' : '¡Ubicación encontrada!');
+          }
+        } catch (error) {
+          // Fallback to coordinates if geocoding fails
+          handleInputChange('pickupLocation', `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`);
+          toast.success(language === 'en' ? 'GPS coordinates captured!' : '¡Coordenadas GPS capturadas!');
+        }
+        setIsGettingLocation(false);
+      },
+      (error) => {
+        setIsGettingLocation(false);
+        let errorMessage = language === 'en' ? 'Unable to get your location' : 'No se pudo obtener tu ubicación';
+        if (error.code === error.PERMISSION_DENIED) {
+          errorMessage = language === 'en' ? 'Please enable location access in your browser' : 'Por favor habilita el acceso a ubicación en tu navegador';
+        }
+        toast.error(errorMessage);
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+    );
   };
 
   const getEstimate = async () => {
@@ -167,12 +226,12 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-white text-gray-900">
       {/* Sticky Top Bar */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-md border-b border-gray-700/50">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-green-400">
+            <div className="flex items-center gap-2 text-green-600">
               <Clock className="w-4 h-4 animate-pulse" />
               <span className="text-sm font-bold">{t('openNow')}</span>
             </div>
@@ -181,7 +240,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={toggleLanguage}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors text-sm font-medium"
+              className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors text-sm font-medium text-gray-700"
               data-testid="language-toggle"
             >
               <Globe className="w-4 h-4" />
@@ -190,7 +249,7 @@ export default function LandingPage() {
             
             <a
               href={`sms:${PHONE_NUMBER}`}
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500 hover:bg-blue-400 transition-colors font-medium"
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-colors font-medium"
               data-testid="header-text-btn"
             >
               <MessageSquare className="w-4 h-4" />
@@ -199,7 +258,7 @@ export default function LandingPage() {
             
             <a
               href={`tel:${PHONE_NUMBER}`}
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-orange-500 to-yellow-400 text-gray-900 font-bold transition-all emergency-glow hover:scale-105"
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-400 text-white font-bold transition-all emergency-glow hover:scale-105"
               data-testid="header-call-btn"
             >
               <Phone className="w-4 h-4" />
@@ -213,7 +272,7 @@ export default function LandingPage() {
       <section 
         className="relative min-h-screen flex items-center justify-center pt-20"
         style={{
-          backgroundImage: `url(${CLIENT_IMAGES.hero})`,
+          backgroundImage: `url(${CLIENT_IMAGES.flatbedDay})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -223,25 +282,25 @@ export default function LandingPage() {
         
         <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">
           <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 border border-green-500/30 rounded-full text-green-400 text-sm font-medium mb-4">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 backdrop-blur-sm border border-green-400/30 rounded-full text-green-300 text-sm font-medium mb-4">
               <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
               {language === 'en' ? 'Available Now - Dispatching' : 'Disponible Ahora - Despachando'}
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-none">
-              <span className="text-gradient">{t('heroTitle')}</span>
+            <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-none text-white">
+              {t('heroTitle')}
             </h1>
             <p className="text-2xl md:text-4xl font-bold text-white">
               {t('heroSubtitle')}
             </p>
-            <p className="text-xl md:text-2xl text-gray-300">
+            <p className="text-xl md:text-2xl text-gray-200">
               {t('heroTagline')}
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
               <a
                 href={`tel:${PHONE_NUMBER}`}
-                className="w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-5 rounded-full bg-gradient-to-r from-orange-500 via-orange-400 to-yellow-400 text-gray-900 font-black text-xl uppercase tracking-wider shadow-2xl shadow-orange-500/30 hover:scale-105 transition-transform cta-button emergency-glow"
+                className="w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-5 rounded-full bg-gradient-to-r from-orange-500 to-orange-400 text-white font-black text-xl uppercase tracking-wider shadow-2xl shadow-orange-500/40 hover:scale-105 transition-transform cta-button"
                 data-testid="hero-call-btn"
               >
                 <Phone className="w-6 h-6" />
@@ -249,7 +308,7 @@ export default function LandingPage() {
               </a>
               <a
                 href="#quote"
-                className="w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-5 rounded-full bg-blue-500 hover:bg-blue-400 text-white font-bold text-lg shadow-lg shadow-blue-500/20 transition-all cta-button"
+                className="w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-5 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-bold text-lg border border-white/30 transition-all cta-button"
                 data-testid="hero-quote-btn"
               >
                 <FileText className="w-5 h-5" />
@@ -257,22 +316,22 @@ export default function LandingPage() {
               </a>
             </div>
             
-            <p className="text-gray-300 pt-4 flex items-center justify-center gap-2">
+            <p className="text-gray-200 pt-4 flex items-center justify-center gap-2">
               <MapPin className="w-5 h-5 text-orange-400" />
               {t('servingArea')}
             </p>
             
             {/* Trust Badges */}
             <div className="flex flex-wrap items-center justify-center gap-4 pt-8">
-              <Badge variant="outline" className="px-5 py-2.5 border-green-400/50 text-green-400 bg-green-500/10 font-medium">
+              <Badge variant="outline" className="px-5 py-2.5 border-green-400/50 text-green-300 bg-green-500/20 backdrop-blur-sm font-medium">
                 <Shield className="w-4 h-4 mr-2" />
                 {t('licensed')}
               </Badge>
-              <Badge variant="outline" className="px-5 py-2.5 border-blue-400/50 text-blue-400 bg-blue-500/10 font-medium">
+              <Badge variant="outline" className="px-5 py-2.5 border-blue-400/50 text-blue-300 bg-blue-500/20 backdrop-blur-sm font-medium">
                 <CheckCircle className="w-4 h-4 mr-2" />
                 {t('insured')}
               </Badge>
-              <Badge variant="outline" className="px-5 py-2.5 border-orange-400/50 text-orange-400 bg-orange-500/10 font-medium">
+              <Badge variant="outline" className="px-5 py-2.5 border-orange-400/50 text-orange-300 bg-orange-500/20 backdrop-blur-sm font-medium">
                 <Clock className="w-4 h-4 mr-2" />
                 {t('available247')}
               </Badge>
@@ -281,14 +340,269 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Quote Calculator Section - RIGHT AFTER HERO for fast access */}
+      <section id="quote" className="py-20 px-4 section-gray" data-testid="quote-section">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-10">
+            <p className="text-orange-500 font-semibold mb-2">{language === 'en' ? 'Quick Estimate' : 'Estimado Rápido'}</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-3 text-gray-900">{t('quoteTitle')}</h2>
+            <p className="text-gray-600">{t('quoteSubtitle')}</p>
+          </div>
+          
+          <div className="glass-card p-8">
+            {quoteStep === 'form' && (
+              <div className="space-y-6 quote-form" data-testid="quote-form">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="pickup" className="text-gray-700 font-medium">{t('pickupLocation')} *</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="pickup"
+                        placeholder={language === 'en' ? "Your current location" : "Tu ubicación actual"}
+                        value={formData.pickupLocation}
+                        onChange={(e) => handleInputChange('pickupLocation', e.target.value)}
+                        className="bg-white border-gray-300 focus:border-orange-500 text-gray-900 placeholder:text-gray-400 flex-1"
+                        data-testid="pickup-input"
+                      />
+                      <Button
+                        type="button"
+                        onClick={getCurrentLocation}
+                        disabled={isGettingLocation}
+                        className="bg-blue-500 hover:bg-blue-600 text-white px-3 shrink-0"
+                        data-testid="use-location-btn"
+                        title={language === 'en' ? "Use my current location" : "Usar mi ubicación actual"}
+                      >
+                        {isGettingLocation ? (
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                          <Crosshair className="w-5 h-5" />
+                        )}
+                      </Button>
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      {language === 'en' ? "Click the location icon to share your GPS" : "Haz clic en el icono para compartir tu GPS"}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="dropoff" className="text-gray-700 font-medium">{t('dropoffLocation')}</Label>
+                    <Input
+                      id="dropoff"
+                      placeholder={language === 'en' ? "Where should we take your vehicle?" : "¿A dónde llevamos tu vehículo?"}
+                      value={formData.dropoffLocation}
+                      onChange={(e) => handleInputChange('dropoffLocation', e.target.value)}
+                      className="bg-white border-gray-300 focus:border-orange-500 text-gray-900 placeholder:text-gray-400"
+                      data-testid="dropoff-input"
+                    />
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label className="text-gray-700 font-medium">{t('vehicleType')} *</Label>
+                    <Select
+                      value={formData.vehicleType}
+                      onValueChange={(value) => handleInputChange('vehicleType', value)}
+                    >
+                      <SelectTrigger className="bg-white border-gray-300 text-gray-900" data-testid="vehicle-select">
+                        <SelectValue placeholder={t('vehicleType')} />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white border-gray-200">
+                        <SelectItem value="sedan" className="text-gray-900">{t('sedan')}</SelectItem>
+                        <SelectItem value="suv" className="text-gray-900">{t('suv')}</SelectItem>
+                        <SelectItem value="truck" className="text-gray-900">{t('truck')}</SelectItem>
+                        <SelectItem value="motorcycle" className="text-gray-900">{t('motorcycle')}</SelectItem>
+                        <SelectItem value="van" className="text-gray-900">{t('van')}</SelectItem>
+                        <SelectItem value="other" className="text-gray-900">{t('other')}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-gray-700 font-medium">{t('serviceNeeded')} *</Label>
+                    <Select
+                      value={formData.serviceType}
+                      onValueChange={(value) => handleInputChange('serviceType', value)}
+                    >
+                      <SelectTrigger className="bg-white border-gray-300 text-gray-900" data-testid="service-select">
+                        <SelectValue placeholder={t('serviceNeeded')} />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white border-gray-200">
+                        <SelectItem value="emergency_towing" className="text-gray-900">{t('emergencyTowing')}</SelectItem>
+                        <SelectItem value="flatbed_towing" className="text-gray-900">{t('flatbedTowing')}</SelectItem>
+                        <SelectItem value="accident_recovery" className="text-gray-900">{t('accidentRecovery')}</SelectItem>
+                        <SelectItem value="lockout" className="text-gray-900">{t('lockoutService')}</SelectItem>
+                        <SelectItem value="jump_start" className="text-gray-900">{t('jumpStart')}</SelectItem>
+                        <SelectItem value="tire_change" className="text-gray-900">{t('tireChange')}</SelectItem>
+                        <SelectItem value="long_distance" className="text-gray-900">{t('longDistance')}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="phone" className="text-gray-700 font-medium">{t('phoneNumber')} *</Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      placeholder="(555) 123-4567"
+                      value={formData.phoneNumber}
+                      onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
+                      className="bg-white border-gray-300 focus:border-orange-500 text-gray-900 placeholder:text-gray-400"
+                      data-testid="phone-input"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="distance" className="text-gray-700 font-medium">{t('estimatedDistance')}</Label>
+                    <Input
+                      id="distance"
+                      type="number"
+                      min="1"
+                      max="500"
+                      value={formData.estimatedDistance}
+                      onChange={(e) => handleInputChange('estimatedDistance', parseInt(e.target.value) || 10)}
+                      className="bg-white border-gray-300 focus:border-orange-500 text-gray-900"
+                      data-testid="distance-input"
+                    />
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-4">
+                  <button
+                    type="button"
+                    onClick={() => handleInputChange('isEmergency', true)}
+                    className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
+                      formData.isEmergency
+                        ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
+                    data-testid="emergency-btn"
+                  >
+                    {t('emergencyService')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleInputChange('isEmergency', false)}
+                    className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
+                      !formData.isEmergency
+                        ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
+                    data-testid="scheduled-btn"
+                  >
+                    {t('scheduledService')}
+                  </button>
+                </div>
+                
+                <Button
+                  onClick={getEstimate}
+                  disabled={isSubmitting}
+                  className="w-full py-6 text-lg font-bold bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-600 hover:to-orange-500 text-white shadow-lg shadow-orange-500/20"
+                  data-testid="get-estimate-btn"
+                >
+                  {isSubmitting ? t('submitting') : t('getEstimate')}
+                </Button>
+              </div>
+            )}
+            
+            {quoteStep === 'estimate' && estimate && (
+              <div className="space-y-6" data-testid="quote-estimate">
+                <h3 className="text-2xl font-bold text-center text-gray-900">{t('estimateTitle')}</h3>
+                
+                <div className="bg-gray-50 rounded-xl p-6 space-y-4 border border-gray-200">
+                  <div className="flex justify-between text-gray-700">
+                    <span>{t('basePrice')}</span>
+                    <span className="font-medium">${estimate.base_price.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-700">
+                    <span>{t('mileageCharge')} ({estimate.distance_miles} mi)</span>
+                    <span className="font-medium">${estimate.mileage_charge.toFixed(2)}</span>
+                  </div>
+                  {estimate.emergency_fee > 0 && (
+                    <div className="flex justify-between text-gray-700">
+                      <span>{t('emergencyFee')}</span>
+                      <span className="font-medium">${estimate.emergency_fee.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div className="border-t border-gray-200 pt-4 flex justify-between text-2xl font-bold">
+                    <span className="text-gray-900">{t('totalEstimate')}</span>
+                    <span className="text-orange-500">${estimate.total_estimate.toFixed(2)}</span>
+                  </div>
+                </div>
+                
+                {/* Important notice - call for exact price */}
+                <div className="bg-orange-50 border-2 border-orange-200 rounded-xl p-4">
+                  <p className="text-orange-800 text-center font-medium">
+                    {language === 'en' 
+                      ? "⚠️ This is an ESTIMATE only. Call Ben now to get the exact price for your situation!"
+                      : "⚠️ Esto es solo un ESTIMADO. ¡Llama a Ben ahora para obtener el precio exacto!"}
+                  </p>
+                </div>
+                
+                <div className="flex flex-col gap-3">
+                  {/* Primary CTA - CALL NOW */}
+                  <a
+                    href={`tel:${PHONE_NUMBER}`}
+                    className="w-full py-6 text-lg font-bold bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-600 hover:to-orange-500 text-white rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-orange-500/20 transition-all hover:scale-[1.02]"
+                    data-testid="call-for-exact-btn"
+                  >
+                    <Phone className="w-6 h-6" />
+                    {language === 'en' ? 'Call Ben for Exact Price' : 'Llama a Ben por Precio Exacto'}
+                  </a>
+                  
+                  {/* Secondary option - text */}
+                  <a
+                    href={`sms:${PHONE_NUMBER}?body=${encodeURIComponent(
+                      language === 'en' 
+                        ? `Hi Ben! I need ${formData.serviceType?.replace('_', ' ')} service. My vehicle: ${formData.vehicleType}. Pickup: ${formData.pickupLocation}. Estimate showed: $${estimate.total_estimate.toFixed(2)}. What's the exact price?`
+                        : `¡Hola Ben! Necesito servicio de ${formData.serviceType?.replace('_', ' ')}. Mi vehículo: ${formData.vehicleType}. Recogida: ${formData.pickupLocation}. El estimado mostró: $${estimate.total_estimate.toFixed(2)}. ¿Cuál es el precio exacto?`
+                    )}`}
+                    className="w-full py-4 text-base font-semibold bg-blue-500 hover:bg-blue-600 text-white rounded-xl flex items-center justify-center gap-2 transition-all"
+                    data-testid="text-for-exact-btn"
+                  >
+                    <MessageSquare className="w-5 h-5" />
+                    {language === 'en' ? 'Or Text Ben' : 'O Envía un Texto a Ben'}
+                  </a>
+                  
+                  <Button
+                    onClick={() => setQuoteStep('form')}
+                    variant="outline"
+                    className="w-full border-gray-300 text-gray-700 hover:bg-gray-50"
+                    data-testid="modify-quote-btn"
+                  >
+                    {language === 'en' ? 'Modify Estimate' : 'Modificar Estimado'}
+                  </Button>
+                </div>
+              </div>
+            )}
+            
+            {quoteStep === 'submitted' && (
+              <div className="text-center py-8 space-y-4" data-testid="quote-submitted">
+                <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto">
+                  <CheckCircle className="w-10 h-10 text-green-500" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900">{t('requestSubmitted')}</h3>
+                <p className="text-gray-600">{t('contactSoon')}</p>
+                <a
+                  href={`tel:${PHONE_NUMBER}`}
+                  className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-orange-500 to-orange-400 text-white font-bold transition-colors shadow-lg shadow-orange-500/20"
+                >
+                  <Phone className="w-5 h-5" />
+                  {t('callNow')} - {PHONE_DISPLAY}
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
       {/* Services Section */}
       <section className="py-20 px-4 section-light" data-testid="services-section">
         <div className="max-w-7xl mx-auto">
-          <p className="text-orange-400 text-center font-medium mb-2">{language === 'en' ? 'What We Offer' : 'Lo Que Ofrecemos'}</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+          <p className="text-orange-500 text-center font-semibold mb-2">{language === 'en' ? 'What We Offer' : 'Lo Que Ofrecemos'}</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900">
             {t('servicesTitle')}
           </h2>
-          <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
+          <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
             {language === 'en' ? 'From emergency roadside assistance to heavy-duty towing, we\'ve got you covered' : 'Desde asistencia de emergencia hasta grúa pesada, lo tenemos cubierto'}
           </p>
           
@@ -298,17 +612,17 @@ export default function LandingPage() {
               return (
                 <div
                   key={service.key}
-                  className="glass-card p-6 service-card border border-gray-700/50 hover:border-orange-400/50"
+                  className="glass-card p-6 service-card"
                   data-testid={`service-card-${service.type}`}
                 >
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-yellow-400 flex items-center justify-center mb-4 shadow-lg shadow-orange-500/20">
-                    <Icon className="w-7 h-7 text-gray-900" />
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-400 flex items-center justify-center mb-4 shadow-lg shadow-orange-500/20">
+                    <Icon className="w-7 h-7 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2 text-white">{t(service.key)}</h3>
-                  <p className="text-gray-400 text-sm mb-4">{t(`${service.key}Desc`)}</p>
+                  <h3 className="text-xl font-bold mb-2 text-gray-900">{t(service.key)}</h3>
+                  <p className="text-gray-600 text-sm mb-4">{t(`${service.key}Desc`)}</p>
                   <a
                     href={`tel:${PHONE_NUMBER}`}
-                    className="inline-flex items-center gap-2 text-orange-400 hover:text-orange-300 font-semibold text-sm group"
+                    className="inline-flex items-center gap-2 text-orange-500 hover:text-orange-600 font-semibold text-sm group"
                   >
                     <Phone className="w-4 h-4" />
                     {t('callNow')}
@@ -321,223 +635,12 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Quote Calculator Section */}
-      <section id="quote" className="py-20 px-4 section-dark" data-testid="quote-section">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">{t('quoteTitle')}</h2>
-            <p className="text-gray-400">{t('quoteSubtitle')}</p>
-          </div>
-          
-          <div className="glass-card p-8 border border-gray-700/50">
-            {quoteStep === 'form' && (
-              <div className="space-y-6 quote-form" data-testid="quote-form">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="pickup" className="text-gray-300">{t('pickupLocation')} *</Label>
-                    <Input
-                      id="pickup"
-                      placeholder="e.g., 123 Main St, Salem OR"
-                      value={formData.pickupLocation}
-                      onChange={(e) => handleInputChange('pickupLocation', e.target.value)}
-                      className="bg-gray-800/50 border-gray-600 focus:border-orange-400 text-white placeholder:text-gray-500"
-                      data-testid="pickup-input"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="dropoff" className="text-gray-300">{t('dropoffLocation')}</Label>
-                    <Input
-                      id="dropoff"
-                      placeholder="e.g., 456 Oak Ave, Salem OR"
-                      value={formData.dropoffLocation}
-                      onChange={(e) => handleInputChange('dropoffLocation', e.target.value)}
-                      className="bg-gray-800/50 border-gray-600 focus:border-orange-400 text-white placeholder:text-gray-500"
-                      data-testid="dropoff-input"
-                    />
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label className="text-gray-300">{t('vehicleType')} *</Label>
-                    <Select
-                      value={formData.vehicleType}
-                      onValueChange={(value) => handleInputChange('vehicleType', value)}
-                    >
-                      <SelectTrigger className="bg-gray-800/50 border-gray-600 text-white" data-testid="vehicle-select">
-                        <SelectValue placeholder={t('vehicleType')} />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-800 border-gray-600">
-                        <SelectItem value="sedan" className="text-white hover:bg-gray-700 focus:bg-gray-700">{t('sedan')}</SelectItem>
-                        <SelectItem value="suv" className="text-white hover:bg-gray-700 focus:bg-gray-700">{t('suv')}</SelectItem>
-                        <SelectItem value="truck" className="text-white hover:bg-gray-700 focus:bg-gray-700">{t('truck')}</SelectItem>
-                        <SelectItem value="motorcycle" className="text-white hover:bg-gray-700 focus:bg-gray-700">{t('motorcycle')}</SelectItem>
-                        <SelectItem value="van" className="text-white hover:bg-gray-700 focus:bg-gray-700">{t('van')}</SelectItem>
-                        <SelectItem value="other" className="text-white hover:bg-gray-700 focus:bg-gray-700">{t('other')}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-gray-300">{t('serviceNeeded')} *</Label>
-                    <Select
-                      value={formData.serviceType}
-                      onValueChange={(value) => handleInputChange('serviceType', value)}
-                    >
-                      <SelectTrigger className="bg-gray-800/50 border-gray-600 text-white" data-testid="service-select">
-                        <SelectValue placeholder={t('serviceNeeded')} />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-800 border-gray-600">
-                        <SelectItem value="emergency_towing" className="text-white hover:bg-gray-700 focus:bg-gray-700">{t('emergencyTowing')}</SelectItem>
-                        <SelectItem value="flatbed_towing" className="text-white hover:bg-gray-700 focus:bg-gray-700">{t('flatbedTowing')}</SelectItem>
-                        <SelectItem value="accident_recovery" className="text-white hover:bg-gray-700 focus:bg-gray-700">{t('accidentRecovery')}</SelectItem>
-                        <SelectItem value="lockout" className="text-white hover:bg-gray-700 focus:bg-gray-700">{t('lockoutService')}</SelectItem>
-                        <SelectItem value="jump_start" className="text-white hover:bg-gray-700 focus:bg-gray-700">{t('jumpStart')}</SelectItem>
-                        <SelectItem value="tire_change" className="text-white hover:bg-gray-700 focus:bg-gray-700">{t('tireChange')}</SelectItem>
-                        <SelectItem value="long_distance" className="text-white hover:bg-gray-700 focus:bg-gray-700">{t('longDistance')}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="phone" className="text-gray-300">{t('phoneNumber')} *</Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="(555) 123-4567"
-                      value={formData.phoneNumber}
-                      onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
-                      className="bg-gray-800/50 border-gray-600 focus:border-orange-400 text-white placeholder:text-gray-500"
-                      data-testid="phone-input"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="distance" className="text-gray-300">{t('estimatedDistance')}</Label>
-                    <Input
-                      id="distance"
-                      type="number"
-                      min="1"
-                      max="500"
-                      value={formData.estimatedDistance}
-                      onChange={(e) => handleInputChange('estimatedDistance', parseInt(e.target.value) || 10)}
-                      className="bg-gray-800/50 border-gray-600 focus:border-orange-400 text-white"
-                      data-testid="distance-input"
-                    />
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-4">
-                  <button
-                    type="button"
-                    onClick={() => handleInputChange('isEmergency', true)}
-                    className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
-                      formData.isEmergency
-                        ? 'bg-orange-500/20 text-orange-400 border-2 border-orange-500 shadow-lg shadow-orange-500/10'
-                        : 'bg-gray-700 text-gray-400 border-2 border-transparent'
-                    }`}
-                    data-testid="emergency-btn"
-                  >
-                    {t('emergencyService')}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleInputChange('isEmergency', false)}
-                    className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
-                      !formData.isEmergency
-                        ? 'bg-blue-500/20 text-blue-400 border-2 border-blue-500 shadow-lg shadow-blue-500/10'
-                        : 'bg-gray-700 text-gray-400 border-2 border-transparent'
-                    }`}
-                    data-testid="scheduled-btn"
-                  >
-                    {t('scheduledService')}
-                  </button>
-                </div>
-                
-                <Button
-                  onClick={getEstimate}
-                  disabled={isSubmitting}
-                  className="w-full py-6 text-lg font-bold bg-gradient-to-r from-orange-500 to-yellow-400 hover:from-orange-600 hover:to-yellow-500 text-gray-900 shadow-lg shadow-orange-500/20"
-                  data-testid="get-estimate-btn"
-                >
-                  {isSubmitting ? t('submitting') : t('getEstimate')}
-                </Button>
-              </div>
-            )}
-            
-            {quoteStep === 'estimate' && estimate && (
-              <div className="space-y-6" data-testid="quote-estimate">
-                <h3 className="text-2xl font-bold text-center">{t('estimateTitle')}</h3>
-                
-                <div className="bg-gray-800/80 rounded-xl p-6 space-y-4 border border-gray-700">
-                  <div className="flex justify-between text-gray-300">
-                    <span>{t('basePrice')}</span>
-                    <span className="font-medium">${estimate.base_price.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between text-gray-300">
-                    <span>{t('mileageCharge')} ({estimate.distance_miles} mi)</span>
-                    <span className="font-medium">${estimate.mileage_charge.toFixed(2)}</span>
-                  </div>
-                  {estimate.emergency_fee > 0 && (
-                    <div className="flex justify-between text-gray-300">
-                      <span>{t('emergencyFee')}</span>
-                      <span className="font-medium">${estimate.emergency_fee.toFixed(2)}</span>
-                    </div>
-                  )}
-                  <div className="border-t border-gray-600 pt-4 flex justify-between text-2xl font-bold">
-                    <span>{t('totalEstimate')}</span>
-                    <span className="text-gradient">${estimate.total_estimate.toFixed(2)}</span>
-                  </div>
-                </div>
-                
-                <p className="text-gray-500 text-sm text-center">{t('estimateNote')}</p>
-                
-                <div className="flex flex-col gap-3">
-                  <Button
-                    onClick={submitRequest}
-                    disabled={isSubmitting}
-                    className="w-full py-6 text-lg font-bold bg-gradient-to-r from-orange-500 to-yellow-400 hover:from-orange-600 hover:to-yellow-500 text-gray-900"
-                    data-testid="confirm-request-btn"
-                  >
-                    {isSubmitting ? t('submitting') : t('confirmRequest')}
-                  </Button>
-                  <Button
-                    onClick={() => setQuoteStep('form')}
-                    variant="outline"
-                    className="w-full border-gray-600 text-gray-300 hover:bg-gray-800"
-                  >
-                    {language === 'en' ? 'Modify Quote' : 'Modificar Cotización'}
-                  </Button>
-                </div>
-              </div>
-            )}
-            
-            {quoteStep === 'submitted' && (
-              <div className="text-center py-8 space-y-4" data-testid="quote-submitted">
-                <div className="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mx-auto border-2 border-green-500">
-                  <CheckCircle className="w-10 h-10 text-green-500" />
-                </div>
-                <h3 className="text-2xl font-bold">{t('requestSubmitted')}</h3>
-                <p className="text-gray-400">{t('contactSoon')}</p>
-                <a
-                  href={`tel:${PHONE_NUMBER}`}
-                  className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-orange-500 to-yellow-400 text-gray-900 font-bold transition-colors shadow-lg shadow-orange-500/20"
-                >
-                  <Phone className="w-5 h-5" />
-                  {t('callNow')} - {PHONE_DISPLAY}
-                </a>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
       {/* Why Choose Us */}
       <section className="py-20 px-4 section-light" data-testid="why-us-section">
         <div className="max-w-7xl mx-auto">
-          <p className="text-blue-400 text-center font-medium mb-2">{language === 'en' ? 'Why Us' : 'Por Qué Nosotros'}</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">{t('whyChooseUs')}</h2>
-          <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
+          <p className="text-blue-500 text-center font-semibold mb-2">{language === 'en' ? 'Why Us' : 'Por Qué Nosotros'}</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900">{t('whyChooseUs')}</h2>
+          <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
             {language === 'en' ? 'When you\'re stranded, you need a towing company you can trust' : 'Cuando estás varado, necesitas una grúa en la que puedas confiar'}
           </p>
           
@@ -545,12 +648,12 @@ export default function LandingPage() {
             {whyUs.map((item) => {
               const Icon = item.icon;
               return (
-                <div key={item.key} className="text-center p-6 glass-card border border-gray-700/50">
+                <div key={item.key} className="text-center p-6 glass-card">
                   <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/20">
                     <Icon className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-lg font-bold mb-2 text-white">{t(item.key)}</h3>
-                  <p className="text-gray-400 text-sm">{t(`${item.key}Desc`)}</p>
+                  <h3 className="text-lg font-bold mb-2 text-gray-900">{t(item.key)}</h3>
+                  <p className="text-gray-600 text-sm">{t(`${item.key}Desc`)}</p>
                 </div>
               );
             })}
@@ -566,20 +669,20 @@ export default function LandingPage() {
       </section>
 
       {/* Reviews Section */}
-      <section className="py-20 px-4 section-dark" data-testid="reviews-section">
+      <section className="py-20 px-4 section-gray" data-testid="reviews-section">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">{t('reviewsTitle')}</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-900">{t('reviewsTitle')}</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {reviews.map((review, index) => (
-              <div key={index} className="glass-card p-6 border border-gray-700/50" data-testid={`review-card-${index}`}>
+              <div key={index} className="glass-card p-6" data-testid={`review-card-${index}`}>
                 <div className="flex items-center gap-1 mb-3">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Star key={star} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                <p className="text-gray-300 mb-4 italic">"{review.text}"</p>
-                <p className="font-semibold text-white">{review.name}</p>
+                <p className="text-gray-700 mb-4 italic">"{review.text}"</p>
+                <p className="font-semibold text-gray-900">{review.name}</p>
               </div>
             ))}
           </div>
@@ -589,7 +692,7 @@ export default function LandingPage() {
               href="https://g.page/r/YOUR_GOOGLE_BUSINESS_ID/review"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors font-medium"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-gray-200 hover:bg-gray-50 transition-colors font-medium text-gray-700 shadow-sm"
             >
               {t('readMoreReviews')}
               <ChevronRight className="w-4 h-4" />
@@ -601,72 +704,72 @@ export default function LandingPage() {
       {/* Our Fleet Gallery */}
       <section className="py-20 px-4 section-light" data-testid="gallery-section">
         <div className="max-w-7xl mx-auto">
-          <p className="text-orange-400 text-center font-medium mb-2">{language === 'en' ? 'Our Equipment' : 'Nuestro Equipo'}</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+          <p className="text-orange-500 text-center font-semibold mb-2">{language === 'en' ? 'Our Equipment' : 'Nuestro Equipo'}</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900">
             {language === 'en' ? 'Our Fleet in Action' : 'Nuestra Flota en Acción'}
           </h2>
-          <p className="text-gray-400 text-center mb-12">
+          <p className="text-gray-600 text-center mb-12">
             {language === 'en' ? 'Professional equipment ready to serve you 24/7' : 'Equipo profesional listo para servirle 24/7'}
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="glass-card overflow-hidden group border border-gray-700/50 hover:border-orange-400/50 transition-all">
+            <div className="glass-card overflow-hidden group">
               <img 
                 src={CLIENT_IMAGES.flatbedDay} 
                 alt="Flatbed towing service" 
                 className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="p-4">
-                <h3 className="font-bold text-lg text-white">{t('flatbedTowing')}</h3>
-                <p className="text-gray-400 text-sm">{language === 'en' ? 'Safe transport for all vehicles' : 'Transporte seguro para todos los vehículos'}</p>
+                <h3 className="font-bold text-lg text-gray-900">{t('flatbedTowing')}</h3>
+                <p className="text-gray-600 text-sm">{language === 'en' ? 'Safe transport for all vehicles' : 'Transporte seguro para todos los vehículos'}</p>
               </div>
             </div>
             
-            <div className="glass-card overflow-hidden group border border-gray-700/50 hover:border-orange-400/50 transition-all">
+            <div className="glass-card overflow-hidden group">
               <img 
                 src={CLIENT_IMAGES.truckWithPickup} 
                 alt="Heavy duty towing" 
                 className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="p-4">
-                <h3 className="font-bold text-lg text-white">{language === 'en' ? 'Heavy Duty Capable' : 'Capacidad para Carga Pesada'}</h3>
-                <p className="text-gray-400 text-sm">{language === 'en' ? 'Trucks, SUVs, and more' : 'Trocas, SUVs, y más'}</p>
+                <h3 className="font-bold text-lg text-gray-900">{language === 'en' ? 'Heavy Duty Capable' : 'Capacidad para Carga Pesada'}</h3>
+                <p className="text-gray-600 text-sm">{language === 'en' ? 'Trucks, SUVs, and more' : 'Trocas, SUVs, y más'}</p>
               </div>
             </div>
             
-            <div className="glass-card overflow-hidden group border border-gray-700/50 hover:border-orange-400/50 transition-all">
+            <div className="glass-card overflow-hidden group">
               <img 
                 src={CLIENT_IMAGES.gasStation} 
                 alt="24/7 Service" 
                 className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="p-4">
-                <h3 className="font-bold text-lg text-white">{t('available247')}</h3>
-                <p className="text-gray-400 text-sm">{language === 'en' ? 'Always ready when you need us' : 'Siempre listos cuando nos necesite'}</p>
+                <h3 className="font-bold text-lg text-gray-900">{t('available247')}</h3>
+                <p className="text-gray-600 text-sm">{language === 'en' ? 'Always ready when you need us' : 'Siempre listos cuando nos necesite'}</p>
               </div>
             </div>
             
-            <div className="glass-card overflow-hidden group border border-gray-700/50 hover:border-orange-400/50 transition-all">
+            <div className="glass-card overflow-hidden group">
               <img 
                 src={CLIENT_IMAGES.hero} 
                 alt="Night emergency service" 
                 className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="p-4">
-                <h3 className="font-bold text-lg text-white">{t('emergencyTowing')}</h3>
-                <p className="text-gray-400 text-sm">{language === 'en' ? 'Day or night, we\'re there' : 'De día o de noche, estamos ahí'}</p>
+                <h3 className="font-bold text-lg text-gray-900">{t('emergencyTowing')}</h3>
+                <p className="text-gray-600 text-sm">{language === 'en' ? 'Day or night, we\'re there' : 'De día o de noche, estamos ahí'}</p>
               </div>
             </div>
             
-            <div className="glass-card overflow-hidden group md:col-span-2 border border-gray-700/50 hover:border-orange-400/50 transition-all">
+            <div className="glass-card overflow-hidden group md:col-span-2">
               <img 
                 src={CLIENT_IMAGES.truckCloseup} 
                 alt="Ben's Road Service truck" 
                 className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="p-4">
-                <h3 className="font-bold text-lg text-white">Ben's Road Service LLC</h3>
-                <p className="text-gray-400 text-sm">{language === 'en' ? 'Professional, reliable, and ready to help' : 'Profesional, confiable, y listo para ayudar'}</p>
+                <h3 className="font-bold text-lg text-gray-900">Ben's Road Service LLC</h3>
+                <p className="text-gray-600 text-sm">{language === 'en' ? 'Professional, reliable, and ready to help' : 'Profesional, confiable, y listo para ayudar'}</p>
               </div>
             </div>
           </div>
@@ -677,22 +780,32 @@ export default function LandingPage() {
       <section className="py-20 px-4 section-dark" data-testid="service-area-section">
         <div className="max-w-6xl mx-auto">
           <p className="text-blue-400 text-center font-medium mb-2">{language === 'en' ? 'Coverage' : 'Cobertura'}</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-8">{t('serviceAreaTitle')}</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">{t('serviceAreaTitle')}</h2>
+          <p className="text-gray-400 text-center mb-8">
+            {language === 'en' 
+              ? 'Serving Salem and up to 100 miles throughout Oregon!' 
+              : '¡Sirviendo Salem y hasta 100 millas en todo Oregon!'}
+          </p>
           
           <div className="glass-card p-4 md:p-8 border border-gray-700/50">
             <div className="aspect-video rounded-xl overflow-hidden mb-6">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d181814.71477384583!2d-123.14837282813!3d44.9428908!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54bffefcbc4b9c63%3A0xf93429e08f0357c2!2sSalem%2C%20OR!5e0!3m2!1sen!2sus!4v1699999999999!5m2!1sen!2sus"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1453451.7117904!2d-123.5!3d44.9428908!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54bffefcbc4b9c63%3A0xf93429e08f0357c2!2sSalem%2C%20OR!5e0!3m2!1sen!2sus!4v1699999999999!5m2!1sen!2sus"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 allowFullScreen=""
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Service Area Map"
+                title="Service Area Map - 100 Mile Radius"
               />
             </div>
-            <p className="text-center text-gray-400">{t('serviceAreaCities')}</p>
+            <div className="text-center">
+              <p className="text-gray-300 font-medium mb-2">
+                {language === 'en' ? '100+ Mile Service Radius from Salem' : 'Radio de Servicio de 100+ Millas desde Salem'}
+              </p>
+              <p className="text-gray-400 text-sm">{t('serviceAreaCities')}</p>
+            </div>
           </div>
         </div>
       </section>
