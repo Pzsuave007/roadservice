@@ -1041,8 +1041,8 @@ export default function LandingPage() {
         </div>
       </footer>
 
-      {/* Floating Action Button (Mobile) - Expandable Help Menu */}
-      <div className="fixed bottom-6 right-4 z-50 md:hidden" data-testid="fab-container">
+      {/* Floating Action Button - Expandable Help Menu */}
+      <div className="fixed bottom-6 right-4 z-50" data-testid="fab-container">
         {/* Backdrop when open */}
         {fabOpen && (
           <div 
