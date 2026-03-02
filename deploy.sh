@@ -27,7 +27,7 @@ print_error() { echo -e "${RED}[✗]${NC} $1"; }
 GIT_REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROD_DIR="/opt/bensroadservice"
 BACKEND_PORT="8003"
-FRONTEND_PORT="3001"
+FRONTEND_PORT="4001"
 
 echo "Git Repository: $GIT_REPO_DIR"
 echo "Production Dir: $PROD_DIR"
