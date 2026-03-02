@@ -66,8 +66,8 @@ agenthub/agents/youtube/db
 
 # Archive files and large assets
 **/*.zip
-**/*.tar.gz
-**/*.tar
+# # **/*.tar.gz
+# **/*.tar
 **/*.tgz
 *.pack
 *.deb
