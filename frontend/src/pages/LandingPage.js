@@ -416,7 +416,7 @@ export default function LandingPage() {
             </p>
             
             {/* Trust Badges */}
-            <div className="flex flex-wrap items-center justify-center gap-2 pt-4">
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-4 pb-8 md:pb-12">
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 text-gray-800 text-xs font-semibold shadow-sm">
                 <Shield className="w-3.5 h-3.5 text-green-600" />
                 {t('licensed')}
