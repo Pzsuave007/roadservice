@@ -1139,7 +1139,7 @@ export default function LandingPage() {
           className={`w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 ${
             fabOpen 
               ? 'bg-gray-800 rotate-0' 
-              : 'bg-gradient-to-r from-orange-500 to-red-500 animate-pulse'
+              : 'bg-gradient-to-r from-orange-500 to-red-500 animate-pulse-slow'
           }`}
           data-testid="fab-main-btn"
         >
