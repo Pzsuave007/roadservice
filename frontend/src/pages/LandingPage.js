@@ -43,6 +43,8 @@ import {
   Wrench,
   Crosshair,
   Loader2,
+  X,
+  HelpCircle,
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -79,6 +81,7 @@ export default function LandingPage() {
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [emergencyLocation, setEmergencyLocation] = useState(null);
   const [isGettingEmergencyLocation, setIsGettingEmergencyLocation] = useState(false);
+  const [fabOpen, setFabOpen] = useState(false);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -1038,52 +1041,119 @@ export default function LandingPage() {
         </div>
       </footer>
 
-      {/* Floating Action Buttons (Mobile) */}
-      <div className="fab-container md:hidden" data-testid="fab-container">
-        <a
-          href={`tel:${PHONE_NUMBER}`}
-          className="w-14 h-14 rounded-full bg-gradient-to-r from-orange-500 to-yellow-400 flex items-center justify-center shadow-lg shadow-orange-500/40"
-          aria-label={t('callNow')}
-          data-testid="fab-call"
-        >
-          <Phone className="w-6 h-6 text-gray-900" />
-        </a>
-        <a
-          href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(language === 'en' ? 'Hi Ben! I need roadside assistance.' : '¡Hola Ben! Necesito asistencia en carretera.')}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-14 h-14 rounded-full bg-green-500 flex items-center justify-center shadow-lg shadow-green-500/30"
-          aria-label="WhatsApp"
-          data-testid="fab-whatsapp"
-        >
-          <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-          </svg>
-        </a>
-        <a
-          href={`sms:${PHONE_NUMBER}`}
-          className="w-14 h-14 rounded-full bg-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/30"
-          aria-label={t('textUs')}
-          data-testid="fab-text"
-        >
-          <MessageSquare className="w-6 h-6 text-white" />
-        </a>
+      {/* Floating Action Button (Mobile) - Expandable Help Menu */}
+      <div className="fixed bottom-6 right-4 z-50 md:hidden" data-testid="fab-container">
+        {/* Backdrop when open */}
+        {fabOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 -z-10"
+            onClick={() => setFabOpen(false)}
+          />
+        )}
+        
+        {/* Expanded Menu */}
+        <div className={`absolute bottom-20 right-0 transition-all duration-300 ${fabOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
+          <div className="bg-white rounded-2xl shadow-2xl p-4 min-w-[200px]">
+            <p className="text-gray-500 text-xs font-medium mb-3 text-center">
+              {language === 'en' ? 'How can we help?' : '¿Cómo podemos ayudarte?'}
+            </p>
+            
+            <div className="space-y-2">
+              {/* Call */}
+              <a
+                href={`tel:${PHONE_NUMBER}`}
+                className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-orange-500 to-orange-400 text-white font-semibold transition-transform hover:scale-[1.02]"
+                data-testid="fab-call"
+                onClick={() => setFabOpen(false)}
+              >
+                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                  <Phone className="w-5 h-5" />
+                </div>
+                <span>{language === 'en' ? 'Call Now' : 'Llamar Ahora'}</span>
+              </a>
+              
+              {/* WhatsApp */}
+              <a
+                href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(language === 'en' ? 'Hi Ben! I need roadside assistance.' : '¡Hola Ben! Necesito asistencia en carretera.')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 p-3 rounded-xl bg-green-500 text-white font-semibold transition-transform hover:scale-[1.02]"
+                data-testid="fab-whatsapp"
+                onClick={() => setFabOpen(false)}
+              >
+                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                  </svg>
+                </div>
+                <span>WhatsApp</span>
+              </a>
+              
+              {/* Text */}
+              <a
+                href={`sms:${PHONE_NUMBER}`}
+                className="flex items-center gap-3 p-3 rounded-xl bg-blue-500 text-white font-semibold transition-transform hover:scale-[1.02]"
+                data-testid="fab-text"
+                onClick={() => setFabOpen(false)}
+              >
+                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                  <MessageSquare className="w-5 h-5" />
+                </div>
+                <span>{language === 'en' ? 'Text Message' : 'Mensaje de Texto'}</span>
+              </a>
+              
+              {/* Send Location */}
+              <button
+                onClick={() => {
+                  setFabOpen(false);
+                  getEmergencyLocation();
+                }}
+                className="w-full flex items-center gap-3 p-3 rounded-xl bg-red-500 text-white font-semibold transition-transform hover:scale-[1.02]"
+                data-testid="fab-send-location"
+              >
+                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                  <MapPin className="w-5 h-5" />
+                </div>
+                <span>{language === 'en' ? 'Send My Location' : 'Enviar Ubicación'}</span>
+              </button>
+              
+              {/* Get Quote */}
+              <a
+                href="#quote"
+                className="flex items-center gap-3 p-3 rounded-xl bg-gray-700 text-white font-semibold transition-transform hover:scale-[1.02]"
+                data-testid="fab-quote"
+                onClick={() => setFabOpen(false)}
+              >
+                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <span>{language === 'en' ? 'Get Estimate' : 'Obtener Cotización'}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        {/* Main FAB Button */}
         <button
-          onClick={getEmergencyLocation}
-          className="w-14 h-14 rounded-full bg-red-500 flex items-center justify-center shadow-lg shadow-red-500/30 animate-pulse"
-          aria-label={language === 'en' ? 'Send My Location' : 'Enviar Mi Ubicación'}
-          data-testid="fab-send-location"
+          onClick={() => setFabOpen(!fabOpen)}
+          className={`w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 ${
+            fabOpen 
+              ? 'bg-gray-800 rotate-0' 
+              : 'bg-gradient-to-r from-orange-500 to-red-500 animate-pulse'
+          }`}
+          data-testid="fab-main-btn"
         >
-          <MapPin className="w-6 h-6 text-white" />
+          {fabOpen ? (
+            <X className="w-7 h-7 text-white" />
+          ) : (
+            <div className="flex flex-col items-center">
+              <HelpCircle className="w-7 h-7 text-white" />
+              <span className="text-[8px] text-white font-bold mt-0.5">
+                {language === 'en' ? 'HELP' : 'AYUDA'}
+              </span>
+            </div>
+          )}
         </button>
-        <a
-          href="#quote"
-          className="w-14 h-14 rounded-full bg-gray-700 flex items-center justify-center shadow-lg"
-          aria-label={t('getQuote')}
-          data-testid="fab-quote"
-        >
-          <FileText className="w-6 h-6 text-white" />
-        </a>
       </div>
 
       {/* Emergency Location Sharing Modal */}
