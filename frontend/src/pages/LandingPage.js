@@ -76,6 +76,9 @@ export default function LandingPage() {
     estimatedDistance: 10,
   });
   const [isGettingLocation, setIsGettingLocation] = useState(false);
+  const [showLocationModal, setShowLocationModal] = useState(false);
+  const [emergencyLocation, setEmergencyLocation] = useState(null);
+  const [isGettingEmergencyLocation, setIsGettingEmergencyLocation] = useState(false);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -135,6 +138,70 @@ export default function LandingPage() {
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
     );
+  };
+
+  // Get emergency location and prepare for sharing via SMS or WhatsApp
+  const getEmergencyLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error(language === 'en' ? 'Geolocation is not supported by your browser' : 'La geolocalización no es compatible con tu navegador');
+      return;
+    }
+    
+    setIsGettingEmergencyLocation(true);
+    setShowLocationModal(true);
+    
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        const mapsLink = `https://maps.google.com/?q=${latitude},${longitude}`;
+        
+        let addressText = '';
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+          );
+          const data = await response.json();
+          if (data.display_name) {
+            const address = data.address;
+            if (address.road) addressText = address.road;
+            if (address.city || address.town || address.village) {
+              addressText += addressText ? ', ' : '';
+              addressText += address.city || address.town || address.village;
+            }
+          }
+        } catch (error) {
+          // Use coordinates if geocoding fails
+          addressText = `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+        }
+        
+        setEmergencyLocation({
+          lat: latitude,
+          lng: longitude,
+          mapsLink,
+          address: addressText || `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`
+        });
+        setIsGettingEmergencyLocation(false);
+        toast.success(language === 'en' ? 'Location found! Choose how to send it.' : '¡Ubicación encontrada! Elige cómo enviarla.');
+      },
+      (error) => {
+        setIsGettingEmergencyLocation(false);
+        let errorMessage = language === 'en' ? 'Unable to get your location' : 'No se pudo obtener tu ubicación';
+        if (error.code === error.PERMISSION_DENIED) {
+          errorMessage = language === 'en' ? 'Please enable location access in your browser' : 'Por favor habilita el acceso a ubicación en tu navegador';
+        }
+        toast.error(errorMessage);
+        setShowLocationModal(false);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+    );
+  };
+
+  const getEmergencyMessage = (method) => {
+    if (!emergencyLocation) return '';
+    const baseMessage = language === 'en'
+      ? `🆘 EMERGENCY! I need roadside help!\n\n📍 My location: ${emergencyLocation.address}\n\n🗺️ Google Maps: ${emergencyLocation.mapsLink}\n\nPlease come ASAP!`
+      : `🆘 ¡EMERGENCIA! ¡Necesito ayuda en carretera!\n\n📍 Mi ubicación: ${emergencyLocation.address}\n\n🗺️ Google Maps: ${emergencyLocation.mapsLink}\n\n¡Por favor vengan lo antes posible!`;
+    return baseMessage;
   };
 
   const getEstimate = async () => {
@@ -329,6 +396,16 @@ export default function LandingPage() {
                 {t('getQuote')}
               </a>
             </div>
+            
+            {/* Emergency Send Location Button */}
+            <button
+              onClick={getEmergencyLocation}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-red-500/90 hover:bg-red-600 backdrop-blur-sm text-white font-bold text-sm border border-red-400/50 transition-all animate-pulse hover:animate-none"
+              data-testid="hero-send-location-btn"
+            >
+              <MapPin className="w-5 h-5" />
+              {language === 'en' ? "🆘 Stranded? Send My Location" : "🆘 ¿Varado? Enviar Mi Ubicación"}
+            </button>
             
             <p className="text-gray-200 pt-4 flex items-center justify-center gap-2">
               <MapPin className="w-5 h-5 text-orange-400" />
@@ -991,16 +1068,14 @@ export default function LandingPage() {
         >
           <MessageSquare className="w-6 h-6 text-white" />
         </a>
-        <a
-          href="https://maps.google.com/?q=Salem,+OR"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-14 h-14 rounded-full bg-gray-700 flex items-center justify-center shadow-lg"
-          aria-label={t('getDirections')}
-          data-testid="fab-directions"
+        <button
+          onClick={getEmergencyLocation}
+          className="w-14 h-14 rounded-full bg-red-500 flex items-center justify-center shadow-lg shadow-red-500/30 animate-pulse"
+          aria-label={language === 'en' ? 'Send My Location' : 'Enviar Mi Ubicación'}
+          data-testid="fab-send-location"
         >
-          <Navigation className="w-6 h-6 text-white" />
-        </a>
+          <MapPin className="w-6 h-6 text-white" />
+        </button>
         <a
           href="#quote"
           className="w-14 h-14 rounded-full bg-gray-700 flex items-center justify-center shadow-lg"
@@ -1010,6 +1085,92 @@ export default function LandingPage() {
           <FileText className="w-6 h-6 text-white" />
         </a>
       </div>
+
+      {/* Emergency Location Sharing Modal */}
+      {showLocationModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70" data-testid="location-modal">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+                {isGettingEmergencyLocation ? (
+                  <Loader2 className="w-8 h-8 text-red-500 animate-spin" />
+                ) : (
+                  <MapPin className="w-8 h-8 text-red-500" />
+                )}
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900">
+                {language === 'en' ? 'Send My Location' : 'Enviar Mi Ubicación'}
+              </h3>
+              <p className="text-gray-600 mt-2">
+                {isGettingEmergencyLocation 
+                  ? (language === 'en' ? 'Finding your location...' : 'Buscando tu ubicación...')
+                  : (language === 'en' ? 'Share your GPS location with Ben' : 'Comparte tu ubicación GPS con Ben')
+                }
+              </p>
+            </div>
+            
+            {emergencyLocation && !isGettingEmergencyLocation && (
+              <div className="space-y-4">
+                {/* Location found */}
+                <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                  <p className="text-green-800 font-medium text-center">
+                    📍 {emergencyLocation.address}
+                  </p>
+                </div>
+                
+                {/* Send via WhatsApp */}
+                <a
+                  href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(getEmergencyMessage('whatsapp'))}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-4 text-lg font-bold bg-green-500 hover:bg-green-600 text-white rounded-xl flex items-center justify-center gap-3 transition-all"
+                  data-testid="send-location-whatsapp"
+                  onClick={() => setShowLocationModal(false)}
+                >
+                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                  </svg>
+                  {language === 'en' ? 'Send via WhatsApp' : 'Enviar por WhatsApp'}
+                </a>
+                
+                {/* Send via SMS */}
+                <a
+                  href={`sms:${PHONE_NUMBER}?body=${encodeURIComponent(getEmergencyMessage('sms'))}`}
+                  className="w-full py-4 text-lg font-bold bg-blue-500 hover:bg-blue-600 text-white rounded-xl flex items-center justify-center gap-3 transition-all"
+                  data-testid="send-location-sms"
+                  onClick={() => setShowLocationModal(false)}
+                >
+                  <MessageSquare className="w-6 h-6" />
+                  {language === 'en' ? 'Send via Text Message' : 'Enviar por Mensaje de Texto'}
+                </a>
+                
+                {/* Call directly */}
+                <a
+                  href={`tel:${PHONE_NUMBER}`}
+                  className="w-full py-4 text-lg font-bold bg-gradient-to-r from-orange-500 to-orange-400 text-white rounded-xl flex items-center justify-center gap-3 transition-all"
+                  data-testid="send-location-call"
+                  onClick={() => setShowLocationModal(false)}
+                >
+                  <Phone className="w-6 h-6" />
+                  {language === 'en' ? 'Or Just Call Ben' : 'O Solo Llama a Ben'}
+                </a>
+              </div>
+            )}
+            
+            {/* Close button */}
+            <button
+              onClick={() => {
+                setShowLocationModal(false);
+                setEmergencyLocation(null);
+              }}
+              className="w-full mt-4 py-3 text-gray-600 hover:text-gray-900 font-medium transition-colors"
+              data-testid="close-location-modal"
+            >
+              {language === 'en' ? 'Cancel' : 'Cancelar'}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* FAQ Schema Markup for SEO */}
       <script
