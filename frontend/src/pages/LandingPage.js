@@ -410,40 +410,40 @@ export default function LandingPage() {
               {language === 'en' ? "🆘 Stranded? Send My Location" : "🆘 ¿Varado? Enviar Mi Ubicación"}
             </button>
             
-            <p className="text-gray-200 pt-4 flex items-center justify-center gap-2">
-              <MapPin className="w-5 h-5 text-orange-400" />
+            <p className="text-gray-200 pt-2 flex items-center justify-center gap-2 text-sm">
+              <MapPin className="w-4 h-4 text-orange-400" />
               {t('servingArea')}
             </p>
             
             {/* Trust Badges */}
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-8">
-              <Badge variant="outline" className="px-5 py-2.5 border-green-400/50 text-green-300 bg-green-500/20 backdrop-blur-sm font-medium">
-                <Shield className="w-4 h-4 mr-2" />
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-4">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 text-gray-800 text-xs font-semibold shadow-sm">
+                <Shield className="w-3.5 h-3.5 text-green-600" />
                 {t('licensed')}
-              </Badge>
-              <Badge variant="outline" className="px-5 py-2.5 border-blue-400/50 text-blue-300 bg-blue-500/20 backdrop-blur-sm font-medium">
-                <CheckCircle className="w-4 h-4 mr-2" />
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 text-gray-800 text-xs font-semibold shadow-sm">
+                <CheckCircle className="w-3.5 h-3.5 text-blue-600" />
                 {t('insured')}
-              </Badge>
-              <Badge variant="outline" className="px-5 py-2.5 border-orange-400/50 text-orange-300 bg-orange-500/20 backdrop-blur-sm font-medium">
-                <Clock className="w-4 h-4 mr-2" />
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 text-gray-800 text-xs font-semibold shadow-sm">
+                <Clock className="w-3.5 h-3.5 text-orange-600" />
                 {t('available247')}
-              </Badge>
+              </span>
             </div>
           </div>
         </div>
       </section>
 
       {/* Quote Calculator Section - RIGHT AFTER HERO for fast access */}
-      <section id="quote" className="py-20 px-4 section-gray" data-testid="quote-section">
+      <section id="quote" className="py-10 md:py-20 px-4 section-gray" data-testid="quote-section">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-10">
-            <p className="text-orange-500 font-semibold mb-2">{language === 'en' ? 'Quick Estimate' : 'Estimado Rápido'}</p>
-            <h2 className="text-3xl md:text-4xl font-bold mb-3 text-gray-900">{t('quoteTitle')}</h2>
-            <p className="text-gray-600">{t('quoteSubtitle')}</p>
+          <div className="text-center mb-6 md:mb-10">
+            <p className="text-orange-500 font-semibold mb-1 text-sm">{language === 'en' ? 'Quick Estimate' : 'Estimado Rápido'}</p>
+            <h2 className="text-2xl md:text-4xl font-bold mb-2 text-gray-900">{t('quoteTitle')}</h2>
+            <p className="text-gray-600 text-sm md:text-base">{t('quoteSubtitle')}</p>
           </div>
           
-          <div className="glass-card p-8">
+          <div className="glass-card p-4 md:p-8">
             {quoteStep === 'form' && (
               <div className="space-y-6 quote-form" data-testid="quote-form">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -708,35 +708,35 @@ export default function LandingPage() {
       </section>
 
       {/* Services Section */}
-      <section className="py-20 px-4 section-light" data-testid="services-section">
+      <section className="py-10 md:py-20 px-4 section-light" data-testid="services-section">
         <div className="max-w-7xl mx-auto">
-          <p className="text-orange-500 text-center font-semibold mb-2">{language === 'en' ? 'What We Offer' : 'Lo Que Ofrecemos'}</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900">
+          <p className="text-orange-500 text-center font-semibold mb-1 text-sm">{language === 'en' ? 'What We Offer' : 'Lo Que Ofrecemos'}</p>
+          <h2 className="text-2xl md:text-4xl font-bold text-center mb-2 text-gray-900">
             {t('servicesTitle')}
           </h2>
-          <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+          <p className="text-gray-600 text-center mb-6 md:mb-12 max-w-2xl mx-auto text-sm md:text-base">
             {language === 'en' ? 'From emergency roadside assistance to heavy-duty towing, we\'ve got you covered' : 'Desde asistencia de emergencia hasta grúa pesada, lo tenemos cubierto'}
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
             {services.map((service) => {
               const Icon = service.icon;
               return (
                 <div
                   key={service.key}
-                  className="glass-card p-6 service-card"
+                  className="glass-card p-4 md:p-6 service-card"
                   data-testid={`service-card-${service.type}`}
                 >
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-400 flex items-center justify-center mb-4 shadow-lg shadow-orange-500/20">
-                    <Icon className="w-7 h-7 text-white" />
+                  <div className="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-gradient-to-br from-orange-500 to-orange-400 flex items-center justify-center mb-2 md:mb-4 shadow-lg shadow-orange-500/20">
+                    <Icon className="w-5 h-5 md:w-7 md:h-7 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2 text-gray-900">{t(service.key)}</h3>
-                  <p className="text-gray-600 text-sm mb-4">{t(`${service.key}Desc`)}</p>
+                  <h3 className="text-sm md:text-xl font-bold mb-1 md:mb-2 text-gray-900">{t(service.key)}</h3>
+                  <p className="text-gray-600 text-xs md:text-sm mb-2 md:mb-4 hidden md:block">{t(`${service.key}Desc`)}</p>
                   <a
                     href={`tel:${PHONE_NUMBER}`}
-                    className="inline-flex items-center gap-2 text-orange-500 hover:text-orange-600 font-semibold text-sm group"
+                    className="inline-flex items-center gap-1 md:gap-2 text-orange-500 hover:text-orange-600 font-semibold text-xs md:text-sm group"
                   >
-                    <Phone className="w-4 h-4" />
+                    <Phone className="w-3 h-3 md:w-4 md:h-4" />
                     {t('callNow')}
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </a>
@@ -748,63 +748,63 @@ export default function LandingPage() {
       </section>
 
       {/* Why Choose Us */}
-      <section className="py-20 px-4 section-light" data-testid="why-us-section">
+      <section className="py-10 md:py-20 px-4 section-light" data-testid="why-us-section">
         <div className="max-w-7xl mx-auto">
-          <p className="text-blue-500 text-center font-semibold mb-2">{language === 'en' ? 'Why Us' : 'Por Qué Nosotros'}</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900">{t('whyChooseUs')}</h2>
-          <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+          <p className="text-blue-500 text-center font-semibold mb-1 text-sm">{language === 'en' ? 'Why Us' : 'Por Qué Nosotros'}</p>
+          <h2 className="text-2xl md:text-4xl font-bold text-center mb-2 text-gray-900">{t('whyChooseUs')}</h2>
+          <p className="text-gray-600 text-center mb-6 md:mb-12 max-w-2xl mx-auto text-sm md:text-base">
             {language === 'en' ? 'When you\'re stranded, you need a towing company you can trust' : 'Cuando estás varado, necesitas una grúa en la que puedas confiar'}
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-6">
             {whyUs.map((item) => {
               const Icon = item.icon;
               return (
-                <div key={item.key} className="text-center p-6 glass-card">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/20">
-                    <Icon className="w-8 h-8 text-white" />
+                <div key={item.key} className="text-center p-3 md:p-6 glass-card">
+                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mx-auto mb-2 md:mb-4 shadow-lg shadow-blue-500/20">
+                    <Icon className="w-6 h-6 md:w-8 md:h-8 text-white" />
                   </div>
-                  <h3 className="text-lg font-bold mb-2 text-gray-900">{t(item.key)}</h3>
-                  <p className="text-gray-600 text-sm">{t(`${item.key}Desc`)}</p>
+                  <h3 className="text-xs md:text-lg font-bold mb-1 md:mb-2 text-gray-900">{t(item.key)}</h3>
+                  <p className="text-gray-600 text-xs hidden md:block">{t(`${item.key}Desc`)}</p>
                 </div>
               );
             })}
           </div>
           
           {/* Star Rating */}
-          <div className="flex items-center justify-center gap-1 mt-10">
+          <div className="flex items-center justify-center gap-1 mt-6 md:mt-10">
             {[1, 2, 3, 4, 5].map((star) => (
-              <Star key={star} className="w-8 h-8 fill-yellow-400 text-yellow-400" />
+              <Star key={star} className="w-6 h-6 md:w-8 md:h-8 fill-yellow-400 text-yellow-400" />
             ))}
           </div>
         </div>
       </section>
 
       {/* Reviews Section */}
-      <section className="py-20 px-4 section-gray" data-testid="reviews-section">
+      <section className="py-10 md:py-20 px-4 section-gray" data-testid="reviews-section">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-900">{t('reviewsTitle')}</h2>
+          <h2 className="text-2xl md:text-4xl font-bold text-center mb-6 md:mb-12 text-gray-900">{t('reviewsTitle')}</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
             {reviews.map((review, index) => (
-              <div key={index} className="glass-card p-6" data-testid={`review-card-${index}`}>
-                <div className="flex items-center gap-1 mb-3">
+              <div key={index} className="glass-card p-4 md:p-6" data-testid={`review-card-${index}`}>
+                <div className="flex items-center gap-1 mb-2 md:mb-3">
                   {[1, 2, 3, 4, 5].map((star) => (
-                    <Star key={star} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                    <Star key={star} className="w-4 h-4 md:w-5 md:h-5 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                <p className="text-gray-700 mb-4 italic">"{review.text}"</p>
-                <p className="font-semibold text-gray-900">{review.name}</p>
+                <p className="text-gray-700 mb-2 md:mb-4 italic text-sm md:text-base">"{review.text}"</p>
+                <p className="font-semibold text-gray-900 text-sm md:text-base">{review.name}</p>
               </div>
             ))}
           </div>
           
-          <div className="text-center mt-8">
+          <div className="text-center mt-6 md:mt-8">
             <a
               href="https://g.page/r/YOUR_GOOGLE_BUSINESS_ID/review"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-gray-200 hover:bg-gray-50 transition-colors font-medium text-gray-700 shadow-sm"
+              className="inline-flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-full bg-white border border-gray-200 hover:bg-gray-50 transition-colors font-medium text-gray-700 shadow-sm text-sm"
             >
               {t('readMoreReviews')}
               <ChevronRight className="w-4 h-4" />
@@ -814,26 +814,26 @@ export default function LandingPage() {
       </section>
 
       {/* Our Fleet Gallery */}
-      <section className="py-20 px-4 section-light" data-testid="gallery-section">
+      <section className="py-10 md:py-20 px-4 section-light" data-testid="gallery-section">
         <div className="max-w-7xl mx-auto">
-          <p className="text-orange-500 text-center font-semibold mb-2">{language === 'en' ? 'Our Equipment' : 'Nuestro Equipo'}</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900">
+          <p className="text-orange-500 text-center font-semibold mb-1 text-sm">{language === 'en' ? 'Our Equipment' : 'Nuestro Equipo'}</p>
+          <h2 className="text-2xl md:text-4xl font-bold text-center mb-2 text-gray-900">
             {language === 'en' ? 'Our Fleet in Action' : 'Nuestra Flota en Acción'}
           </h2>
-          <p className="text-gray-600 text-center mb-12">
+          <p className="text-gray-600 text-center mb-4 md:mb-12 text-sm">
             {language === 'en' ? 'Professional equipment ready to serve you 24/7' : 'Equipo profesional listo para servirle 24/7'}
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
             <div className="glass-card overflow-hidden group">
               <img 
                 src={CLIENT_IMAGES.flatbedDay} 
                 alt="Flatbed towing service" 
-                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-32 md:h-64 object-cover group-hover:scale-105 transition-transform duration-500"
               />
-              <div className="p-4">
-                <h3 className="font-bold text-lg text-gray-900">{t('flatbedTowing')}</h3>
-                <p className="text-gray-600 text-sm">{language === 'en' ? 'Safe transport for all vehicles' : 'Transporte seguro para todos los vehículos'}</p>
+              <div className="p-2 md:p-4">
+                <h3 className="font-bold text-sm md:text-lg text-gray-900">{t('flatbedTowing')}</h3>
+                <p className="text-gray-600 text-xs md:text-sm hidden md:block">{language === 'en' ? 'Safe transport for all vehicles' : 'Transporte seguro para todos los vehículos'}</p>
               </div>
             </div>
             
@@ -841,11 +841,11 @@ export default function LandingPage() {
               <img 
                 src={CLIENT_IMAGES.truckWithPickup} 
                 alt="Heavy duty towing" 
-                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-32 md:h-64 object-cover group-hover:scale-105 transition-transform duration-500"
               />
-              <div className="p-4">
-                <h3 className="font-bold text-lg text-gray-900">{language === 'en' ? 'Heavy Duty Capable' : 'Capacidad para Carga Pesada'}</h3>
-                <p className="text-gray-600 text-sm">{language === 'en' ? 'Trucks, SUVs, and more' : 'Trocas, SUVs, y más'}</p>
+              <div className="p-2 md:p-4">
+                <h3 className="font-bold text-sm md:text-lg text-gray-900">{language === 'en' ? 'Heavy Duty' : 'Carga Pesada'}</h3>
+                <p className="text-gray-600 text-xs md:text-sm hidden md:block">{language === 'en' ? 'Trucks, SUVs, and more' : 'Trocas, SUVs, y más'}</p>
               </div>
             </div>
             
@@ -853,11 +853,11 @@ export default function LandingPage() {
               <img 
                 src={CLIENT_IMAGES.gasStation} 
                 alt="24/7 Service" 
-                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-32 md:h-64 object-cover group-hover:scale-105 transition-transform duration-500"
               />
-              <div className="p-4">
-                <h3 className="font-bold text-lg text-gray-900">{t('available247')}</h3>
-                <p className="text-gray-600 text-sm">{language === 'en' ? 'Always ready when you need us' : 'Siempre listos cuando nos necesite'}</p>
+              <div className="p-2 md:p-4">
+                <h3 className="font-bold text-sm md:text-lg text-gray-900">{t('available247')}</h3>
+                <p className="text-gray-600 text-xs md:text-sm hidden md:block">{language === 'en' ? 'Always ready when you need us' : 'Siempre listos cuando nos necesite'}</p>
               </div>
             </div>
             
@@ -865,23 +865,23 @@ export default function LandingPage() {
               <img 
                 src={CLIENT_IMAGES.hero} 
                 alt="Night emergency service" 
-                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-32 md:h-64 object-cover group-hover:scale-105 transition-transform duration-500"
               />
-              <div className="p-4">
-                <h3 className="font-bold text-lg text-gray-900">{t('emergencyTowing')}</h3>
-                <p className="text-gray-600 text-sm">{language === 'en' ? 'Day or night, we\'re there' : 'De día o de noche, estamos ahí'}</p>
+              <div className="p-2 md:p-4">
+                <h3 className="font-bold text-sm md:text-lg text-gray-900">{t('emergencyTowing')}</h3>
+                <p className="text-gray-600 text-xs md:text-sm hidden md:block">{language === 'en' ? 'Day or night, we\'re there' : 'De día o de noche, estamos ahí'}</p>
               </div>
             </div>
             
-            <div className="glass-card overflow-hidden group md:col-span-2">
+            <div className="glass-card overflow-hidden group col-span-2">
               <img 
                 src={CLIENT_IMAGES.truckCloseup} 
                 alt="Ben's Road Service truck" 
-                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-32 md:h-64 object-cover group-hover:scale-105 transition-transform duration-500"
               />
-              <div className="p-4">
-                <h3 className="font-bold text-lg text-gray-900">Ben's Road Service LLC</h3>
-                <p className="text-gray-600 text-sm">{language === 'en' ? 'Professional, reliable, and ready to help' : 'Profesional, confiable, y listo para ayudar'}</p>
+              <div className="p-2 md:p-4">
+                <h3 className="font-bold text-sm md:text-lg text-gray-900">Ben's Road Service LLC</h3>
+                <p className="text-gray-600 text-xs md:text-sm hidden md:block">{language === 'en' ? 'Professional, reliable, and ready to help' : 'Profesional, confiable, y listo para ayudar'}</p>
               </div>
             </div>
           </div>
@@ -889,11 +889,11 @@ export default function LandingPage() {
       </section>
 
       {/* Service Area Map */}
-      <section className="py-20 px-4 section-dark" data-testid="service-area-section">
+      <section className="py-10 md:py-20 px-4 section-dark" data-testid="service-area-section">
         <div className="max-w-6xl mx-auto">
-          <p className="text-blue-400 text-center font-medium mb-2">{language === 'en' ? 'Coverage' : 'Cobertura'}</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">{t('serviceAreaTitle')}</h2>
-          <p className="text-gray-400 text-center mb-8">
+          <p className="text-blue-400 text-center font-medium mb-1 text-sm">{language === 'en' ? 'Coverage' : 'Cobertura'}</p>
+          <h2 className="text-2xl md:text-4xl font-bold text-center mb-2">{t('serviceAreaTitle')}</h2>
+          <p className="text-gray-400 text-center mb-4 md:mb-8 text-sm">
             {language === 'en' 
               ? 'Serving Salem and up to 100 miles throughout Oregon!' 
               : '¡Sirviendo Salem y hasta 100 millas en todo Oregon!'}
@@ -924,7 +924,7 @@ export default function LandingPage() {
 
       {/* Accident Assistance Section */}
       <section 
-        className="py-20 px-4 relative"
+        className="py-10 md:py-20 px-4 relative"
         style={{
           backgroundImage: `url(${CLIENT_IMAGES.truckWithPickup})`,
           backgroundSize: 'cover',
@@ -935,61 +935,61 @@ export default function LandingPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-gray-900/95 to-gray-900/85" />
         
         <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <AlertTriangle className="w-16 h-16 text-orange-500 mx-auto mb-6" />
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('accidentTitle')}</h2>
-          <p className="text-xl text-gray-300 mb-8">{t('accidentSubtitle')}</p>
+          <AlertTriangle className="w-12 h-12 md:w-16 md:h-16 text-orange-500 mx-auto mb-4 md:mb-6" />
+          <h2 className="text-2xl md:text-4xl font-bold mb-2 md:mb-4">{t('accidentTitle')}</h2>
+          <p className="text-base md:text-xl text-gray-300 mb-4 md:mb-8">{t('accidentSubtitle')}</p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto mb-10">
-            <div className="flex items-center gap-3 bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-              <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-              <span className="text-white">{t('insuranceWork')}</span>
+          <div className="grid grid-cols-2 gap-2 md:gap-4 max-w-2xl mx-auto mb-6 md:mb-10">
+            <div className="flex items-center gap-2 md:gap-3 bg-white/10 rounded-lg md:rounded-xl p-2 md:p-4 backdrop-blur-sm">
+              <CheckCircle className="w-4 h-4 md:w-6 md:h-6 text-green-400 flex-shrink-0" />
+              <span className="text-white text-xs md:text-base">{t('insuranceWork')}</span>
             </div>
-            <div className="flex items-center gap-3 bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-              <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-              <span className="text-white">{t('directBilling')}</span>
+            <div className="flex items-center gap-2 md:gap-3 bg-white/10 rounded-lg md:rounded-xl p-2 md:p-4 backdrop-blur-sm">
+              <CheckCircle className="w-4 h-4 md:w-6 md:h-6 text-green-400 flex-shrink-0" />
+              <span className="text-white text-xs md:text-base">{t('directBilling')}</span>
             </div>
-            <div className="flex items-center gap-3 bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-              <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-              <span className="text-white">{t('policeDispatch')}</span>
+            <div className="flex items-center gap-2 md:gap-3 bg-white/10 rounded-lg md:rounded-xl p-2 md:p-4 backdrop-blur-sm">
+              <CheckCircle className="w-4 h-4 md:w-6 md:h-6 text-green-400 flex-shrink-0" />
+              <span className="text-white text-xs md:text-base">{t('policeDispatch')}</span>
             </div>
-            <div className="flex items-center gap-3 bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-              <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-              <span className="text-white">{t('safeStorage')}</span>
+            <div className="flex items-center gap-2 md:gap-3 bg-white/10 rounded-lg md:rounded-xl p-2 md:p-4 backdrop-blur-sm">
+              <CheckCircle className="w-4 h-4 md:w-6 md:h-6 text-green-400 flex-shrink-0" />
+              <span className="text-white text-xs md:text-base">{t('safeStorage')}</span>
             </div>
           </div>
           
           <a
             href={`tel:${PHONE_NUMBER}`}
-            className="inline-flex items-center gap-3 px-10 py-5 rounded-full bg-gradient-to-r from-orange-500 to-yellow-400 text-gray-900 font-black text-xl uppercase tracking-wider shadow-2xl shadow-orange-500/30 transition-all cta-button hover:scale-105"
+            className="inline-flex items-center gap-2 md:gap-3 px-6 md:px-10 py-3 md:py-5 rounded-full bg-gradient-to-r from-orange-500 to-yellow-400 text-gray-900 font-black text-base md:text-xl uppercase tracking-wider shadow-2xl shadow-orange-500/30 transition-all cta-button hover:scale-105"
             data-testid="accident-call-btn"
           >
-            <Phone className="w-6 h-6" />
+            <Phone className="w-5 h-5 md:w-6 md:h-6" />
             {t('callForHelp')}
           </a>
         </div>
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 px-4 section-light" data-testid="faq-section">
+      <section className="py-10 md:py-20 px-4 section-light" data-testid="faq-section">
         <div className="max-w-3xl mx-auto">
-          <p className="text-orange-500 text-center font-semibold mb-2">{language === 'en' ? 'Got Questions?' : '¿Tienes Preguntas?'}</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900">{t('faqTitle')}</h2>
-          <p className="text-gray-600 text-center mb-12">
+          <p className="text-orange-500 text-center font-semibold mb-1 text-sm">{language === 'en' ? 'Got Questions?' : '¿Tienes Preguntas?'}</p>
+          <h2 className="text-2xl md:text-4xl font-bold text-center mb-2 text-gray-900">{t('faqTitle')}</h2>
+          <p className="text-gray-600 text-center mb-6 md:mb-12 text-sm">
             {language === 'en' ? 'Find answers to common questions about our towing services' : 'Encuentra respuestas a preguntas comunes sobre nuestros servicios'}
           </p>
           
-          <Accordion type="single" collapsible className="space-y-4">
+          <Accordion type="single" collapsible className="space-y-2 md:space-y-4">
             {[1, 2, 3, 4, 5, 6].map((num) => (
               <AccordionItem
                 key={num}
                 value={`item-${num}`}
-                className="bg-white border border-gray-200 px-6 rounded-xl shadow-sm"
+                className="bg-white border border-gray-200 px-4 md:px-6 rounded-xl shadow-sm"
                 data-testid={`faq-item-${num}`}
               >
-                <AccordionTrigger className="text-left text-base md:text-lg font-semibold hover:text-orange-500 text-gray-900 py-5">
+                <AccordionTrigger className="text-left text-sm md:text-lg font-semibold hover:text-orange-500 text-gray-900 py-3 md:py-5">
                   {t(`faq${num}Q`)}
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-700 text-base leading-relaxed pb-5">
+                <AccordionContent className="text-gray-700 text-sm md:text-base leading-relaxed pb-3 md:pb-5">
                   {t(`faq${num}A`)}
                 </AccordionContent>
               </AccordionItem>
@@ -1000,7 +1000,7 @@ export default function LandingPage() {
 
       {/* Final CTA Section */}
       <section 
-        className="py-24 px-4 relative"
+        className="py-12 md:py-24 px-4 relative"
         style={{
           backgroundImage: `url(${CLIENT_IMAGES.gasStation})`,
           backgroundSize: 'cover',
@@ -1011,29 +1011,29 @@ export default function LandingPage() {
         <div className="absolute inset-0 bg-gray-900/85" />
         
         <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-black mb-4">{t('finalCtaTitle')}</h2>
-          <p className="text-2xl text-gray-300 mb-10">{t('finalCtaSubtitle')}</p>
+          <h2 className="text-2xl md:text-5xl font-black mb-2 md:mb-4">{t('finalCtaTitle')}</h2>
+          <p className="text-base md:text-2xl text-gray-300 mb-6 md:mb-10">{t('finalCtaSubtitle')}</p>
           
           <a
             href={`tel:${PHONE_NUMBER}`}
-            className="inline-flex items-center gap-4 px-12 py-6 rounded-full bg-gradient-to-r from-orange-500 via-orange-400 to-yellow-400 text-gray-900 font-black text-2xl uppercase tracking-wider shadow-2xl shadow-orange-500/40 hover:scale-105 transition-transform cta-button animate-pulse-slow"
+            className="inline-flex items-center gap-2 md:gap-4 px-6 md:px-12 py-4 md:py-6 rounded-full bg-gradient-to-r from-orange-500 via-orange-400 to-yellow-400 text-gray-900 font-black text-base md:text-2xl uppercase tracking-wider shadow-2xl shadow-orange-500/40 hover:scale-105 transition-transform cta-button animate-pulse-slow"
             data-testid="final-call-btn"
           >
-            <Phone className="w-8 h-8" />
-            {t('callNow')} - {PHONE_DISPLAY}
+            <Phone className="w-5 h-5 md:w-8 md:h-8" />
+            <span className="hidden md:inline">{t('callNow')} - </span>{PHONE_DISPLAY}
           </a>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-4 border-t border-gray-700 bg-gray-900" data-testid="footer">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-gray-400 text-center md:text-left">{t('footerText')}</p>
+      <footer className="py-6 md:py-8 px-4 border-t border-gray-700 bg-gray-900" data-testid="footer">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
+          <p className="text-gray-400 text-center md:text-left text-xs md:text-base">{t('footerText')}</p>
           <div className="flex items-center gap-4">
-            <span className="text-gray-400">{t('weSpeak')}</span>
+            <span className="text-gray-400 text-xs md:text-base">{t('weSpeak')}</span>
             <a
               href="/admin"
-              className="text-gray-500 hover:text-gray-300 text-sm"
+              className="text-gray-500 hover:text-gray-300 text-xs md:text-sm"
             >
               Admin
             </a>
