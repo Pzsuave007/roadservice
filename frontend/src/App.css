@@ -1,34 +1,115 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+/* App-specific styles */
+
+.hero-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(9, 9, 11, 0.7) 0%,
+    rgba(9, 9, 11, 0.85) 50%,
+    #09090b 100%
+  );
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+.service-card {
+  transition: all 0.3s ease;
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+.service-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(249, 115, 22, 0.3);
 }
 
-.App-link {
-    color: #61dafb;
+.cta-button {
+  transition: all 0.2s ease;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.cta-button:active {
+  transform: scale(0.95);
+}
+
+/* Floating action buttons */
+.fab-container {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .fab-container {
+    bottom: 2rem;
+    right: 2rem;
+  }
+}
+
+/* Quote form styles */
+.quote-form input:focus,
+.quote-form select:focus {
+  outline: none;
+  border-color: #f97316;
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
+}
+
+/* Star rating */
+.star-filled {
+  color: #fbbf24;
+}
+
+/* Map container */
+.map-container {
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+/* Admin table */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #27272a;
+}
+
+.admin-table th {
+  background: #18181b;
+  font-weight: 600;
+}
+
+.admin-table tr:hover {
+  background: #18181b;
+}
+
+/* Status badges */
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-pending {
+  background: rgba(234, 179, 8, 0.2);
+  color: #eab308;
+}
+
+.status-contacted {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}
+
+.status-completed {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.status-cancelled {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
 }
