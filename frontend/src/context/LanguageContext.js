@@ -91,7 +91,7 @@ const translations = {
     // Accident Section
     accidentTitle: "Involved in an Accident?",
     accidentSubtitle: "We're here to help during stressful times",
-    insuranceWork: "We work with all insurance companies",
+    insuranceWork: "We work with you!",
     directBilling: "Direct billing available",
     policeDispatch: "Police dispatch assistance",
     safeStorage: "Safe vehicle storage",
@@ -226,7 +226,7 @@ const translations = {
     // Accident Section
     accidentTitle: "¿Tuviste un Accidente?",
     accidentSubtitle: "Estamos aquí para ayudarte en momentos difíciles",
-    insuranceWork: "Trabajamos con todas las aseguradoras",
+    insuranceWork: "¡Trabajamos contigo!",
     directBilling: "Facturación directa disponible",
     policeDispatch: "Asistencia con despacho policial",
     safeStorage: "Almacenamiento seguro de vehículos",

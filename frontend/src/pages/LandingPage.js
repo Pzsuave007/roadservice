@@ -52,7 +52,6 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 const PHONE_NUMBER = '9713886300';
 const PHONE_DISPLAY = '(971) 388-6300';
-const WHATSAPP_NUMBER = '19713886300'; // With country code for WhatsApp
 
 // Company logo
 const COMPANY_LOGO = 'https://customer-assets.emergentagent.com/job_00aa8ed2-46e4-4aea-a6de-8d7e8cfaf0af/artifacts/szsdzxev_bensroadserviceslogo-horizontal.png';
@@ -146,7 +145,7 @@ export default function LandingPage() {
     );
   };
 
-  // Get emergency location and prepare for sharing via SMS or WhatsApp
+  // Get emergency location and prepare for sharing via SMS
   const getEmergencyLocation = () => {
     if (!navigator.geolocation) {
       toast.error(language === 'en' ? 'Geolocation is not supported by your browser' : 'La geolocalización no es compatible con tu navegador');
@@ -325,21 +324,8 @@ export default function LandingPage() {
               data-testid="language-toggle"
             >
               <Globe className="w-4 h-4" />
-              <span>{language === 'en' ? 'ES' : 'EN'}</span>
+              <span>{language === 'en' ? 'Español' : 'English'}</span>
             </button>
-            
-            <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(language === 'en' ? 'Hi Ben! I need roadside assistance.' : '¡Hola Ben! Necesito asistencia en carretera.')}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500 hover:bg-green-600 text-white transition-colors font-medium"
-              data-testid="header-whatsapp-btn"
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-              </svg>
-              <span className="hidden sm:inline text-sm">WhatsApp</span>
-            </a>
             
             <a
               href={`sms:${PHONE_NUMBER}`}
@@ -366,7 +352,7 @@ export default function LandingPage() {
       <section 
         className="relative min-h-screen flex items-center justify-center pt-20"
         style={{
-          backgroundImage: `url(${CLIENT_IMAGES.flatbedDay})`,
+          backgroundImage: `url(${CLIENT_IMAGES.truckWithPickup})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -427,10 +413,6 @@ export default function LandingPage() {
             
             {/* Trust Badges */}
             <div className="flex flex-wrap items-center justify-center gap-2 pt-4 pb-8 md:pb-12">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 text-gray-800 text-xs font-semibold shadow-sm">
-                <Shield className="w-3.5 h-3.5 text-green-600" />
-                {t('licensed')}
-              </span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 text-gray-800 text-xs font-semibold shadow-sm">
                 <CheckCircle className="w-3.5 h-3.5 text-blue-600" />
                 {t('insured')}
@@ -653,24 +635,6 @@ export default function LandingPage() {
                     {language === 'en' ? 'Call Ben for Exact Price' : 'Llama a Ben por Precio Exacto'}
                   </a>
                   
-                  {/* WhatsApp option */}
-                  <a
-                    href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-                      language === 'en' 
-                        ? `Hi Ben! I need ${formData.serviceType?.replace('_', ' ')} service. My vehicle: ${formData.vehicleType}. Pickup: ${formData.pickupLocation}. Estimate showed: $${estimate.total_estimate.toFixed(2)}. What's the exact price?`
-                        : `¡Hola Ben! Necesito servicio de ${formData.serviceType?.replace('_', ' ')}. Mi vehículo: ${formData.vehicleType}. Recogida: ${formData.pickupLocation}. El estimado mostró: $${estimate.total_estimate.toFixed(2)}. ¿Cuál es el precio exacto?`
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-4 text-base font-semibold bg-green-500 hover:bg-green-600 text-white rounded-xl flex items-center justify-center gap-2 transition-all"
-                    data-testid="whatsapp-for-exact-btn"
-                  >
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                    </svg>
-                    {language === 'en' ? 'WhatsApp Ben' : 'WhatsApp a Ben'}
-                  </a>
-                  
                   {/* Text option */}
                   <a
                     href={`sms:${PHONE_NUMBER}?body=${encodeURIComponent(
@@ -854,8 +818,8 @@ export default function LandingPage() {
                 className="w-full h-32 md:h-64 object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="p-2 md:p-4">
-                <h3 className="font-bold text-sm md:text-lg text-gray-900">{language === 'en' ? 'Heavy Duty' : 'Carga Pesada'}</h3>
-                <p className="text-gray-600 text-xs md:text-sm hidden md:block">{language === 'en' ? 'Trucks, SUVs, and more' : 'Trocas, SUVs, y más'}</p>
+                <h3 className="font-bold text-sm md:text-lg text-gray-900">{language === 'en' ? 'Light Duty' : 'Carga Ligera'}</h3>
+                <p className="text-gray-600 text-xs md:text-sm hidden md:block">{language === 'en' ? 'Cars, SUVs, and more' : 'Carros, SUVs, y más'}</p>
               </div>
             </div>
             
@@ -1091,23 +1055,6 @@ export default function LandingPage() {
                 <span>{language === 'en' ? 'Call Now' : 'Llamar Ahora'}</span>
               </a>
               
-              {/* WhatsApp */}
-              <a
-                href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(language === 'en' ? 'Hi Ben! I need roadside assistance.' : '¡Hola Ben! Necesito asistencia en carretera.')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 p-3 rounded-xl bg-green-500 text-white font-semibold transition-transform hover:scale-[1.02]"
-                data-testid="fab-whatsapp"
-                onClick={() => setFabOpen(false)}
-              >
-                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                  </svg>
-                </div>
-                <span>WhatsApp</span>
-              </a>
-              
               {/* Text */}
               <a
                 href={`sms:${PHONE_NUMBER}`}
@@ -1206,21 +1153,6 @@ export default function LandingPage() {
                     📍 {emergencyLocation.address}
                   </p>
                 </div>
-                
-                {/* Send via WhatsApp */}
-                <a
-                  href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(getEmergencyMessage('whatsapp'))}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-4 text-lg font-bold bg-green-500 hover:bg-green-600 text-white rounded-xl flex items-center justify-center gap-3 transition-all"
-                  data-testid="send-location-whatsapp"
-                  onClick={() => setShowLocationModal(false)}
-                >
-                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                  </svg>
-                  {language === 'en' ? 'Send via WhatsApp' : 'Enviar por WhatsApp'}
-                </a>
                 
                 {/* Send via SMS */}
                 <a
