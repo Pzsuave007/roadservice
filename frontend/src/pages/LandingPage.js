@@ -84,9 +84,72 @@ export default function LandingPage() {
   const [emergencyLocation, setEmergencyLocation] = useState(null);
   const [isGettingEmergencyLocation, setIsGettingEmergencyLocation] = useState(false);
   const [fabOpen, setFabOpen] = useState(false);
+  const [isCalculatingDistance, setIsCalculatingDistance] = useState(false);
+  const [pickupCoords, setPickupCoords] = useState(null);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Calculate distance between two locations using coordinates
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 3959; // Earth's radius in miles
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c * 1.3; // Multiply by 1.3 to account for road distance vs straight line
+  };
+
+  // Geocode an address to get coordinates
+  const geocodeAddress = async (address) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`
+      );
+      const data = await response.json();
+      if (data && data.length > 0) {
+        return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+      }
+      return null;
+    } catch (error) {
+      return null;
+    }
+  };
+
+  // Auto-calculate distance when both locations are entered
+  const calculateDistanceFromLocations = async () => {
+    if (!formData.pickupLocation || !formData.dropoffLocation) {
+      toast.error(language === 'en' ? 'Please enter both pickup and drop-off locations' : 'Por favor ingresa ambas ubicaciones');
+      return;
+    }
+
+    setIsCalculatingDistance(true);
+    try {
+      // Get coordinates for pickup location (use stored coords if from GPS)
+      let pickup = pickupCoords;
+      if (!pickup) {
+        pickup = await geocodeAddress(formData.pickupLocation);
+      }
+      
+      // Get coordinates for dropoff location
+      const dropoff = await geocodeAddress(formData.dropoffLocation);
+
+      if (pickup && dropoff) {
+        const distance = calculateDistance(pickup.lat, pickup.lon, dropoff.lat, dropoff.lon);
+        const roundedDistance = Math.round(distance);
+        handleInputChange('estimatedDistance', roundedDistance);
+        toast.success(language === 'en' ? `Distance calculated: ~${roundedDistance} miles` : `Distancia calculada: ~${roundedDistance} millas`);
+      } else {
+        toast.error(language === 'en' ? 'Could not calculate distance. Please enter distance manually.' : 'No se pudo calcular la distancia. Por favor ingrésala manualmente.');
+      }
+    } catch (error) {
+      toast.error(language === 'en' ? 'Error calculating distance' : 'Error al calcular distancia');
+    }
+    setIsCalculatingDistance(false);
   };
 
   // Get user's current location using browser geolocation
@@ -100,6 +163,8 @@ export default function LandingPage() {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
+        // Store coordinates for distance calculation
+        setPickupCoords({ lat: latitude, lon: longitude });
         try {
           // Use reverse geocoding to get address from coordinates
           const response = await fetch(
@@ -539,16 +604,45 @@ export default function LandingPage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="distance" className="text-gray-700 font-medium">{t('estimatedDistance')}</Label>
-                    <Input
-                      id="distance"
-                      type="number"
-                      min="1"
-                      max="500"
-                      value={formData.estimatedDistance}
-                      onChange={(e) => handleInputChange('estimatedDistance', parseInt(e.target.value) || 10)}
-                      className="bg-white border-gray-300 focus:border-red-800 text-gray-900"
-                      data-testid="distance-input"
-                    />
+                    <div className="flex gap-2">
+                      <Input
+                        id="distance"
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        value={formData.estimatedDistance === 0 ? '' : formData.estimatedDistance}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val === '') {
+                            handleInputChange('estimatedDistance', 0);
+                          } else {
+                            const num = parseInt(val);
+                            if (!isNaN(num) && num >= 0 && num <= 500) {
+                              handleInputChange('estimatedDistance', num);
+                            }
+                          }
+                        }}
+                        className="bg-white border-gray-300 focus:border-red-800 text-gray-900 flex-1"
+                        data-testid="distance-input"
+                      />
+                      <Button
+                        type="button"
+                        onClick={calculateDistanceFromLocations}
+                        disabled={isCalculatingDistance || !formData.pickupLocation || !formData.dropoffLocation}
+                        className="bg-green-600 hover:bg-green-700 text-white px-3 shrink-0"
+                        data-testid="calc-distance-btn"
+                        title={language === 'en' ? "Auto-calculate distance" : "Calcular distancia automáticamente"}
+                      >
+                        {isCalculatingDistance ? (
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                          <Navigation className="w-5 h-5" />
+                        )}
+                      </Button>
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      {language === 'en' ? "Enter both locations, then click the icon to auto-calculate" : "Ingresa ambas ubicaciones, luego haz clic en el icono para calcular"}
+                    </p>
                   </div>
                 </div>
                 
