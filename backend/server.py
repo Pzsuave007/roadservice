@@ -8,7 +8,7 @@ import logging
 import secrets
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
-from typing import List, Optional
+from typing import List, Optional, Dict
 import uuid
 from datetime import datetime, timezone
 from enum import Enum
@@ -71,7 +71,45 @@ class RequestStatus(str, Enum):
     cancelled = "cancelled"
 
 
+# Default Settings
+DEFAULT_SETTINGS = {
+    "phone_number": "9713886300",
+    "phone_display": "(971) 388-6300",
+    "company_name": "Ben's Road Service LLC",
+    "service_area": "Salem & All of Oregon",
+    "mileage_rate": 3.50,
+    "emergency_fee": 25,
+    "base_prices": {
+        "emergency_towing": 85,
+        "flatbed_towing": 95,
+        "accident_recovery": 125,
+        "lockout": 55,
+        "jump_start": 45,
+        "tire_change": 55,
+        "long_distance": 100
+    },
+    "vehicle_multipliers": {
+        "sedan": 1.0,
+        "suv": 1.15,
+        "truck": 1.25,
+        "motorcycle": 0.85,
+        "van": 1.2,
+        "other": 1.1
+    }
+}
+
+
 # Models
+class SiteSettings(BaseModel):
+    phone_number: str = "9713886300"
+    phone_display: str = "(971) 388-6300"
+    company_name: str = "Ben's Road Service LLC"
+    service_area: str = "Salem & All of Oregon"
+    mileage_rate: float = 3.50
+    emergency_fee: float = 25
+    base_prices: Dict[str, float] = Field(default_factory=lambda: DEFAULT_SETTINGS["base_prices"].copy())
+    vehicle_multipliers: Dict[str, float] = Field(default_factory=lambda: DEFAULT_SETTINGS["vehicle_multipliers"].copy())
+
 class QuoteRequest(BaseModel):
     model_config = ConfigDict(extra="ignore")
     
@@ -109,33 +147,31 @@ class QuoteStatusUpdate(BaseModel):
     notes: Optional[str] = None
 
 
-# Pricing logic
-def calculate_quote(vehicle_type: VehicleType, service_type: ServiceType, is_emergency: bool, distance_miles: float) -> QuoteEstimate:
-    # Base prices by service type
-    base_prices = {
-        ServiceType.emergency_towing: 85,
-        ServiceType.flatbed_towing: 95,
-        ServiceType.accident_recovery: 125,
-        ServiceType.lockout: 55,
-        ServiceType.jump_start: 45,
-        ServiceType.tire_change: 55,
-        ServiceType.long_distance: 100,
-    }
+# Helper function to get settings
+async def get_settings() -> dict:
+    """Get settings from database or return defaults"""
+    settings = await db.settings.find_one({"_id": "site_settings"})
+    if settings:
+        settings.pop('_id', None)
+        # Merge with defaults in case new fields were added
+        merged = DEFAULT_SETTINGS.copy()
+        merged.update(settings)
+        return merged
+    return DEFAULT_SETTINGS.copy()
+
+
+# Pricing logic - now uses database settings
+async def calculate_quote_async(vehicle_type: VehicleType, service_type: ServiceType, is_emergency: bool, distance_miles: float) -> QuoteEstimate:
+    settings = await get_settings()
     
-    # Vehicle multipliers
-    vehicle_multipliers = {
-        VehicleType.sedan: 1.0,
-        VehicleType.suv: 1.15,
-        VehicleType.truck: 1.25,
-        VehicleType.motorcycle: 0.85,
-        VehicleType.van: 1.2,
-        VehicleType.other: 1.1,
-    }
+    base_prices = settings.get("base_prices", DEFAULT_SETTINGS["base_prices"])
+    vehicle_multipliers = settings.get("vehicle_multipliers", DEFAULT_SETTINGS["vehicle_multipliers"])
+    mileage_rate = settings.get("mileage_rate", 3.50)
+    emergency_fee_amount = settings.get("emergency_fee", 25)
     
-    base_price = base_prices.get(service_type, 75) * vehicle_multipliers.get(vehicle_type, 1.0)
-    mileage_rate = 3.50  # per mile
+    base_price = base_prices.get(service_type.value, 75) * vehicle_multipliers.get(vehicle_type.value, 1.0)
     mileage_charge = distance_miles * mileage_rate
-    emergency_fee = 25 if is_emergency else 0
+    emergency_fee = emergency_fee_amount if is_emergency else 0
     
     total = base_price + mileage_charge + emergency_fee
     
@@ -153,6 +189,20 @@ def calculate_quote(vehicle_type: VehicleType, service_type: ServiceType, is_eme
 async def root():
     return {"message": "Ben's Road Service API"}
 
+
+# Public settings endpoint (for frontend to get phone number, etc.)
+@api_router.get("/settings/public")
+async def get_public_settings():
+    """Get public settings like phone number for frontend"""
+    settings = await get_settings()
+    return {
+        "phone_number": settings.get("phone_number", "9713886300"),
+        "phone_display": settings.get("phone_display", "(971) 388-6300"),
+        "company_name": settings.get("company_name", "Ben's Road Service LLC"),
+        "service_area": settings.get("service_area", "Salem & All of Oregon")
+    }
+
+
 @api_router.post("/quote/estimate", response_model=QuoteEstimate)
 async def get_quote_estimate(
     vehicle_type: VehicleType,
@@ -161,14 +211,15 @@ async def get_quote_estimate(
     distance_miles: float = 10
 ):
     """Get an instant price estimate without submitting a quote request"""
-    return calculate_quote(vehicle_type, service_type, is_emergency, distance_miles)
+    return await calculate_quote_async(vehicle_type, service_type, is_emergency, distance_miles)
+
 
 @api_router.post("/quote/request", response_model=QuoteRequest)
 async def create_quote_request(input: QuoteRequestCreate):
     """Submit a quote request - saves to database for admin review"""
     distance = input.estimated_distance or 10  # Default 10 miles if not provided
     
-    estimate = calculate_quote(
+    estimate = await calculate_quote_async(
         input.vehicle_type,
         input.service_type,
         input.is_emergency,
@@ -193,6 +244,7 @@ async def create_quote_request(input: QuoteRequestCreate):
     await db.quote_requests.insert_one(doc)
     return quote_obj
 
+
 @api_router.get("/admin/quotes", response_model=List[QuoteRequest])
 async def get_all_quotes(username: str = Depends(verify_admin)):
     """Admin endpoint - get all quote requests"""
@@ -203,6 +255,7 @@ async def get_all_quotes(username: str = Depends(verify_admin)):
             quote['created_at'] = datetime.fromisoformat(quote['created_at'])
     
     return quotes
+
 
 @api_router.patch("/admin/quotes/{quote_id}", response_model=QuoteRequest)
 async def update_quote_status(quote_id: str, update: QuoteStatusUpdate, username: str = Depends(verify_admin)):
@@ -227,6 +280,7 @@ async def update_quote_status(quote_id: str, update: QuoteStatusUpdate, username
     
     return QuoteRequest(**result)
 
+
 @api_router.delete("/admin/quotes/{quote_id}")
 async def delete_quote(quote_id: str, username: str = Depends(verify_admin)):
     """Admin endpoint - delete a quote request"""
@@ -234,6 +288,7 @@ async def delete_quote(quote_id: str, username: str = Depends(verify_admin)):
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Quote not found")
     return {"message": "Quote deleted successfully"}
+
 
 @api_router.get("/admin/stats")
 async def get_admin_stats(username: str = Depends(verify_admin)):
@@ -249,6 +304,68 @@ async def get_admin_stats(username: str = Depends(verify_admin)):
         "contacted": contacted,
         "completed": completed
     }
+
+
+# Admin Settings Endpoints
+@api_router.get("/admin/settings", response_model=SiteSettings)
+async def get_admin_settings(username: str = Depends(verify_admin)):
+    """Admin endpoint - get all site settings"""
+    settings = await get_settings()
+    return SiteSettings(**settings)
+
+
+@api_router.put("/admin/settings")
+async def update_settings(settings: SiteSettings, username: str = Depends(verify_admin)):
+    """Admin endpoint - update site settings"""
+    settings_dict = settings.model_dump()
+    
+    await db.settings.update_one(
+        {"_id": "site_settings"},
+        {"$set": settings_dict},
+        upsert=True
+    )
+    
+    return {"message": "Settings updated successfully", "settings": settings_dict}
+
+
+@api_router.patch("/admin/settings/phone")
+async def update_phone(phone_number: str, phone_display: str, username: str = Depends(verify_admin)):
+    """Admin endpoint - update phone number only"""
+    await db.settings.update_one(
+        {"_id": "site_settings"},
+        {"$set": {"phone_number": phone_number, "phone_display": phone_display}},
+        upsert=True
+    )
+    return {"message": "Phone updated successfully"}
+
+
+@api_router.patch("/admin/settings/pricing")
+async def update_pricing(
+    mileage_rate: Optional[float] = None,
+    emergency_fee: Optional[float] = None,
+    base_prices: Optional[Dict[str, float]] = None,
+    vehicle_multipliers: Optional[Dict[str, float]] = None,
+    username: str = Depends(verify_admin)
+):
+    """Admin endpoint - update pricing settings"""
+    update_dict = {}
+    if mileage_rate is not None:
+        update_dict["mileage_rate"] = mileage_rate
+    if emergency_fee is not None:
+        update_dict["emergency_fee"] = emergency_fee
+    if base_prices is not None:
+        update_dict["base_prices"] = base_prices
+    if vehicle_multipliers is not None:
+        update_dict["vehicle_multipliers"] = vehicle_multipliers
+    
+    if update_dict:
+        await db.settings.update_one(
+            {"_id": "site_settings"},
+            {"$set": update_dict},
+            upsert=True
+        )
+    
+    return {"message": "Pricing updated successfully"}
 
 
 # Include the router in the main app

@@ -50,8 +50,10 @@ import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
-const PHONE_NUMBER = '9713886300';
-const PHONE_DISPLAY = '(971) 388-6300';
+
+// Default values (will be overridden by API settings)
+const DEFAULT_PHONE_NUMBER = '9713886300';
+const DEFAULT_PHONE_DISPLAY = '(971) 388-6300';
 
 // Company logo
 const COMPANY_LOGO = 'https://customer-assets.emergentagent.com/job_00aa8ed2-46e4-4aea-a6de-8d7e8cfaf0af/artifacts/szsdzxev_bensroadserviceslogo-horizontal.png';
@@ -70,6 +72,12 @@ export default function LandingPage() {
   const [quoteStep, setQuoteStep] = useState('form'); // form, estimate, submitted
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [estimate, setEstimate] = useState(null);
+  const [siteSettings, setSiteSettings] = useState({
+    phone_number: DEFAULT_PHONE_NUMBER,
+    phone_display: DEFAULT_PHONE_DISPLAY,
+    company_name: "Ben's Road Service LLC",
+    service_area: "Salem & All of Oregon"
+  });
   const [formData, setFormData] = useState({
     pickupLocation: '',
     dropoffLocation: '',
@@ -86,6 +94,24 @@ export default function LandingPage() {
   const [fabOpen, setFabOpen] = useState(false);
   const [isCalculatingDistance, setIsCalculatingDistance] = useState(false);
   const [pickupCoords, setPickupCoords] = useState(null);
+
+  // Fetch site settings on load
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const res = await axios.get(`${API}/settings/public`);
+        setSiteSettings(res.data);
+      } catch (error) {
+        // Use defaults if API fails
+        console.log('Using default settings');
+      }
+    };
+    fetchSettings();
+  }, []);
+
+  // Use settings values
+  const PHONE_NUMBER = siteSettings.phone_number;
+  const PHONE_DISPLAY = siteSettings.phone_display;
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
