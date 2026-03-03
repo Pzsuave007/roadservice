@@ -100,7 +100,7 @@ const translations = {
     // FAQ
     faqTitle: "Frequently Asked Questions",
     faq1Q: "How much does towing cost?",
-    faq1A: "Our services range from $45-$125 base fee (depending on service type) plus $3.50 per mile. Vehicle type may also affect pricing. Get an instant estimate using our quote calculator above!",
+    faq1A: "Our services range from $75-$125 base fee (depending on service type) plus $3.50 per mile. Vehicle type may also affect pricing. Get an instant estimate using our quote calculator above!",
     faq2Q: "How fast can you arrive?",
     faq2A: "We aim to arrive within 30 minutes in the Salem area. Response times may vary for surrounding areas.",
     faq3Q: "Are you available 24/7?",
@@ -235,7 +235,7 @@ const translations = {
     // FAQ
     faqTitle: "Preguntas Frecuentes",
     faq1Q: "¿Cuánto cuesta el servicio de grúa?",
-    faq1A: "Nuestros servicios van desde $45-$125 de tarifa base (dependiendo del tipo de servicio) más $3.50 por milla. El tipo de vehículo también puede afectar el precio. ¡Obtén una cotización instantánea usando nuestra calculadora arriba!",
+    faq1A: "Nuestros servicios van desde $75-$125 de tarifa base (dependiendo del tipo de servicio) más $3.50 por milla. El tipo de vehículo también puede afectar el precio. ¡Obtén una cotización instantánea usando nuestra calculadora arriba!",
     faq2Q: "¿Qué tan rápido pueden llegar?",
     faq2A: "Llegamos en 30 minutos o menos en el área de Salem. Los tiempos pueden variar en áreas cercanas.",
     faq3Q: "¿Están disponibles 24/7?",
