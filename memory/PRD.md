@@ -26,23 +26,46 @@ Create a high-converting, single-page landing website for a professional Towing 
 - **Backend Port:** 8010 (unique to this project)
 - **Backend Service:** bensroad-backend.service
 - **Project Directory:** ~/roadservice
+- **Auto-start:** Enabled via systemd
+
+## Admin Credentials
+- **URL:** https://bensroadservice247.com/admin
+- **Username:** admin
+- **Password:** bensroadservice2024
 
 ## Completed Features
-- ✅ Bilingual interface (EN/ES)
+- ✅ Bilingual interface (EN/ES) with "Español" toggle
 - ✅ Quote calculator with geolocation
+- ✅ **Auto-calculate distance** between pickup and dropoff locations
 - ✅ Admin dashboard for viewing quotes
-- ✅ WhatsApp integration
+- ✅ **Admin Settings Panel** - Ben can change phone, pricing, rates
 - ✅ Emergency "Send My Location" feature
-- ✅ Expandable FAB menu (Call, WhatsApp, Text, Location, Estimate)
+- ✅ Expandable FAB menu (Call, Text, Location, Estimate)
 - ✅ Company logo and branding (red theme)
 - ✅ Mobile responsive design
 - ✅ SEO optimization (meta tags, schema markup)
-- ✅ Deployed to production server
+- ✅ Deployed to production server with SSL pending
+- ✅ Auto-start on server reboot enabled
+
+## Recent Changes (March 2026)
+- Removed "Licensed" badge from hero section
+- Changed hero background image to Light Duty truck
+- Changed "Heavy Duty" to "Light Duty" in fleet section
+- Changed "We work with all insurance companies" to "We work with you!"
+- Removed ALL WhatsApp references (client doesn't use WhatsApp)
+- Changed language toggle from "ES" to "Español"
+- Updated FAQ pricing to show range ($75-$125)
+- Added auto-calculate distance feature
+- Added Admin Settings panel for phone/pricing management
+- Created server management script for all projects
 
 ## Key API Endpoints
+- `GET /api/settings/public` - Get public settings (phone, company name)
 - `POST /api/quote/estimate` - Get price estimate
 - `POST /api/quote/request` - Submit quote request
 - `GET /api/admin/quotes` - Admin: view all quotes
+- `GET /api/admin/settings` - Admin: get all settings
+- `PUT /api/admin/settings` - Admin: update settings
 - `PATCH /api/admin/quotes/{id}` - Admin: update quote status
 
 ## Database Schema
@@ -62,6 +85,30 @@ Create a high-converting, single-page landing website for a professional Towing 
 }
 ```
 
+**settings collection:**
+```
+{
+  _id: "site_settings",
+  phone_number: string,
+  phone_display: string,
+  company_name: string,
+  service_area: string,
+  mileage_rate: float,
+  emergency_fee: float,
+  base_prices: { service_type: price },
+  vehicle_multipliers: { vehicle_type: multiplier }
+}
+```
+
+## Server Management
+Script location: `~/roadservice/manage-services.sh`
+
+Commands:
+- `./manage-services.sh status` - Check all backends
+- `./manage-services.sh enable-all` - Enable auto-start
+- `./manage-services.sh restart-all` - Restart all services
+- `./manage-services.sh logs <service>` - View logs
+
 ## Deployment Notes
 **IMPORTANT:** Do NOT build frontend on the user's server. Use pre-built artifacts:
 1. Build frontend in Emergent environment
@@ -71,9 +118,9 @@ Create a high-converting, single-page landing website for a professional Towing 
 ## Backlog
 
 ### P1 - High Priority
-- [ ] Secure admin dashboard with login system
+- [ ] Install SSL certificate (script created: install-ssl-v2.sh)
 
-### P2 - Medium Priority
+### P2 - Medium Priority  
 - [ ] Refactor LandingPage.js into smaller components
 - [ ] Clean up redundant deployment scripts
 
@@ -82,4 +129,6 @@ Create a high-converting, single-page landing website for a professional Towing 
 - [ ] Add more client photos
 
 ## Bug Fixes Log
-- **2024-03-02:** Fixed quote estimator error - changed backend port from 8001 to 8010 to avoid conflict with other projects, installed missing `motor` module
+- **2026-03-02:** Fixed quote estimator - changed port from 8001 to 8010
+- **2026-03-03:** Fixed distance input on mobile, added auto-calculate feature
+- **2026-03-03:** Added admin settings panel for client self-management
