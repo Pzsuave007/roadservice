@@ -306,6 +306,11 @@ export default function LandingPage() {
       return;
     }
 
+    // Ensure distance is a valid number, default to 10 if empty or 0
+    const distance = formData.estimatedDistance && formData.estimatedDistance > 0 
+      ? formData.estimatedDistance 
+      : 10;
+
     setIsSubmitting(true);
     try {
       const response = await axios.post(`${API}/quote/estimate`, null, {
@@ -313,13 +318,14 @@ export default function LandingPage() {
           vehicle_type: formData.vehicleType,
           service_type: formData.serviceType,
           is_emergency: formData.isEmergency,
-          distance_miles: formData.estimatedDistance,
+          distance_miles: distance,
         }
       });
       setEstimate(response.data);
       setQuoteStep('estimate');
     } catch (error) {
-      toast.error(language === 'en' ? 'Error getting estimate' : 'Error al obtener cotización');
+      console.error('Estimate error:', error);
+      toast.error(language === 'en' ? 'Error getting estimate. Please try again.' : 'Error al obtener cotización. Por favor intenta de nuevo.');
     }
     setIsSubmitting(false);
   };
@@ -636,11 +642,11 @@ export default function LandingPage() {
                         type="text"
                         inputMode="numeric"
                         pattern="[0-9]*"
-                        value={formData.estimatedDistance === 0 ? '' : formData.estimatedDistance}
+                        value={formData.estimatedDistance || ''}
                         onChange={(e) => {
                           const val = e.target.value;
                           if (val === '') {
-                            handleInputChange('estimatedDistance', 0);
+                            handleInputChange('estimatedDistance', '');
                           } else {
                             const num = parseInt(val);
                             if (!isNaN(num) && num >= 0 && num <= 500) {
@@ -648,6 +654,13 @@ export default function LandingPage() {
                             }
                           }
                         }}
+                        onBlur={(e) => {
+                          // Reset to 10 if empty or 0 when user leaves the field
+                          if (!formData.estimatedDistance || formData.estimatedDistance === 0) {
+                            handleInputChange('estimatedDistance', 10);
+                          }
+                        }}
+                        placeholder="10"
                         className="bg-white border-gray-300 focus:border-red-800 text-gray-900 flex-1"
                         data-testid="distance-input"
                       />
