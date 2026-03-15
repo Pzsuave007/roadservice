@@ -118,7 +118,7 @@ export default function LandingPage() {
   };
 
   // Calculate distance between two locations using coordinates
-  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+  const calculateDistanceBetweenCoords = (lat1, lon1, lat2, lon2) => {
     const R = 3959; // Earth's radius in miles
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
@@ -146,6 +146,37 @@ export default function LandingPage() {
     }
   };
 
+  // Auto-calculate distance when both locations are filled
+  useEffect(() => {
+    // Only auto-calculate if both fields have at least 5 characters (a reasonable address)
+    if (formData.pickupLocation?.length >= 5 && formData.dropoffLocation?.length >= 5) {
+      const timeoutId = setTimeout(async () => {
+        setIsCalculatingDistance(true);
+        try {
+          let pickup = pickupCoords;
+          if (!pickup) {
+            pickup = await geocodeAddress(formData.pickupLocation);
+          }
+          const dropoff = await geocodeAddress(formData.dropoffLocation);
+
+          if (pickup && dropoff) {
+            const dist = calculateDistanceBetweenCoords(pickup.lat, pickup.lon, dropoff.lat, dropoff.lon);
+            const roundedDistance = Math.round(dist);
+            if (roundedDistance > 0 && roundedDistance !== formData.estimatedDistance) {
+              setFormData(prev => ({ ...prev, estimatedDistance: roundedDistance }));
+              toast.success(language === 'en' ? `Distance: ~${roundedDistance} miles` : `Distancia: ~${roundedDistance} millas`);
+            }
+          }
+        } catch (error) {
+          // Silently fail - user can still enter manually
+        }
+        setIsCalculatingDistance(false);
+      }, 1500); // Wait 1.5 seconds after user stops typing
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [formData.pickupLocation, formData.dropoffLocation, pickupCoords, language]);
+
   // Auto-calculate distance when both locations are entered
   const calculateDistanceFromLocations = async () => {
     if (!formData.pickupLocation || !formData.dropoffLocation) {
@@ -165,7 +196,7 @@ export default function LandingPage() {
       const dropoff = await geocodeAddress(formData.dropoffLocation);
 
       if (pickup && dropoff) {
-        const distance = calculateDistance(pickup.lat, pickup.lon, dropoff.lat, dropoff.lon);
+        const distance = calculateDistanceBetweenCoords(pickup.lat, pickup.lon, dropoff.lat, dropoff.lon);
         const roundedDistance = Math.round(distance);
         handleInputChange('estimatedDistance', roundedDistance);
         toast.success(language === 'en' ? `Distance calculated: ~${roundedDistance} miles` : `Distancia calculada: ~${roundedDistance} millas`);
