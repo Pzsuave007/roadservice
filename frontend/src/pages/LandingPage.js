@@ -747,7 +747,7 @@ export default function LandingPage() {
               <div className="space-y-2">
                 <Label className="text-gray-700 font-medium flex items-center gap-2">
                   <Camera className="w-4 h-4 text-purple-600" />
-                  {language === 'en' ? 'Photo of Your Vehicle (Optional)' : 'Foto de Tu Vehículo (Opcional)'}
+                  {language === 'en' ? 'Photo of Your Vehicle' : 'Foto de Tu Vehículo'} *
                 </Label>
                 
                 {!photoPreview ? (
