@@ -1,5 +1,7 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, UploadFile, File
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -12,8 +14,12 @@ from typing import List, Optional, Dict
 import uuid
 from datetime import datetime, timezone
 from enum import Enum
+import shutil
 
 ROOT_DIR = Path(__file__).parent
+UPLOAD_DIR = ROOT_DIR / "uploads"
+UPLOAD_DIR.mkdir(exist_ok=True)
+
 load_dotenv(ROOT_DIR / '.env')
 
 # MongoDB connection
@@ -366,6 +372,36 @@ async def update_pricing(
         )
     
     return {"message": "Pricing updated successfully"}
+
+
+# Photo Upload Endpoint
+@api_router.post("/upload/photo")
+async def upload_photo(file: UploadFile = File(...)):
+    """Upload a vehicle photo and return the URL"""
+    # Generate unique filename
+    file_ext = file.filename.split(".")[-1] if "." in file.filename else "jpg"
+    unique_filename = f"{uuid.uuid4()}.{file_ext}"
+    file_path = UPLOAD_DIR / unique_filename
+    
+    # Save file
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    
+    # Return the URL path
+    return {
+        "success": True,
+        "filename": unique_filename,
+        "url": f"/api/uploads/{unique_filename}"
+    }
+
+
+@api_router.get("/uploads/{filename}")
+async def get_upload(filename: str):
+    """Serve uploaded files"""
+    file_path = UPLOAD_DIR / filename
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="File not found")
+    return FileResponse(file_path)
 
 
 # Include the router in the main app

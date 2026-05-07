@@ -45,6 +45,7 @@ import {
   Loader2,
   X,
   HelpCircle,
+  Camera,
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -94,6 +95,42 @@ export default function LandingPage() {
   const [fabOpen, setFabOpen] = useState(false);
   const [isCalculatingDistance, setIsCalculatingDistance] = useState(false);
   const [pickupCoords, setPickupCoords] = useState(null);
+  const [vehiclePhoto, setVehiclePhoto] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+
+  // Handle photo upload
+  const handlePhotoSelect = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Show preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPhotoPreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+
+    // Upload to server
+    setIsUploadingPhoto(true);
+    try {
+      const formDataUpload = new FormData();
+      formDataUpload.append('file', file);
+      
+      const response = await axios.post(`${API}/upload/photo`, formDataUpload, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      
+      if (response.data.success) {
+        setVehiclePhoto(`${BACKEND_URL}${response.data.url}`);
+        toast.success(language === 'en' ? 'Photo uploaded!' : '¡Foto subida!');
+      }
+    } catch (error) {
+      toast.error(language === 'en' ? 'Error uploading photo' : 'Error al subir foto');
+      setPhotoPreview(null);
+    }
+    setIsUploadingPhoto(false);
+  };
 
   // Fetch site settings on load
   useEffect(() => {
@@ -706,6 +743,60 @@ export default function LandingPage() {
                 />
               </div>
               
+              {/* Vehicle Photo Upload */}
+              <div className="space-y-2">
+                <Label className="text-gray-700 font-medium flex items-center gap-2">
+                  <Camera className="w-4 h-4 text-purple-600" />
+                  {language === 'en' ? 'Photo of Your Vehicle (Optional)' : 'Foto de Tu Vehículo (Opcional)'}
+                </Label>
+                
+                {!photoPreview ? (
+                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                      {isUploadingPhoto ? (
+                        <Loader2 className="w-8 h-8 text-gray-400 animate-spin" />
+                      ) : (
+                        <>
+                          <Camera className="w-8 h-8 text-gray-400 mb-2" />
+                          <p className="text-sm text-gray-500">
+                            {language === 'en' ? 'Tap to take or select a photo' : 'Toca para tomar o seleccionar una foto'}
+                          </p>
+                        </>
+                      )}
+                    </div>
+                    <input 
+                      type="file" 
+                      className="hidden" 
+                      accept="image/*"
+                      capture="environment"
+                      onChange={handlePhotoSelect}
+                      data-testid="photo-input"
+                    />
+                  </label>
+                ) : (
+                  <div className="relative">
+                    <img 
+                      src={photoPreview} 
+                      alt="Vehicle preview" 
+                      className="w-full h-40 object-cover rounded-xl border border-gray-200"
+                    />
+                    <button
+                      onClick={() => {
+                        setPhotoPreview(null);
+                        setVehiclePhoto(null);
+                      }}
+                      className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                    <div className="absolute bottom-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                      <CheckCircle className="w-3 h-3" />
+                      {language === 'en' ? 'Photo ready' : 'Foto lista'}
+                    </div>
+                  </div>
+                )}
+              </div>
+              
               {/* Distance indicator - shows when calculated */}
               {formData.estimatedDistance > 0 && (
                 <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center justify-between">
@@ -740,8 +831,8 @@ export default function LandingPage() {
               <a
                 href={`sms:${PHONE_NUMBER}?body=${encodeURIComponent(
                   language === 'en' 
-                    ? `Hi Ben! I need a tow.\n\nVehicle: ${formData.vehicleType || '(not selected)'}\nPickup: ${formData.pickupLocation || '(not entered)'}\nDrop-off: ${formData.dropoffLocation || '(not entered)'}${formData.estimatedDistance > 0 ? `\nDistance: ~${formData.estimatedDistance} miles` : ''}\n\nPlease call me at: ${formData.phoneNumber || '(my number)'}`
-                    : `¡Hola Ben! Necesito una grúa.\n\nVehículo: ${formData.vehicleType || '(no seleccionado)'}\nRecogida: ${formData.pickupLocation || '(no ingresado)'}\nDestino: ${formData.dropoffLocation || '(no ingresado)'}${formData.estimatedDistance > 0 ? `\nDistancia: ~${formData.estimatedDistance} millas` : ''}\n\nPor favor llámame al: ${formData.phoneNumber || '(mi número)'}`
+                    ? `Hi Ben! I need a tow.\n\nVehicle: ${formData.vehicleType || '(not selected)'}\nPickup: ${formData.pickupLocation || '(not entered)'}\nDrop-off: ${formData.dropoffLocation || '(not entered)'}${formData.estimatedDistance > 0 ? `\nDistance: ~${formData.estimatedDistance} miles` : ''}${vehiclePhoto ? `\n\nVehicle Photo: ${vehiclePhoto}` : ''}\n\nPlease call me at: ${formData.phoneNumber || '(my number)'}`
+                    : `¡Hola Ben! Necesito una grúa.\n\nVehículo: ${formData.vehicleType || '(no seleccionado)'}\nRecogida: ${formData.pickupLocation || '(no ingresado)'}\nDestino: ${formData.dropoffLocation || '(no ingresado)'}${formData.estimatedDistance > 0 ? `\nDistancia: ~${formData.estimatedDistance} millas` : ''}${vehiclePhoto ? `\n\nFoto del Vehículo: ${vehiclePhoto}` : ''}\n\nPor favor llámame al: ${formData.phoneNumber || '(mi número)'}`
                 )}`}
                 className="w-full py-6 text-lg font-bold bg-blue-500 hover:bg-blue-600 text-white rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02]"
                 data-testid="text-ben-btn"
