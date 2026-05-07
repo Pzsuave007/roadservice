@@ -600,293 +600,127 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Quote Calculator Section - RIGHT AFTER HERO for fast access */}
+      {/* Contact Section - Simple request form */}
       <section id="quote" className="py-10 md:py-20 px-4 section-gray" data-testid="quote-section">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-2xl mx-auto">
           <div className="text-center mb-6 md:mb-10">
-            <p className="text-red-800 font-semibold mb-1 text-sm">{language === 'en' ? 'Quick Estimate' : 'Estimado Rápido'}</p>
-            <h2 className="text-2xl md:text-4xl font-bold mb-2 text-gray-900">{t('quoteTitle')}</h2>
-            <p className="text-gray-600 text-sm md:text-base">{t('quoteSubtitle')}</p>
+            <p className="text-red-800 font-semibold mb-1 text-sm">{language === 'en' ? 'Need a Tow?' : '¿Necesitas Grúa?'}</p>
+            <h2 className="text-2xl md:text-4xl font-bold mb-2 text-gray-900">
+              {language === 'en' ? 'Get a Quick Quote from Ben' : 'Obtén una Cotización de Ben'}
+            </h2>
+            <p className="text-gray-600 text-sm md:text-base">
+              {language === 'en' 
+                ? "Tell us where you are and where you're going. Ben will give you an exact price!" 
+                : "Dinos dónde estás y a dónde vas. ¡Ben te dará un precio exacto!"}
+            </p>
           </div>
           
           <div className="glass-card p-4 md:p-8">
-            {quoteStep === 'form' && (
-              <div className="space-y-6 quote-form" data-testid="quote-form">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="pickup" className="text-gray-700 font-medium">{t('pickupLocation')} *</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        id="pickup"
-                        placeholder={language === 'en' ? "Your current location" : "Tu ubicación actual"}
-                        value={formData.pickupLocation}
-                        onChange={(e) => handleInputChange('pickupLocation', e.target.value)}
-                        className="bg-white border-gray-300 focus:border-red-800 text-gray-900 placeholder:text-gray-400 flex-1"
-                        data-testid="pickup-input"
-                      />
-                      <Button
-                        type="button"
-                        onClick={getCurrentLocation}
-                        disabled={isGettingLocation}
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-3 shrink-0"
-                        data-testid="use-location-btn"
-                        title={language === 'en' ? "Use my current location" : "Usar mi ubicación actual"}
-                      >
-                        {isGettingLocation ? (
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                        ) : (
-                          <Crosshair className="w-5 h-5" />
-                        )}
-                      </Button>
-                    </div>
-                    <p className="text-xs text-gray-500">
-                      {language === 'en' ? "Click the location icon to share your GPS" : "Haz clic en el icono para compartir tu GPS"}
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="dropoff" className="text-gray-700 font-medium">{t('dropoffLocation')}</Label>
-                    <Input
-                      id="dropoff"
-                      placeholder={language === 'en' ? "Where should we take your vehicle?" : "¿A dónde llevamos tu vehículo?"}
-                      value={formData.dropoffLocation}
-                      onChange={(e) => handleInputChange('dropoffLocation', e.target.value)}
-                      className="bg-white border-gray-300 focus:border-red-800 text-gray-900 placeholder:text-gray-400"
-                      data-testid="dropoff-input"
-                    />
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label className="text-gray-700 font-medium">{t('vehicleType')} *</Label>
-                    <Select
-                      value={formData.vehicleType}
-                      onValueChange={(value) => handleInputChange('vehicleType', value)}
-                    >
-                      <SelectTrigger className="bg-white border-gray-300 text-gray-900" data-testid="vehicle-select">
-                        <SelectValue placeholder={t('vehicleType')} />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white border-gray-200">
-                        <SelectItem value="sedan" className="text-gray-900">{t('sedan')}</SelectItem>
-                        <SelectItem value="suv" className="text-gray-900">{t('suv')}</SelectItem>
-                        <SelectItem value="truck" className="text-gray-900">{t('truck')}</SelectItem>
-                        <SelectItem value="motorcycle" className="text-gray-900">{t('motorcycle')}</SelectItem>
-                        <SelectItem value="van" className="text-gray-900">{t('van')}</SelectItem>
-                        <SelectItem value="other" className="text-gray-900">{t('other')}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-gray-700 font-medium">{t('serviceNeeded')} *</Label>
-                    <Select
-                      value={formData.serviceType}
-                      onValueChange={(value) => handleInputChange('serviceType', value)}
-                    >
-                      <SelectTrigger className="bg-white border-gray-300 text-gray-900" data-testid="service-select">
-                        <SelectValue placeholder={t('serviceNeeded')} />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white border-gray-200">
-                        <SelectItem value="emergency_towing" className="text-gray-900">{t('emergencyTowing')}</SelectItem>
-                        <SelectItem value="flatbed_towing" className="text-gray-900">{t('flatbedTowing')}</SelectItem>
-                        <SelectItem value="accident_recovery" className="text-gray-900">{t('accidentRecovery')}</SelectItem>
-                        <SelectItem value="lockout" className="text-gray-900">{t('lockoutService')}</SelectItem>
-                        <SelectItem value="jump_start" className="text-gray-900">{t('jumpStart')}</SelectItem>
-                        <SelectItem value="tire_change" className="text-gray-900">{t('tireChange')}</SelectItem>
-                        <SelectItem value="long_distance" className="text-gray-900">{t('longDistance')}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="phone" className="text-gray-700 font-medium">{t('phoneNumber')} *</Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="(555) 123-4567"
-                      value={formData.phoneNumber}
-                      onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
-                      className="bg-white border-gray-300 focus:border-red-800 text-gray-900 placeholder:text-gray-400"
-                      data-testid="phone-input"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="distance" className="text-gray-700 font-medium">{t('estimatedDistance')}</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        id="distance"
-                        type="text"
-                        inputMode="numeric"
-                        pattern="[0-9]*"
-                        value={formData.estimatedDistance || ''}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          if (val === '') {
-                            handleInputChange('estimatedDistance', '');
-                          } else {
-                            const num = parseInt(val);
-                            if (!isNaN(num) && num >= 0 && num <= 500) {
-                              handleInputChange('estimatedDistance', num);
-                            }
-                          }
-                        }}
-                        onBlur={(e) => {
-                          // Reset to 10 if empty or 0 when user leaves the field
-                          if (!formData.estimatedDistance || formData.estimatedDistance === 0) {
-                            handleInputChange('estimatedDistance', 10);
-                          }
-                        }}
-                        placeholder="10"
-                        className="bg-white border-gray-300 focus:border-red-800 text-gray-900 flex-1"
-                        data-testid="distance-input"
-                      />
-                      <Button
-                        type="button"
-                        onClick={calculateDistanceFromLocations}
-                        disabled={isCalculatingDistance || !formData.pickupLocation || !formData.dropoffLocation}
-                        className="bg-green-600 hover:bg-green-700 text-white px-3 shrink-0"
-                        data-testid="calc-distance-btn"
-                        title={language === 'en' ? "Auto-calculate distance" : "Calcular distancia automáticamente"}
-                      >
-                        {isCalculatingDistance ? (
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                        ) : (
-                          <Navigation className="w-5 h-5" />
-                        )}
-                      </Button>
-                    </div>
-                    <p className="text-xs text-gray-500">
-                      {language === 'en' ? "Enter both locations, then click the icon to auto-calculate" : "Ingresa ambas ubicaciones, luego haz clic en el icono para calcular"}
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-4">
-                  <button
-                    type="button"
-                    onClick={() => handleInputChange('isEmergency', true)}
-                    className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
-                      formData.isEmergency
-                        ? 'bg-red-800 text-white shadow-lg shadow-red-800/20'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                    }`}
-                    data-testid="emergency-btn"
-                  >
-                    {t('emergencyService')}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleInputChange('isEmergency', false)}
-                    className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
-                      !formData.isEmergency
-                        ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                    }`}
-                    data-testid="scheduled-btn"
-                  >
-                    {t('scheduledService')}
-                  </button>
-                </div>
-                
-                <Button
-                  onClick={getEstimate}
-                  disabled={isSubmitting}
-                  className="w-full py-6 text-lg font-bold bg-gradient-to-r from-red-800 to-red-600 hover:from-red-800 hover:to-red-800 text-white shadow-lg shadow-red-800/20"
-                  data-testid="get-estimate-btn"
-                >
-                  {isSubmitting ? t('submitting') : t('getEstimate')}
-                </Button>
-              </div>
-            )}
-            
-            {quoteStep === 'estimate' && estimate && (
-              <div className="space-y-6" data-testid="quote-estimate">
-                <h3 className="text-2xl font-bold text-center text-gray-900">{t('estimateTitle')}</h3>
-                
-                <div className="bg-gray-50 rounded-xl p-6 space-y-4 border border-gray-200">
-                  <div className="flex justify-between text-gray-700">
-                    <span>{t('basePrice')}</span>
-                    <span className="font-medium">${estimate.base_price.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between text-gray-700">
-                    <span>{t('mileageCharge')} ({estimate.distance_miles} mi)</span>
-                    <span className="font-medium">${estimate.mileage_charge.toFixed(2)}</span>
-                  </div>
-                  {estimate.emergency_fee > 0 && (
-                    <div className="flex justify-between text-gray-700">
-                      <span>{t('emergencyFee')}</span>
-                      <span className="font-medium">${estimate.emergency_fee.toFixed(2)}</span>
-                    </div>
-                  )}
-                  <div className="border-t border-gray-200 pt-4 flex justify-between text-2xl font-bold">
-                    <span className="text-gray-900">{t('totalEstimate')}</span>
-                    <span className="text-red-800">${estimate.total_estimate.toFixed(2)}</span>
-                  </div>
-                </div>
-                
-                {/* Important notice - call for exact price */}
-                <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">
-                  <p className="text-red-800 text-center font-medium">
-                    {language === 'en' 
-                      ? "⚠️ This is an ESTIMATE only. Call Ben now to get the exact price for your situation!"
-                      : "⚠️ Esto es solo un ESTIMADO. ¡Llama a Ben ahora para obtener el precio exacto!"}
-                  </p>
-                </div>
-                
-                <div className="flex flex-col gap-3">
-                  {/* Primary CTA - CALL NOW */}
-                  <a
-                    href={`tel:${PHONE_NUMBER}`}
-                    className="w-full py-6 text-lg font-bold bg-gradient-to-r from-red-800 to-red-600 hover:from-red-800 hover:to-red-800 text-white rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-red-800/20 transition-all hover:scale-[1.02]"
-                    data-testid="call-for-exact-btn"
-                  >
-                    <Phone className="w-6 h-6" />
-                    {language === 'en' ? 'Call Ben for Exact Price' : 'Llama a Ben por Precio Exacto'}
-                  </a>
-                  
-                  {/* Text option */}
-                  <a
-                    href={`sms:${PHONE_NUMBER}?body=${encodeURIComponent(
-                      language === 'en' 
-                        ? `Hi Ben! I need ${formData.serviceType?.replace('_', ' ')} service. My vehicle: ${formData.vehicleType}. Pickup: ${formData.pickupLocation}. Estimate showed: $${estimate.total_estimate.toFixed(2)}. What's the exact price?`
-                        : `¡Hola Ben! Necesito servicio de ${formData.serviceType?.replace('_', ' ')}. Mi vehículo: ${formData.vehicleType}. Recogida: ${formData.pickupLocation}. El estimado mostró: $${estimate.total_estimate.toFixed(2)}. ¿Cuál es el precio exacto?`
-                    )}`}
-                    className="w-full py-4 text-base font-semibold bg-blue-500 hover:bg-blue-600 text-white rounded-xl flex items-center justify-center gap-2 transition-all"
-                    data-testid="text-for-exact-btn"
-                  >
-                    <MessageSquare className="w-5 h-5" />
-                    {language === 'en' ? 'Or Text Ben' : 'O Envía un Texto a Ben'}
-                  </a>
-                  
+            <div className="space-y-5" data-testid="contact-form">
+              {/* Pickup Location */}
+              <div className="space-y-2">
+                <Label htmlFor="pickup" className="text-gray-700 font-medium flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-red-600" />
+                  {language === 'en' ? 'Where are you? (Pickup Location)' : '¿Dónde estás? (Ubicación de Recogida)'} *
+                </Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="pickup"
+                    placeholder={language === 'en' ? "Enter address or use GPS button →" : "Ingresa dirección o usa el botón GPS →"}
+                    value={formData.pickupLocation}
+                    onChange={(e) => handleInputChange('pickupLocation', e.target.value)}
+                    className="bg-white border-gray-300 focus:border-red-800 text-gray-900 placeholder:text-gray-400 flex-1 py-6 text-base"
+                    data-testid="pickup-input"
+                  />
                   <Button
-                    onClick={() => setQuoteStep('form')}
-                    variant="outline"
-                    className="w-full border-gray-300 text-gray-700 hover:bg-gray-50"
-                    data-testid="modify-quote-btn"
+                    type="button"
+                    onClick={getCurrentLocation}
+                    disabled={isGettingLocation}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 shrink-0"
+                    data-testid="use-location-btn"
+                    title={language === 'en' ? "Use my current location" : "Usar mi ubicación actual"}
                   >
-                    {language === 'en' ? 'Modify Estimate' : 'Modificar Estimado'}
+                    {isGettingLocation ? (
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
+                      <Crosshair className="w-5 h-5" />
+                    )}
                   </Button>
                 </div>
               </div>
-            )}
-            
-            {quoteStep === 'submitted' && (
-              <div className="text-center py-8 space-y-4" data-testid="quote-submitted">
-                <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto">
-                  <CheckCircle className="w-10 h-10 text-green-500" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900">{t('requestSubmitted')}</h3>
-                <p className="text-gray-600">{t('contactSoon')}</p>
-                <a
-                  href={`tel:${PHONE_NUMBER}`}
-                  className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-red-800 to-red-600 text-white font-bold transition-colors shadow-lg shadow-red-800/20"
-                >
-                  <Phone className="w-5 h-5" />
-                  {t('callNow')} - {PHONE_DISPLAY}
-                </a>
+              
+              {/* Dropoff Location */}
+              <div className="space-y-2">
+                <Label htmlFor="dropoff" className="text-gray-700 font-medium flex items-center gap-2">
+                  <Navigation className="w-4 h-4 text-green-600" />
+                  {language === 'en' ? 'Where should we take your vehicle?' : '¿A dónde llevamos tu vehículo?'}
+                </Label>
+                <Input
+                  id="dropoff"
+                  placeholder={language === 'en' ? "Destination address (mechanic, home, etc.)" : "Dirección de destino (mecánico, casa, etc.)"}
+                  value={formData.dropoffLocation}
+                  onChange={(e) => handleInputChange('dropoffLocation', e.target.value)}
+                  className="bg-white border-gray-300 focus:border-red-800 text-gray-900 placeholder:text-gray-400 py-6 text-base"
+                  data-testid="dropoff-input"
+                />
               </div>
-            )}
+              
+              {/* Phone Number */}
+              <div className="space-y-2">
+                <Label htmlFor="phone" className="text-gray-700 font-medium flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-blue-600" />
+                  {language === 'en' ? 'Your Phone Number' : 'Tu Número de Teléfono'} *
+                </Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="(555) 123-4567"
+                  value={formData.phoneNumber}
+                  onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
+                  className="bg-white border-gray-300 focus:border-red-800 text-gray-900 placeholder:text-gray-400 py-6 text-base"
+                  data-testid="phone-input"
+                />
+              </div>
+              
+              {/* Divider */}
+              <div className="pt-4 border-t border-gray-200">
+                <p className="text-center text-gray-600 font-medium mb-4">
+                  {language === 'en' ? 'Choose how to reach Ben:' : 'Elige cómo contactar a Ben:'}
+                </p>
+              </div>
+              
+              {/* Primary CTA - Call Ben */}
+              <a
+                href={`tel:${PHONE_NUMBER}`}
+                className="w-full py-6 text-lg font-bold bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 text-white rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-red-800/30 transition-all hover:scale-[1.02]"
+                data-testid="call-ben-btn"
+              >
+                <Phone className="w-6 h-6" />
+                {language === 'en' ? 'Call Ben Now' : 'Llamar a Ben Ahora'}
+                <span className="text-red-200 ml-2">{PHONE_DISPLAY}</span>
+              </a>
+              
+              {/* Secondary CTA - Text Ben */}
+              <a
+                href={`sms:${PHONE_NUMBER}?body=${encodeURIComponent(
+                  language === 'en' 
+                    ? `Hi Ben! I need a tow.\n\nPickup: ${formData.pickupLocation || '(not entered)'}\nDrop-off: ${formData.dropoffLocation || '(not entered)'}\n\nPlease call me at: ${formData.phoneNumber || '(my number)'}`
+                    : `¡Hola Ben! Necesito una grúa.\n\nRecogida: ${formData.pickupLocation || '(no ingresado)'}\nDestino: ${formData.dropoffLocation || '(no ingresado)'}\n\nPor favor llámame al: ${formData.phoneNumber || '(mi número)'}`
+                )}`}
+                className="w-full py-5 text-base font-semibold bg-blue-500 hover:bg-blue-600 text-white rounded-xl flex items-center justify-center gap-3 transition-all"
+                data-testid="text-ben-btn"
+              >
+                <MessageSquare className="w-5 h-5" />
+                {language === 'en' ? 'Text My Info to Ben' : 'Enviar Mensaje a Ben'}
+              </a>
+              
+              {/* Info text */}
+              <p className="text-center text-gray-500 text-sm pt-2">
+                {language === 'en' 
+                  ? "Ben will respond with an exact price based on your locations" 
+                  : "Ben responderá con un precio exacto basado en tus ubicaciones"}
+              </p>
+            </div>
           </div>
         </div>
       </section>
