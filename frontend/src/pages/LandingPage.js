@@ -685,33 +685,40 @@ export default function LandingPage() {
               {/* Divider */}
               <div className="pt-4 border-t border-gray-200">
                 <p className="text-center text-gray-600 font-medium mb-4">
-                  {language === 'en' ? 'Choose how to reach Ben:' : 'Elige cómo contactar a Ben:'}
+                  {language === 'en' ? 'Send your info to Ben:' : 'Envía tu información a Ben:'}
                 </p>
               </div>
               
-              {/* Primary CTA - Call Ben */}
-              <a
-                href={`tel:${PHONE_NUMBER}`}
-                className="w-full py-6 text-lg font-bold bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 text-white rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-red-800/30 transition-all hover:scale-[1.02]"
-                data-testid="call-ben-btn"
-              >
-                <Phone className="w-6 h-6" />
-                {language === 'en' ? 'Call Ben Now' : 'Llamar a Ben Ahora'}
-                <span className="text-red-200 ml-2">{PHONE_DISPLAY}</span>
-              </a>
-              
-              {/* Secondary CTA - Text Ben */}
+              {/* Primary CTA - Text Ben */}
               <a
                 href={`sms:${PHONE_NUMBER}?body=${encodeURIComponent(
                   language === 'en' 
                     ? `Hi Ben! I need a tow.\n\nPickup: ${formData.pickupLocation || '(not entered)'}\nDrop-off: ${formData.dropoffLocation || '(not entered)'}\n\nPlease call me at: ${formData.phoneNumber || '(my number)'}`
                     : `¡Hola Ben! Necesito una grúa.\n\nRecogida: ${formData.pickupLocation || '(no ingresado)'}\nDestino: ${formData.dropoffLocation || '(no ingresado)'}\n\nPor favor llámame al: ${formData.phoneNumber || '(mi número)'}`
                 )}`}
-                className="w-full py-5 text-base font-semibold bg-blue-500 hover:bg-blue-600 text-white rounded-xl flex items-center justify-center gap-3 transition-all"
+                className="w-full py-6 text-lg font-bold bg-blue-500 hover:bg-blue-600 text-white rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02]"
                 data-testid="text-ben-btn"
               >
-                <MessageSquare className="w-5 h-5" />
-                {language === 'en' ? 'Text My Info to Ben' : 'Enviar Mensaje a Ben'}
+                <MessageSquare className="w-6 h-6" />
+                {language === 'en' ? 'Text My Info to Ben' : 'Enviar Mi Info a Ben'}
+              </a>
+              
+              {/* Divider with "or" */}
+              <div className="flex items-center gap-4">
+                <div className="flex-1 border-t border-gray-300"></div>
+                <span className="text-gray-500 text-sm">{language === 'en' ? 'or call directly' : 'o llama directamente'}</span>
+                <div className="flex-1 border-t border-gray-300"></div>
+              </div>
+              
+              {/* Secondary CTA - Call Ben */}
+              <a
+                href={`tel:${PHONE_NUMBER}`}
+                className="w-full py-5 text-base font-semibold bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 text-white rounded-xl flex items-center justify-center gap-3 transition-all"
+                data-testid="call-ben-btn"
+              >
+                <Phone className="w-5 h-5" />
+                {language === 'en' ? 'Call Ben Now' : 'Llamar a Ben Ahora'}
+                <span className="text-red-200 ml-1">{PHONE_DISPLAY}</span>
               </a>
               
               {/* Info text */}
