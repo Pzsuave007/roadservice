@@ -665,6 +665,30 @@ export default function LandingPage() {
                 />
               </div>
               
+              {/* Vehicle Type */}
+              <div className="space-y-2">
+                <Label className="text-gray-700 font-medium flex items-center gap-2">
+                  <Truck className="w-4 h-4 text-gray-600" />
+                  {language === 'en' ? 'What type of vehicle?' : '¿Qué tipo de vehículo?'}
+                </Label>
+                <Select
+                  value={formData.vehicleType}
+                  onValueChange={(value) => handleInputChange('vehicleType', value)}
+                >
+                  <SelectTrigger className="bg-white border-gray-300 text-gray-900 py-6 text-base" data-testid="vehicle-select">
+                    <SelectValue placeholder={language === 'en' ? "Select vehicle type" : "Selecciona tipo de vehículo"} />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border-gray-200">
+                    <SelectItem value="sedan" className="text-gray-900">{language === 'en' ? 'Car / Sedan' : 'Carro / Sedán'}</SelectItem>
+                    <SelectItem value="suv" className="text-gray-900">SUV / Crossover</SelectItem>
+                    <SelectItem value="truck" className="text-gray-900">{language === 'en' ? 'Pickup Truck' : 'Troca / Pickup'}</SelectItem>
+                    <SelectItem value="motorcycle" className="text-gray-900">{language === 'en' ? 'Motorcycle' : 'Motocicleta'}</SelectItem>
+                    <SelectItem value="van" className="text-gray-900">Van / Minivan</SelectItem>
+                    <SelectItem value="other" className="text-gray-900">{language === 'en' ? 'Other' : 'Otro'}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
               {/* Phone Number */}
               <div className="space-y-2">
                 <Label htmlFor="phone" className="text-gray-700 font-medium flex items-center gap-2">
@@ -693,8 +717,8 @@ export default function LandingPage() {
               <a
                 href={`sms:${PHONE_NUMBER}?body=${encodeURIComponent(
                   language === 'en' 
-                    ? `Hi Ben! I need a tow.\n\nPickup: ${formData.pickupLocation || '(not entered)'}\nDrop-off: ${formData.dropoffLocation || '(not entered)'}\n\nPlease call me at: ${formData.phoneNumber || '(my number)'}`
-                    : `¡Hola Ben! Necesito una grúa.\n\nRecogida: ${formData.pickupLocation || '(no ingresado)'}\nDestino: ${formData.dropoffLocation || '(no ingresado)'}\n\nPor favor llámame al: ${formData.phoneNumber || '(mi número)'}`
+                    ? `Hi Ben! I need a tow.\n\nVehicle: ${formData.vehicleType || '(not selected)'}\nPickup: ${formData.pickupLocation || '(not entered)'}\nDrop-off: ${formData.dropoffLocation || '(not entered)'}\n\nPlease call me at: ${formData.phoneNumber || '(my number)'}`
+                    : `¡Hola Ben! Necesito una grúa.\n\nVehículo: ${formData.vehicleType || '(no seleccionado)'}\nRecogida: ${formData.pickupLocation || '(no ingresado)'}\nDestino: ${formData.dropoffLocation || '(no ingresado)'}\n\nPor favor llámame al: ${formData.phoneNumber || '(mi número)'}`
                 )}`}
                 className="w-full py-6 text-lg font-bold bg-blue-500 hover:bg-blue-600 text-white rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02]"
                 data-testid="text-ben-btn"
