@@ -706,6 +706,29 @@ export default function LandingPage() {
                 />
               </div>
               
+              {/* Distance indicator - shows when calculated */}
+              {formData.estimatedDistance > 0 && (
+                <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Navigation className="w-5 h-5 text-green-600" />
+                    <span className="text-green-800 font-medium">
+                      {language === 'en' ? 'Estimated Distance:' : 'Distancia Estimada:'}
+                    </span>
+                  </div>
+                  <span className="text-green-800 font-bold text-lg">~{formData.estimatedDistance} {language === 'en' ? 'miles' : 'millas'}</span>
+                </div>
+              )}
+              
+              {/* Calculating indicator */}
+              {isCalculatingDistance && (
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center justify-center gap-2">
+                  <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
+                  <span className="text-blue-800">
+                    {language === 'en' ? 'Calculating distance...' : 'Calculando distancia...'}
+                  </span>
+                </div>
+              )}
+              
               {/* Divider */}
               <div className="pt-4 border-t border-gray-200">
                 <p className="text-center text-gray-600 font-medium mb-4">
@@ -717,8 +740,8 @@ export default function LandingPage() {
               <a
                 href={`sms:${PHONE_NUMBER}?body=${encodeURIComponent(
                   language === 'en' 
-                    ? `Hi Ben! I need a tow.\n\nVehicle: ${formData.vehicleType || '(not selected)'}\nPickup: ${formData.pickupLocation || '(not entered)'}\nDrop-off: ${formData.dropoffLocation || '(not entered)'}\n\nPlease call me at: ${formData.phoneNumber || '(my number)'}`
-                    : `¡Hola Ben! Necesito una grúa.\n\nVehículo: ${formData.vehicleType || '(no seleccionado)'}\nRecogida: ${formData.pickupLocation || '(no ingresado)'}\nDestino: ${formData.dropoffLocation || '(no ingresado)'}\n\nPor favor llámame al: ${formData.phoneNumber || '(mi número)'}`
+                    ? `Hi Ben! I need a tow.\n\nVehicle: ${formData.vehicleType || '(not selected)'}\nPickup: ${formData.pickupLocation || '(not entered)'}\nDrop-off: ${formData.dropoffLocation || '(not entered)'}${formData.estimatedDistance > 0 ? `\nDistance: ~${formData.estimatedDistance} miles` : ''}\n\nPlease call me at: ${formData.phoneNumber || '(my number)'}`
+                    : `¡Hola Ben! Necesito una grúa.\n\nVehículo: ${formData.vehicleType || '(no seleccionado)'}\nRecogida: ${formData.pickupLocation || '(no ingresado)'}\nDestino: ${formData.dropoffLocation || '(no ingresado)'}${formData.estimatedDistance > 0 ? `\nDistancia: ~${formData.estimatedDistance} millas` : ''}\n\nPor favor llámame al: ${formData.phoneNumber || '(mi número)'}`
                 )}`}
                 className="w-full py-6 text-lg font-bold bg-blue-500 hover:bg-blue-600 text-white rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02]"
                 data-testid="text-ben-btn"
