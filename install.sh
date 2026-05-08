@@ -1,25 +1,31 @@
 #!/bin/bash
 
-echo "Installing Ben's Road Service updates..."
+echo "=========================================="
+echo "  Installing Ben's Road Service Updates"
+echo "=========================================="
 
-cd /root/roadservice
+cd ~/roadservice
 
 # Create uploads folder for vehicle photos
-mkdir -p /root/roadservice/backend/uploads
+echo "[1/4] Creating uploads folder..."
+mkdir -p ~/roadservice/backend/uploads
 
-# Extract the pre-built frontend
-tar -xzvf frontend-build.tar.gz -C /opt/bensroadservice/frontend/
+# Extract frontend to public_html
+echo "[2/4] Extracting frontend..."
+tar -xzf frontend-build.tar.gz
+cp -r build/* ~/public_html/
 
-# Restart services
-sudo systemctl restart bensroad-frontend
+# Restart backend
+echo "[3/4] Restarting backend..."
 sudo systemctl restart bensroad-backend
-
 sleep 3
 
 # Test
+echo "[4/4] Testing..."
+RESPONSE=$(curl -s http://localhost:8010/api/)
+echo "Backend: $RESPONSE"
+
 echo ""
-echo "Testing..."
-echo "Frontend: $(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:4001)"
-echo "Backend: $(curl -s http://localhost:8010/api/)"
-echo ""
-echo "Done! Visit: https://bensroadservice247.com"
+echo "=========================================="
+echo "  Done! Visit: https://bensroadservice247.com"
+echo "=========================================="
