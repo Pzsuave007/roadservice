@@ -99,23 +99,59 @@ export default function LandingPage() {
   const [photoPreview, setPhotoPreview] = useState(null);
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
 
+  // Compress image before upload
+  const compressImage = (file, maxWidth = 800, quality = 0.6) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          
+          // Resize if too large
+          if (width > maxWidth) {
+            height = (height * maxWidth) / width;
+            width = maxWidth;
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          canvas.toBlob(
+            (blob) => resolve(blob),
+            'image/jpeg',
+            quality
+          );
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
   // Handle photo upload
   const handlePhotoSelect = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Show preview
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPhotoPreview(reader.result);
-    };
-    reader.readAsDataURL(file);
-
-    // Upload to server
     setIsUploadingPhoto(true);
+    
     try {
+      // Compress the image first
+      const compressedBlob = await compressImage(file);
+      
+      // Show preview of compressed image
+      const previewUrl = URL.createObjectURL(compressedBlob);
+      setPhotoPreview(previewUrl);
+      
+      // Upload compressed image
       const formDataUpload = new FormData();
-      formDataUpload.append('file', file);
+      formDataUpload.append('file', compressedBlob, 'vehicle.jpg');
       
       const response = await axios.post(`${API}/upload/photo`, formDataUpload, {
         headers: { 'Content-Type': 'multipart/form-data' }
