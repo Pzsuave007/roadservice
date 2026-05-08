@@ -1,34 +1,38 @@
 #!/bin/bash
 
 echo "=========================================="
-echo "  Installing Ben's Road Service Updates"
+echo "  Updating Ben's Road Service"
 echo "=========================================="
 
 cd ~/roadservice
 
 # Create uploads folder for vehicle photos
-echo "[1/4] Creating uploads folder..."
+echo "[1/5] Creating uploads folder..."
 mkdir -p ~/roadservice/backend/uploads
 
-# Extract frontend
-echo "[2/4] Extracting frontend..."
+# Extract frontend build
+echo "[2/5] Extracting frontend..."
 tar -xzf frontend-build.tar.gz
 
-# Copy to both possible locations
-echo "[3/4] Copying files..."
-cp -r build/* /home/bensroaduni2/ 2>/dev/null && echo "  ✓ Copied to /home/bensroaduni2/"
-cp -r build/* /opt/bensroadservice/frontend/public/ 2>/dev/null && echo "  ✓ Copied to /opt/bensroadservice/frontend/public/"
+# Copy to production frontend folder
+echo "[3/5] Copying to production..."
+sudo cp -r build/* /opt/bensroadservice/frontend/build/
 
-# Restart backend
-echo "[4/4] Restarting backend..."
+# Update backend files
+echo "[4/5] Updating backend..."
+sudo cp backend/server.py /opt/bensroadservice/backend/server.py
+
+# Restart services
+echo "[5/5] Restarting services..."
 sudo systemctl restart bensroad-backend
+sudo systemctl restart bensroad-frontend
 sleep 3
 
 # Test
 echo ""
 echo "Testing..."
-RESPONSE=$(curl -s http://localhost:8010/api/)
-echo "Backend: $RESPONSE"
+echo "Backend: $(curl -s http://localhost:8010/api/)"
+echo "Frontend: $(curl -s -o /dev/null -w '%{http_code}' http://localhost:4001)"
 
 echo ""
 echo "=========================================="
