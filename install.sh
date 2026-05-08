@@ -10,18 +10,23 @@ cd ~/roadservice
 echo "[1/4] Creating uploads folder..."
 mkdir -p ~/roadservice/backend/uploads
 
-# Extract frontend to web root
+# Extract frontend
 echo "[2/4] Extracting frontend..."
 tar -xzf frontend-build.tar.gz
-cp -r build/* /home/bensroaduni2/
+
+# Copy to both possible locations
+echo "[3/4] Copying files..."
+cp -r build/* /home/bensroaduni2/ 2>/dev/null && echo "  ✓ Copied to /home/bensroaduni2/"
+cp -r build/* /opt/bensroadservice/frontend/public/ 2>/dev/null && echo "  ✓ Copied to /opt/bensroadservice/frontend/public/"
 
 # Restart backend
-echo "[3/4] Restarting backend..."
+echo "[4/4] Restarting backend..."
 sudo systemctl restart bensroad-backend
 sleep 3
 
 # Test
-echo "[4/4] Testing..."
+echo ""
+echo "Testing..."
 RESPONSE=$(curl -s http://localhost:8010/api/)
 echo "Backend: $RESPONSE"
 
