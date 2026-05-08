@@ -828,18 +828,19 @@ export default function LandingPage() {
               </div>
               
               {/* Primary CTA - Text Ben */}
-              <a
-                href={`sms:${PHONE_NUMBER}?body=${encodeURIComponent(
-                  language === 'en' 
+              <button
+                onClick={() => {
+                  const message = language === 'en' 
                     ? `Hi Ben! I need a tow.\n\nVehicle: ${formData.vehicleType || '(not selected)'}\nPickup: ${formData.pickupLocation || '(not entered)'}\nDrop-off: ${formData.dropoffLocation || '(not entered)'}${formData.estimatedDistance > 0 ? `\nDistance: ~${formData.estimatedDistance} miles` : ''}${vehiclePhoto ? `\n\nVehicle Photo: ${vehiclePhoto}` : ''}\n\nPlease call me at: ${formData.phoneNumber || '(my number)'}`
-                    : `¡Hola Ben! Necesito una grúa.\n\nVehículo: ${formData.vehicleType || '(no seleccionado)'}\nRecogida: ${formData.pickupLocation || '(no ingresado)'}\nDestino: ${formData.dropoffLocation || '(no ingresado)'}${formData.estimatedDistance > 0 ? `\nDistancia: ~${formData.estimatedDistance} millas` : ''}${vehiclePhoto ? `\n\nFoto del Vehículo: ${vehiclePhoto}` : ''}\n\nPor favor llámame al: ${formData.phoneNumber || '(mi número)'}`
-                )}`}
+                    : `¡Hola Ben! Necesito una grúa.\n\nVehículo: ${formData.vehicleType || '(no seleccionado)'}\nRecogida: ${formData.pickupLocation || '(no ingresado)'}\nDestino: ${formData.dropoffLocation || '(no ingresado)'}${formData.estimatedDistance > 0 ? `\nDistancia: ~${formData.estimatedDistance} millas` : ''}${vehiclePhoto ? `\n\nFoto del Vehículo: ${vehiclePhoto}` : ''}\n\nPor favor llámame al: ${formData.phoneNumber || '(mi número)'}`;
+                  window.location.href = `sms:${PHONE_NUMBER}?body=${encodeURIComponent(message)}`;
+                }}
                 className="w-full py-6 text-lg font-bold bg-blue-500 hover:bg-blue-600 text-white rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02]"
                 data-testid="text-ben-btn"
               >
                 <MessageSquare className="w-6 h-6" />
                 {language === 'en' ? 'Text My Info to Ben' : 'Enviar Mi Info a Ben'}
-              </a>
+              </button>
               
               {/* Divider with "or" */}
               <div className="flex items-center gap-4">
