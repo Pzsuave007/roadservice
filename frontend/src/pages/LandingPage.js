@@ -835,11 +835,25 @@ export default function LandingPage() {
                     : `¡Hola Ben! Necesito una grúa.\n\nVehículo: ${formData.vehicleType || '(no seleccionado)'}\nRecogida: ${formData.pickupLocation || '(no ingresado)'}\nDestino: ${formData.dropoffLocation || '(no ingresado)'}${formData.estimatedDistance > 0 ? `\nDistancia: ~${formData.estimatedDistance} millas` : ''}${vehiclePhoto ? `\n\nFoto del Vehículo: ${vehiclePhoto}` : ''}\n\nPor favor llámame al: ${formData.phoneNumber || '(mi número)'}`;
                   window.location.href = `sms:${PHONE_NUMBER}?body=${encodeURIComponent(message)}`;
                 }}
-                className="w-full py-6 text-lg font-bold bg-blue-500 hover:bg-blue-600 text-white rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02]"
+                disabled={isUploadingPhoto}
+                className={`w-full py-6 text-lg font-bold rounded-xl flex items-center justify-center gap-3 shadow-lg transition-all ${
+                  isUploadingPhoto 
+                    ? 'bg-gray-400 cursor-not-allowed' 
+                    : 'bg-blue-500 hover:bg-blue-600 shadow-blue-500/30 hover:scale-[1.02]'
+                } text-white`}
                 data-testid="text-ben-btn"
               >
-                <MessageSquare className="w-6 h-6" />
-                {language === 'en' ? 'Text My Info to Ben' : 'Enviar Mi Info a Ben'}
+                {isUploadingPhoto ? (
+                  <>
+                    <Loader2 className="w-6 h-6 animate-spin" />
+                    {language === 'en' ? 'Uploading Photo...' : 'Subiendo Foto...'}
+                  </>
+                ) : (
+                  <>
+                    <MessageSquare className="w-6 h-6" />
+                    {language === 'en' ? 'Text My Info to Ben' : 'Enviar Mi Info a Ben'}
+                  </>
+                )}
               </button>
               
               {/* Divider with "or" */}
