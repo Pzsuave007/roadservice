@@ -10,10 +10,10 @@ cd ~/roadservice
 echo "[1/4] Creating uploads folder..."
 mkdir -p ~/roadservice/backend/uploads
 
-# Extract frontend to public_html
+# Extract frontend to web root
 echo "[2/4] Extracting frontend..."
 tar -xzf frontend-build.tar.gz
-cp -r build/* ~/public_html/
+cp -r build/* /home/bensroaduni2/
 
 # Restart backend
 echo "[3/4] Restarting backend..."
