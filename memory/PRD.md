@@ -1,5 +1,9 @@
 # Ben's Road Service LLC - Product Requirements Document
 
+## [2026-06-09] Imágenes localizadas y desplegables
+- Imágenes migradas de CDN Emergent a locales (`/frontend/public/images/`: logo.png, truck1-5.jpeg). `LandingPage.js` referencia `/images/...`.
+- Frontend recompilado con `REACT_APP_BACKEND_URL=https://bensroadservice247.com` y empaquetado en `frontend-build.tar.gz` (incluye imágenes). Verificado: las 6 imágenes cargan en preview. Pendiente: usuario despliega vía Save to Github + `git pull && ./install.sh`.
+
 ## Original Problem Statement
 Create a high-converting, single-page landing website for a professional Towing & Roadside Assistance company named "Ben's Road Service LLC".
 
