@@ -56,16 +56,16 @@ const API = `${BACKEND_URL}/api`;
 const DEFAULT_PHONE_NUMBER = '9713886300';
 const DEFAULT_PHONE_DISPLAY = '(971) 388-6300';
 
-// Company logo
-const COMPANY_LOGO = 'https://customer-assets.emergentagent.com/job_00aa8ed2-46e4-4aea-a6de-8d7e8cfaf0af/artifacts/szsdzxev_bensroadserviceslogo-horizontal.png';
+// Company logo - local
+const COMPANY_LOGO = '/images/logo.png';
 
-// Client's actual tow truck images
+// Client's actual tow truck images - local
 const CLIENT_IMAGES = {
-  hero: 'https://customer-assets.emergentagent.com/job_quick-towing-pro/artifacts/q4hhmpd9_WhatsApp%20Image%202026-03-02%20at%207.33.36%20AM%20%281%29.jpeg',
-  flatbedDay: 'https://customer-assets.emergentagent.com/job_quick-towing-pro/artifacts/nczsdil9_WhatsApp%20Image%202026-03-02%20at%207.33.36%20AM%20%282%29.jpeg',
-  gasStation: 'https://customer-assets.emergentagent.com/job_quick-towing-pro/artifacts/202b513u_WhatsApp%20Image%202026-03-02%20at%207.33.36%20AM%20%283%29.jpeg',
-  truckWithPickup: 'https://customer-assets.emergentagent.com/job_quick-towing-pro/artifacts/lsayurd5_WhatsApp%20Image%202026-03-02%20at%207.33.36%20AM%20%284%29.jpeg',
-  truckCloseup: 'https://customer-assets.emergentagent.com/job_quick-towing-pro/artifacts/7xjs889d_WhatsApp%20Image%202026-03-02%20at%207.33.36%20AM%20%285%29.jpeg',
+  hero: '/images/truck1.jpeg',
+  flatbedDay: '/images/truck2.jpeg',
+  gasStation: '/images/truck3.jpeg',
+  truckWithPickup: '/images/truck4.jpeg',
+  truckCloseup: '/images/truck5.jpeg',
 };
 
 export default function LandingPage() {
