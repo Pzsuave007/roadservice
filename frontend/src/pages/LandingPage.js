@@ -46,6 +46,7 @@ import {
   X,
   HelpCircle,
   Camera,
+  User,
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -98,6 +99,8 @@ export default function LandingPage() {
   const [vehiclePhoto, setVehiclePhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const [isSubmittingLead, setIsSubmittingLead] = useState(false);
+  const [leadSmsHref, setLeadSmsHref] = useState(null);
 
   // Compress image before upload
   const compressImage = (file, maxWidth = 800, quality = 0.6) => {
@@ -188,6 +191,53 @@ export default function LandingPage() {
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Save the lead to the system and open the SMS app with name + phone + a read-only link.
+  // The miles & full details live on the server so the customer cannot alter them in the text.
+  const handleTextBen = async () => {
+    if (!formData.name?.trim()) {
+      toast.error(language === 'en' ? 'Please enter your name' : 'Por favor ingresa tu nombre');
+      return;
+    }
+    if (!formData.phoneNumber?.trim()) {
+      toast.error(language === 'en' ? 'Please enter your phone number' : 'Por favor ingresa tu número de teléfono');
+      return;
+    }
+    if (!formData.pickupLocation?.trim()) {
+      toast.error(language === 'en' ? 'Please enter your pickup location' : 'Por favor ingresa tu ubicación de recogida');
+      return;
+    }
+    if (!vehiclePhoto) {
+      toast.error(language === 'en' ? 'Please add a photo of your vehicle' : 'Por favor agrega una foto de tu vehículo');
+      return;
+    }
+
+    setIsSubmittingLead(true);
+    try {
+      const hasDropoff = !!formData.dropoffLocation?.trim();
+      const res = await axios.post(`${API}/leads`, {
+        name: formData.name,
+        phone_number: formData.phoneNumber,
+        pickup_location: formData.pickupLocation,
+        dropoff_location: formData.dropoffLocation || '',
+        vehicle_type: formData.vehicleType || 'other',
+        distance_miles: hasDropoff && formData.estimatedDistance > 0 ? Number(formData.estimatedDistance) : null,
+        photo_url: vehiclePhoto,
+      });
+      const leadId = res.data.id;
+      const link = `${window.location.origin}/lead/${leadId}`;
+      const message = language === 'en'
+        ? `Hi Ben, this is ${formData.name}. My number: ${formData.phoneNumber}. Here are my tow request details (location, vehicle & photo): ${link}`
+        : `Hola Ben, soy ${formData.name}. Mi número: ${formData.phoneNumber}. Aquí están los detalles de mi grúa (ubicación, vehículo y foto): ${link}`;
+      const smsHref = `sms:${PHONE_NUMBER}?body=${encodeURIComponent(message)}`;
+      setLeadSmsHref(smsHref);
+      setIsSubmittingLead(false);
+      window.location.href = smsHref;
+    } catch (error) {
+      setIsSubmittingLead(false);
+      toast.error(language === 'en' ? 'Error saving your info. Please try again.' : 'Error al guardar tu información. Intenta de nuevo.');
+    }
   };
 
   // Calculate distance between two locations using coordinates
@@ -690,6 +740,22 @@ export default function LandingPage() {
           
           <div className="glass-card p-4 md:p-8">
             <div className="space-y-5" data-testid="contact-form">
+              {/* Customer Name */}
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-gray-700 font-medium flex items-center gap-2">
+                  <User className="w-4 h-4 text-red-600" />
+                  {language === 'en' ? 'Your Name' : 'Tu Nombre'} *
+                </Label>
+                <Input
+                  id="name"
+                  placeholder={language === 'en' ? 'First and last name' : 'Nombre y apellido'}
+                  value={formData.name}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  className="bg-white border-gray-300 focus:border-red-800 text-gray-900 placeholder:text-gray-400 py-6 text-base"
+                  data-testid="name-input"
+                />
+              </div>
+
               {/* Pickup Location */}
               <div className="space-y-2">
                 <Label htmlFor="pickup" className="text-gray-700 font-medium flex items-center gap-2">
@@ -833,28 +899,8 @@ export default function LandingPage() {
                 )}
               </div>
               
-              {/* Distance indicator - shows when calculated */}
-              {formData.estimatedDistance > 0 && (
-                <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Navigation className="w-5 h-5 text-green-600" />
-                    <span className="text-green-800 font-medium">
-                      {language === 'en' ? 'Estimated Distance:' : 'Distancia Estimada:'}
-                    </span>
-                  </div>
-                  <span className="text-green-800 font-bold text-lg">~{formData.estimatedDistance} {language === 'en' ? 'miles' : 'millas'}</span>
-                </div>
-              )}
-              
-              {/* Calculating indicator */}
-              {isCalculatingDistance && (
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center justify-center gap-2">
-                  <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
-                  <span className="text-blue-800">
-                    {language === 'en' ? 'Calculating distance...' : 'Calculando distancia...'}
-                  </span>
-                </div>
-              )}
+              {/* Distance is calculated silently in the background and only shown to Ben
+                  on the read-only lead link. It is hidden from the customer on purpose. */}
               
               {/* Divider */}
               <div className="pt-4 border-t border-gray-200">
@@ -865,15 +911,10 @@ export default function LandingPage() {
               
               {/* Primary CTA - Text Ben */}
               <button
-                onClick={() => {
-                  const message = language === 'en' 
-                    ? `Hi Ben! I need a tow.\n\nVehicle: ${formData.vehicleType || '(not selected)'}\nPickup: ${formData.pickupLocation || '(not entered)'}\nDrop-off: ${formData.dropoffLocation || '(not entered)'}${formData.estimatedDistance > 0 ? `\nDistance: ~${formData.estimatedDistance} miles` : ''}${vehiclePhoto ? `\n\nVehicle Photo: ${vehiclePhoto}` : ''}\n\nPlease call me at: ${formData.phoneNumber || '(my number)'}`
-                    : `¡Hola Ben! Necesito una grúa.\n\nVehículo: ${formData.vehicleType || '(no seleccionado)'}\nRecogida: ${formData.pickupLocation || '(no ingresado)'}\nDestino: ${formData.dropoffLocation || '(no ingresado)'}${formData.estimatedDistance > 0 ? `\nDistancia: ~${formData.estimatedDistance} millas` : ''}${vehiclePhoto ? `\n\nFoto del Vehículo: ${vehiclePhoto}` : ''}\n\nPor favor llámame al: ${formData.phoneNumber || '(mi número)'}`;
-                  window.location.href = `sms:${PHONE_NUMBER}?body=${encodeURIComponent(message)}`;
-                }}
-                disabled={isUploadingPhoto}
+                onClick={handleTextBen}
+                disabled={isUploadingPhoto || isSubmittingLead}
                 className={`w-full py-6 text-lg font-bold rounded-xl flex items-center justify-center gap-3 shadow-lg transition-all ${
-                  isUploadingPhoto 
+                  isUploadingPhoto || isSubmittingLead
                     ? 'bg-gray-400 cursor-not-allowed' 
                     : 'bg-blue-500 hover:bg-blue-600 shadow-blue-500/30 hover:scale-[1.02]'
                 } text-white`}
@@ -884,6 +925,11 @@ export default function LandingPage() {
                     <Loader2 className="w-6 h-6 animate-spin" />
                     {language === 'en' ? 'Uploading Photo...' : 'Subiendo Foto...'}
                   </>
+                ) : isSubmittingLead ? (
+                  <>
+                    <Loader2 className="w-6 h-6 animate-spin" />
+                    {language === 'en' ? 'Preparing your text...' : 'Preparando tu texto...'}
+                  </>
                 ) : (
                   <>
                     <MessageSquare className="w-6 h-6" />
@@ -891,6 +937,19 @@ export default function LandingPage() {
                   </>
                 )}
               </button>
+
+              {/* Fallback link if the SMS app did not open automatically */}
+              {leadSmsHref && (
+                <a
+                  href={leadSmsHref}
+                  className="block text-center text-blue-600 hover:text-blue-700 text-sm font-medium underline"
+                  data-testid="text-ben-fallback-link"
+                >
+                  {language === 'en'
+                    ? "Messages app didn't open? Tap here to text Ben"
+                    : '¿No se abrió la app de mensajes? Toca aquí para enviar el texto'}
+                </a>
+              )}
               
               {/* Divider with "or" */}
               <div className="flex items-center gap-4">

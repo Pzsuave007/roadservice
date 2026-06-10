@@ -153,6 +153,31 @@ class QuoteStatusUpdate(BaseModel):
     notes: Optional[str] = None
 
 
+class Lead(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    id: str = Field(default_factory=lambda: secrets.token_urlsafe(8))
+    name: str
+    phone_number: str
+    pickup_location: str
+    dropoff_location: Optional[str] = None
+    vehicle_type: str = "other"
+    distance_miles: Optional[float] = None
+    photo_url: Optional[str] = None
+    status: RequestStatus = RequestStatus.pending
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class LeadCreate(BaseModel):
+    name: str
+    phone_number: str
+    pickup_location: str
+    dropoff_location: Optional[str] = None
+    vehicle_type: str = "other"
+    distance_miles: Optional[float] = None
+    photo_url: Optional[str] = None
+
+
 # Helper function to get settings
 async def get_settings() -> dict:
     """Get settings from database or return defaults"""
@@ -402,6 +427,42 @@ async def get_upload(filename: str):
     if not file_path.exists():
         raise HTTPException(status_code=404, detail="File not found")
     return FileResponse(file_path)
+
+
+# Lead Endpoints (tamper-proof lead capture)
+@api_router.post("/leads")
+async def create_lead(input: LeadCreate):
+    """Create a lead record. Returns a public id used for a read-only link."""
+    lead = Lead(**input.model_dump())
+    doc = lead.model_dump()
+    doc['created_at'] = doc['created_at'].isoformat()
+    await db.leads.insert_one(doc)
+    return {"id": lead.id, "created_at": doc['created_at']}
+
+
+@api_router.get("/leads/{lead_id}")
+async def get_lead(lead_id: str):
+    """Public read-only lead details (for the owner to view from the SMS link)."""
+    doc = await db.leads.find_one({"id": lead_id}, {"_id": 0})
+    if not doc:
+        raise HTTPException(status_code=404, detail="Lead not found")
+    return doc
+
+
+@api_router.get("/admin/leads")
+async def get_all_leads(username: str = Depends(verify_admin)):
+    """Admin endpoint - get all saved leads."""
+    leads = await db.leads.find({}, {"_id": 0}).sort("created_at", -1).to_list(1000)
+    return leads
+
+
+@api_router.delete("/admin/leads/{lead_id}")
+async def delete_lead(lead_id: str, username: str = Depends(verify_admin)):
+    """Admin endpoint - delete a lead."""
+    result = await db.leads.delete_one({"id": lead_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Lead not found")
+    return {"message": "Lead deleted successfully"}
 
 
 # Include the router in the main app

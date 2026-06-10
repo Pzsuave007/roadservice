@@ -37,6 +37,8 @@ import {
   DollarSign,
   Save,
   FileText,
+  User,
+  ExternalLink,
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -55,6 +57,7 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState('quotes'); // 'quotes' or 'settings'
   const [settings, setSettings] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [leads, setLeads] = useState([]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -164,6 +167,7 @@ export default function AdminPage() {
     if (isLoggedIn && authHeader) {
       fetchQuotes();
       fetchSettings();
+      fetchLeads();
     }
   }, [isLoggedIn, authHeader]);
 
@@ -291,7 +295,7 @@ export default function AdminPage() {
               <Home className="w-4 h-4" />
             </a>
             <Button
-              onClick={fetchQuotes}
+              onClick={() => { fetchQuotes(); fetchLeads(); }}
               variant="outline"
               size="sm"
               disabled={isLoading}
@@ -326,6 +330,18 @@ export default function AdminPage() {
           >
             <FileText className="w-4 h-4" />
             {language === 'en' ? 'Quote Requests' : 'Cotizaciones'}
+          </button>
+          <button
+            onClick={() => setActiveTab('leads')}
+            className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors ${
+              activeTab === 'leads'
+                ? 'bg-red-600 text-white'
+                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+            }`}
+            data-testid="leads-tab-btn"
+          >
+            <User className="w-4 h-4" />
+            {language === 'en' ? 'Leads' : 'Clientes'}
           </button>
           <button
             onClick={() => setActiveTab('settings')}
@@ -450,6 +466,109 @@ export default function AdminPage() {
                               variant="ghost"
                               size="sm"
                               onClick={() => deleteQuote(quote.id)}
+                              className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Leads Tab */}
+      {activeTab === 'leads' && (
+        <div className="max-w-7xl mx-auto px-4 pb-6">
+          <div className="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden" data-testid="leads-table">
+            <div className="p-4 border-b border-gray-700 flex items-center justify-between">
+              <h2 className="text-lg font-bold">
+                {language === 'en' ? 'Saved Leads (tamper-proof)' : 'Clientes Guardados (a prueba de cambios)'}
+              </h2>
+              <span className="text-gray-400 text-sm">{leads.length}</span>
+            </div>
+
+            {leads.length === 0 ? (
+              <div className="p-12 text-center text-gray-500" data-testid="no-leads">
+                <User className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>{language === 'en' ? 'No leads yet' : 'Aún no hay clientes'}</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-gray-700 hover:bg-transparent">
+                      <TableHead className="text-gray-400">Date</TableHead>
+                      <TableHead className="text-gray-400">{language === 'en' ? 'Name' : 'Nombre'}</TableHead>
+                      <TableHead className="text-gray-400">Phone</TableHead>
+                      <TableHead className="text-gray-400">Vehicle</TableHead>
+                      <TableHead className="text-gray-400">Pickup</TableHead>
+                      <TableHead className="text-gray-400">{language === 'en' ? 'Distance' : 'Distancia'}</TableHead>
+                      <TableHead className="text-gray-400">Photo</TableHead>
+                      <TableHead className="text-gray-400">{t('actions')}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {leads.map((lead) => (
+                      <TableRow
+                        key={lead.id}
+                        className="border-gray-700"
+                        data-testid={`lead-row-${lead.id}`}
+                      >
+                        <TableCell className="text-gray-300">{formatDate(lead.created_at)}</TableCell>
+                        <TableCell className="text-gray-200 font-medium">{lead.name}</TableCell>
+                        <TableCell>
+                          <a
+                            href={`tel:${lead.phone_number}`}
+                            className="text-red-400 hover:text-red-300 flex items-center gap-1"
+                          >
+                            <Phone className="w-4 h-4" />
+                            {lead.phone_number}
+                          </a>
+                        </TableCell>
+                        <TableCell className="text-gray-300">
+                          {vehicleTypeLabels[lead.vehicle_type] || lead.vehicle_type}
+                        </TableCell>
+                        <TableCell className="text-gray-300 max-w-[180px] truncate" title={lead.pickup_location}>
+                          <MapPin className="w-4 h-4 inline mr-1 text-gray-500" />
+                          {lead.pickup_location}
+                        </TableCell>
+                        <TableCell className="text-gray-300">
+                          {lead.distance_miles != null ? `${lead.distance_miles} mi` : '—'}
+                        </TableCell>
+                        <TableCell>
+                          {lead.photo_url ? (
+                            <a
+                              href={lead.photo_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-400 hover:text-blue-300 underline text-sm"
+                            >
+                              {language === 'en' ? 'View' : 'Ver'}
+                            </a>
+                          ) : '—'}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <a
+                              href={`/lead/${lead.id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-green-400 hover:text-green-300 inline-flex items-center gap-1 text-sm"
+                              data-testid={`open-lead-${lead.id}`}
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                              {language === 'en' ? 'Open' : 'Abrir'}
+                            </a>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => deleteLead(lead.id)}
                               className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
                             >
                               <Trash2 className="w-4 h-4" />
