@@ -228,8 +228,8 @@ export default function LandingPage() {
       const leadId = res.data.id;
       const link = `${window.location.origin}/lead/${leadId}`;
       const message = language === 'en'
-        ? `Hi Ben, this is ${formData.name}. My number: ${formData.phoneNumber}. Here are my tow request details (location, vehicle & photo): ${link}`
-        : `Hola Ben, soy ${formData.name}. Mi número: ${formData.phoneNumber}. Aquí están los detalles de mi grúa (ubicación, vehículo y foto): ${link}`;
+        ? `Tow request from ${formData.name}. My number: ${formData.phoneNumber}. My location, vehicle and photo here: ${link}`
+        : `Solicitud de grua de ${formData.name}. Mi numero: ${formData.phoneNumber}. Mi ubicacion, vehiculo y foto aqui: ${link}`;
       const smsHref = `sms:${PHONE_NUMBER}?body=${encodeURIComponent(message)}`;
       setLeadSmsHref(smsHref);
       setIsSubmittingLead(false);
