@@ -1,3 +1,11 @@
+## [2026-06-10] Sistema de Leads a prueba de cambios (anti-edición de SMS)
+Problema: clientes editaban el SMS (millas) y luego disputaban el precio. Solución: el SMS ya no lleva los datos editables; se guardan en el sistema y el SMS solo lleva Nombre + Teléfono + un link público de solo lectura.
+- Backend (`server.py`): modelos `Lead`/`LeadCreate` + endpoints `POST /api/leads`, `GET /api/leads/{id}` (público, id de `secrets.token_urlsafe(8)`), `GET /api/admin/leads` y `DELETE /api/admin/leads/{id}` (Basic Auth). Colección `leads`.
+- Frontend: campo **Nombre** obligatorio en el formulario; **millas ocultas al cliente** (solo Ben las ve en el link). `handleTextBen()` guarda el lead y abre `sms:` con Nombre+Teléfono+link, con link de respaldo si la app no abre.
+- Nueva página `/lead/:id` (`LeadPage.js`): vista solo lectura (nombre, teléfono, distancia, vehículo, recogida/destino con mapas, foto, fecha/hora, aviso "no editable").
+- Admin (`/admin`): nueva pestaña **Leads** con historial (foto, millas, link Abrir, eliminar).
+- Verificado: backend 8/8 endpoints, formulario, página de lead y pestaña admin OK. Build de producción empaquetado (`main.c4eddab4.js`). Pendiente: usuario despliega vía Save to Github + `git pull && ./install.sh`.
+
 # Ben's Road Service LLC - Product Requirements Document
 
 ## [2026-06-09] Imágenes localizadas y desplegables

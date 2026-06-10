@@ -114,6 +114,30 @@ export default function AdminPage() {
     }
   };
 
+  const fetchLeads = async () => {
+    try {
+      const res = await axios.get(`${API}/admin/leads`, {
+        headers: { Authorization: authHeader }
+      });
+      setLeads(res.data);
+    } catch (error) {
+      // ignore - leads are optional
+    }
+  };
+
+  const deleteLead = async (leadId) => {
+    if (!window.confirm(language === 'en' ? 'Delete this lead?' : '¿Eliminar este cliente?')) return;
+    try {
+      await axios.delete(`${API}/admin/leads/${leadId}`, {
+        headers: { Authorization: authHeader }
+      });
+      toast.success(language === 'en' ? 'Lead deleted' : 'Cliente eliminado');
+      fetchLeads();
+    } catch (error) {
+      toast.error(language === 'en' ? 'Error deleting lead' : 'Error al eliminar');
+    }
+  };
+
   const saveSettings = async () => {
     setIsSaving(true);
     try {
